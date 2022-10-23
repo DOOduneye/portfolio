@@ -1,9 +1,10 @@
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faArrowLeft, faFrownOpen } from '@fortawesome/free-solid-svg-icons';
 
+import { motion } from 'framer-motion';
 export default function NotFound() {
     return (
-        <div className="min-h-full px-4 py-16 sm:px-6 sm:py-24 md:grid md:place-items-center lg:px-8">
+        <motion.div className="min-h-full px-4 py-16 sm:px-6 sm:py-24 md:grid md:place-items-center lg:px-8" initial={{ opacity: 0}} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <div className="mx-auto max-w-max">
                 <main className="sm:flex">
                     <p className="text-4xl font-bold tracking-tight sm:text-5xl bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-red-300">
@@ -26,6 +27,6 @@ export default function NotFound() {
                     </div>
                 </main>
             </div>
-        </div>
+        </motion.div>
     )
 }

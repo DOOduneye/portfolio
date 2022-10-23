@@ -1,24 +1,50 @@
 import '../../App.scss';
 
-import Navigation from '../Navigation/Navigation.js';
 import HomeMainSection from './HomeMainSection';
-import Footer from "../Footer";
+
+import { motion } from 'framer-motion';
+import InitialTransition from './InitialTransition.js';
+
+const content = {
+    animate: {
+      transition: { staggerChildren: 0.1, delayChildren: 2.8 },
+    },
+  };
+  
+  const title = {
+    initial: { y: -20, opacity: 0 },
+    animate: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        duration: 0.7,
+        ease: [0.6, -0.05, 0.01, 0.99],
+      },
+    },
+  };
+  
+  const products = {
+    initial: { y: -20, opacity: 0 },
+    animate: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        duration: 0.7,
+        ease: [0.6, -0.05, 0.01, 0.99],
+      },
+    },
+  };
+  
 
 function Home() {
     return (
-        <main className="grid grid-rows-3 h-full w-full">
-            <section className="row-start-1 row-end-1">
-                <Navigation />
-            </section>
+        <motion.main className="grid grid-rows-3 h-full w-full">
+            <InitialTransition />
 
             <section className="row-start-2 row-end 3">
                 <HomeMainSection />
             </section>
-
-            <section className="flex flex-col-reverse overflow-hidden align-end row-start-3 row-end-4">
-                <Footer />
-            </section>
-        </main>
+        </motion.main>
 
     );
 }

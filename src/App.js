@@ -4,25 +4,21 @@ import { Routes, Route } from "react-router-dom";
 
 import './App.scss'
 
-import Home from "./Components/Home/Home";
-import Blog from "./Components/Blog/Blog";
-import Portfolio from "./Components/Portfolio/Portfolio";
-import About from "./Components/About/About";
-import Uses from "./Components/Uses/Uses";
-import NotFound from "./Components/NotFound";
+import Navigation from './Components/Navigation/Navigation';
+import Footer from './Components/Footer.js';
+
+
+import AnimatedRoutes from './Components/AnimatedRoutes';
 
 function App() {
   return (
-      <div className="w-full h-full">
+      <div className="w-full h-full min-h-full relative">
         <BrowserRouter>      
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/blog" element={<Blog />} />
-              <Route path="/portfolio" element={<Portfolio />} />
-              <Route path="/about" element={<About />} />
-              {/* <Route path="/uses" element={<Uses />} /> */}
-              <Route path='*' element={<NotFound />}/>
-            </Routes>
+          <section className="row-start-1 row-end-1">
+            <Navigation />
+          </section>
+          <AnimatedRoutes />
+          <Footer />
         </BrowserRouter> 
       </div>
   );
