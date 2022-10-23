@@ -1,0 +1,14 @@
+@import "styles/_variables.scss";
+
+/* Top Level Styles */
+*,
+*::before,
+*::after { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+}
+
+body {
+  background-color: $background-color;
+}
