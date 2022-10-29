@@ -7,21 +7,53 @@ import fs from 'fs';
 import * as path from 'path';
 import matter from 'gray-matter';
 
+import tw from 'tailwind-styled-components';
+
+const Container = tw.main`
+    grid 
+    grid-flow-row 
+    auto-rows-max
+    h-full
+    w-full
+    mb-10
+`
+const HeadingSection = tw.section`
+    flex 
+    flex-row 
+    justify-center 
+    p-12
+`
+const MotionContainer = motion(Container);
+
+const MapContainer = tw.section`
+    grid
+    mx-auto 
+    grid-flow-rows
+    gap-4
+    px-1
+`
+
+const HeadingText = tw.p`
+    mt-1
+    text-base 
+    text-gray-500
+`
+
 export default function Projects( { projects }) {
     return (       
-        <motion.main initial='hidden' animate='animate' exit='exit' variants={variants} className="grid grid-flow-row auto-rows-max h-full w-full mb-10">
-            <section className="flex flex-row justify-center p-12">
-                <p className="mt-1 text-base text-gray-500">
+        <MotionContainer initial="initial" animate="animate" exit="exit" variants={variants}>
+            <HeadingSection>
+                <HeadingText>
                     Things I've built* (and things I'm working on).
-                </p>
-             </section>
+                </HeadingText>
+            </HeadingSection>
 
-            <section className="grid mx-auto grid-flow-rows gap-4 px-1">
+            <MapContainer>
                 {projects.map((project, index) => (
                     <ProjectCard key={index} project={project} />
                 ))}
-            </section>
-        </motion.main> 
+            </MapContainer>
+        </MotionContainer>
     );
 }
 

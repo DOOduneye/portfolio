@@ -10,15 +10,20 @@ import Link from 'next/link';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import variants from '../../utils/motion';
 import components from '../../utils/mdxComponents';
 
 const PostPage = ({ frontmatter: { title, date }, mdxSource }) => {
+
 // bg-[#191919]
     return (
-        <motion.main initial='hidden' animate='animate' exit='exit' variants={variants} className="grid grid-rows-1 mx-10 mt-10 pb-5">
-            <div className="border border-zinc-100/20 bg-[#191919] rounded-md p-10 shadow-md drop-shadow-sm hover:inner-shadow hover:transition ease-in-out delay-150 hover:-translate-y-2 hover:scale-200 duration-300 mx-auto max-w-prose text-lg">
-                <div className="flex flex-row justify-center py-8  mx-auto max-w-prose px-10 rounded-lg bg-gradient-to-r to-pink-500 from-[#191919]">
+        <motion.main initial='hidden' animate='animate' exit='exit' 
+        variants = {{
+            hidden: { opacity: 0, x: 100 },
+            animate: { opacity: 1, x: 0, transition: { duration: 2, delay: 0.5, ease: [0.6, 0.05, -0.01, 0.9] } },
+            exit: { opacity: 0, x: -100, transition: { duration: 2, delay: 0.5, ease: [0.6, 0.05, -0.01, 0.9] } },
+        }} className="grid grid-rows-1 mx-10 pb-5">
+            <div className="border-b border-l border-r border-zinc-100/20 bg-[#191919] rounded-b-md  p-10 shadow-md drop-shadow-lg hover:inner-shadow mx-auto max-w-prose text-lg">
+                <div className={`flex flex-row justify-center py-8  mx-auto max-w-prose px-10 rounded-lg bg-gradient-to-r to-[#F57A89] from-[#191919]`}>
                     <Link href="/posts" className="flex-2 text-slate-200 hover:text-slate-300">
                         <FontAwesomeIcon icon={faArrowLeft} className="pt-3 transition ease-in-out delay translate-x-0 hover:-translate-x-1 duration-300" />
                     </Link>

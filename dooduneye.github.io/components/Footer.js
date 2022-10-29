@@ -1,11 +1,35 @@
 import Link from "next/link";
 
+import tw from "tailwind-styled-components";
+
+const FooterContainer = tw.div`
+    w-full
+    left-0
+    bottom-0 
+    flex 
+    flex-row 
+    justify-center 
+    items-center
+    text-slate-100 
+    pb-5
+`;
+
+const P = tw.p`
+    text-center
+    text-gray-500 
+    text-xs
+`;
+
+const LinkSpan = tw.span`
+    hover:text-gray-600 
+`;
+
 export default function Footer() {
     return (
-        <footer className=" w-full left-0 bottom-0 flex flex-row justify-center items-center text-slate-100 pb-5">
-            <p className="text-center text-gray-500 text-xs">
-                <Link href="/code-of-conduct" className="hover:text-gray-600">Code of Conduct</Link> | <a href="./assets/text/Resume.pdf" target="_blank" className="hover:text-gray-600">Resume</a> | © 2022 David Oduneye. All rights reserved.
-            </p>
-        </footer>
+        <FooterContainer>
+            <P>
+                <Link href="/code-of-conduct"><LinkSpan>Code of Conduct</LinkSpan></Link> | <a href="./assets/text/Resume.pdf" target="_blank"><LinkSpan>Resume</LinkSpan></a> | © 2022 David Oduneye. All rights reserved.
+            </P>
+        </FooterContainer>
     );
 }

@@ -7,22 +7,57 @@ import fs from 'fs';
 import * as path from 'path';
 import matter from 'gray-matter'; 
 
+import tw from 'tailwind-styled-components';
+
+const Container = tw.main`  
+    grid
+    grid-flow-row
+    auto-rows-max
+    h-full
+    w-full
+    mb-10
+`
+
+const HeadingSection = tw.section`
+    flex
+    flex-row
+    justify-center
+    p-12
+`
+
+const MotionContainer = motion(Container);
+
+const MapContainer = tw.section`
+    grid 
+    grid-col-1 
+    md:grid-cols-1 
+    lg:grid-cols-3 
+    gap-5 
+    px-10
+`
+
+const HeadingText = tw.p`
+    mt-1
+    text-base
+    text-gray-500
+`
+
 export default function Posts({ posts }) {
     return (        
-        <motion.main initial='hidden' animate='animate' exit='exit' variants={variants} className="grid grid-flow-row auto-rows-max h-full w-full mb-10">
-            <section className="flex flex-row justify-center p-12">
-                <p className="mt-1 text-base text-gray-500">
-                    I write about things I find interesting.
-                </p>
-           </section>
+        <MotionContainer initial="initial" animate="animate" exit="exit" variants={variants}>
+            <HeadingSection>
+                <HeadingText>
+                    Things I've written.
+                </HeadingText>
+            </HeadingSection>   
 
-            <section className="grid grid-col-1 md:grid-cols-1 lg:grid-cols-3 gap-5 px-10">
+            <MapContainer>
                 {posts.map((post, index) => (
                     <PostCard key={index} post={post} />
                 ))}
-            </section>
+            </MapContainer>
 
-        </motion.main>
+        </MotionContainer>
     );
 }
 
