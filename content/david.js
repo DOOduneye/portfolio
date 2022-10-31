@@ -1,8 +1,7 @@
 export default {
-    date: "",
-    title: "About Me",
-    content: 
-    `I'm a second year Computer Science student at 
+    date: '',
+    title: 'About Me',
+    content: `I'm a second year Computer Science student at 
     <span className="text-red-300">Northeastern University</span>, 
     as well as a Full Stack Software Developer.
 
@@ -21,6 +20,5 @@ export default {
     I am looking for a Spring 2022 internship, 
     so if you are interested in working with me, 
     please reach <a href="malito:oduneye.d@northeastern.edu" className="text-red-300">out</a>!
-    `
-    
-}
+    `,
+};

@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 
-import tw from 'tailwind-styled-components'
+import tw from 'tailwind-styled-components';
 
 const Container = tw.div`
     pt-2
@@ -20,7 +20,7 @@ const Container = tw.div`
     hover:delay-150
     hover:translatex-1
     cursor-pointer
-`
+`;
 //    text-[#B4A0E5]
 //   text-[#4ECDC4]
 
@@ -28,11 +28,14 @@ export default function NavItem(props) {
     const state = useRouter();
     const { title, link } = props;
     const location = state.pathname;
-    const active = location == props.link ? true : false;   
+    const active = location == props.link ? true : false;
 
     return (
         <Container>
-            <Link href={active ? "#" : link} className={active ? "text-slate-200 underline decoration-slate-200 underline-offset-8" : ""}>
+            <Link
+                href={active ? '#' : link}
+                className={active ? 'text-slate-200 underline decoration-slate-200 underline-offset-8' : ''}
+            >
                 {title}
             </Link>
         </Container>

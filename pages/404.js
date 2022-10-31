@@ -1,8 +1,8 @@
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faArrowLeft, faFrownOpen } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowLeft, faFrownOpen } from '@fortawesome/free-solid-svg-icons';
 
 import { motion } from 'framer-motion';
-import variants from '../utils/motion' 
+import variants from '../utils/motion';
 
 import tw from 'tailwind-styled-components';
 
@@ -15,14 +15,14 @@ const Container = tw.main`
     md:grid 
     md:place-items-center 
     lg:px-8
-`
+`;
 
 const MotionContainer = motion(Container);
 
 const SubContainer = tw.div`
     max-w-max
     mx-auto
-`
+`;
 
 const NotFoundText = tw.p`
     text-4xl 
@@ -34,13 +34,13 @@ const NotFoundText = tw.p`
     bg-gradient-to-r 
     from-pink-500 
     to-red-300
-`
+`;
 
 const NotFoundSubText = tw.p`
     mt-1
     text-base
     text-gray-500   
-`
+`;
 
 const Button = tw.a`
     bg-gradient-to-r 
@@ -65,33 +65,35 @@ const Button = tw.a`
     hover:text-white 
     drop-shadow-lg 
     shadow-lg
-`
+`;
 
 export default function NotFound() {
     return (
         <MotionContainer initial="initial" animate="animate" exit="exit" variants={variants}>
             <SubContainer>
                 <main className="sm:flex">
-                    <NotFoundText>
-                        404
-                    </NotFoundText>
+                    <NotFoundText>{'404'}</NotFoundText>
                     <div className="sm:ml-6">
                         <div className="sm:border-l sm:border-gray-200 sm:pl-6">
                             <h1 className="text-4xl font-bold tracking-tight text-slate-200 sm:text-5xl">
-                               <FontAwesomeIcon icon={faFrownOpen} /> Page not found
+                                <FontAwesomeIcon icon={faFrownOpen} /> {'Page not found'}
                             </h1>
                             <NotFoundSubText>
-                                The page you're looking for doesn't exist. It may have been moved or deleted.
+                                {'The page you\'re looking for doesn\'t exist. It may have been moved or deleted.'}
                             </NotFoundSubText>
                         </div>
                         <div className="mt-10 flex space-x-3 sm:border-l sm:border-transparent sm:pl-6">
                             <Button href="/">
-                                <FontAwesomeIcon icon={faArrowLeft} className="mr-2 transition ease-in-out delay translate-x-0 hover:-translate-x-1 duration-300" /> Lets go home
+                                <FontAwesomeIcon
+                                    icon={faArrowLeft}
+                                    className="mr-2 transition ease-in-out delay translate-x-0 hover:-translate-x-1 duration-300"
+                                />
+                                {'Lets go home'}
                             </Button>
-                        </div> 
+                        </div>
                     </div>
                 </main>
             </SubContainer>
         </MotionContainer>
-    )
+    );
 }

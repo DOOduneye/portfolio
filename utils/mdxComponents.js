@@ -7,5 +7,4 @@ export default {
     code: (props) => <code {...props} className="bg-gray-800 p-2 rounded-md" />,
     a: (props) => <a {...props} className="text-blue-500" />,
     ul: (props) => <ul {...props} className="list-disc ml-8 bg-orange-100" />,
-  }
-  
+};

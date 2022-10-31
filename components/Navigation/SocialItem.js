@@ -13,7 +13,7 @@ const FontAwesomeIconContainer = tw.button`
 export default function SocialsItem(props) {
     return (
         <FontAwesomeIconContainer>
-            <a href={props.url} target="_blank" rel="noreferrer"> 
+            <a href={props.url} target="_blank" rel="noreferrer">
                 {props.icon}
             </a>
         </FontAwesomeIconContainer>

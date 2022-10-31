@@ -6,9 +6,8 @@ import matter from 'gray-matter';
 import { serialize } from 'next-mdx-remote/serialize';
 import { MDXRemote } from 'next-mdx-remote';
 
-
 import { motion } from 'framer-motion';
-import variants from '../utils/motion' 
+import variants from '../utils/motion';
 
 import tw from 'tailwind-styled-components';
 
@@ -18,7 +17,7 @@ const Grid = tw.main`
     auto-rows-max
     h-full
     m-10
-`
+`;
 
 const HeadingContainer = tw.section`
     border
@@ -43,7 +42,7 @@ const HeadingContainer = tw.section`
     leading-relaxed
     racking-wide 
     font-light
-`
+`;
 
 const Date = tw.span`
     block 
@@ -51,7 +50,7 @@ const Date = tw.span`
     text-lg 
     font-semibold 
     text-red-300
-`
+`;
 
 const Title = tw.span`
     mt-2 
@@ -63,7 +62,7 @@ const Title = tw.span`
     tracking-tight 
     text-[#DA4167] 
     sm:text-4xl
-`
+`;
 
 const Content = tw.section`
     flex 
@@ -74,12 +73,11 @@ const Content = tw.section`
     leading-8 
     text-slate-200 
     text-justify
-`       
+`;
 
 const MotionGrid = motion(Grid);
 
-
-export default function About( { frontmatter: { title, date }, mdxSource } ) {
+export default function About({ frontmatter: { title, date }, mdxSource }) {
     return (
         <MotionGrid initial="initial" animate="animate" exit="exit" variants={variants}>
             <HeadingContainer>
@@ -87,7 +85,7 @@ export default function About( { frontmatter: { title, date }, mdxSource } ) {
                     <Date>{date}</Date>
                     <Title>{title}</Title>
                 </h1>
-    
+
                 <Content>
                     <MDXRemote {...mdxSource} />
                 </Content>
@@ -96,9 +94,8 @@ export default function About( { frontmatter: { title, date }, mdxSource } ) {
     );
 }
 
-
 const getStaticProps = async () => {
-    const markdownWithMeta = fs.readFileSync(path.join('pages', '../content/', 'about.mdx'), 'utf-8'); 
+    const markdownWithMeta = fs.readFileSync(path.join('pages', '../content/', 'about.mdx'), 'utf-8');
 
     const { data: frontmatter, content } = matter(markdownWithMeta);
     const mdxSource = await serialize(content);
@@ -106,9 +103,9 @@ const getStaticProps = async () => {
     return {
         props: {
             frontmatter,
-            mdxSource
-        }
-    }
-}
+            mdxSource,
+        },
+    };
+};
 
-export { getStaticProps }
+export { getStaticProps };
