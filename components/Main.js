@@ -109,10 +109,10 @@ export default function Main() {
                         <MotionGradientP variants={variants} initial="hidden" animate="animate">
                             {'Passionate about building'}
                             <br />
-                            {'software that is both'}
-                            <UnderlineTransition>{'beautiful'}</UnderlineTransition>
-                            {'and'}
-                            <UnderlineTransition>{'functional'}</UnderlineTransition>
+                            {'software that is both '}
+                            <UnderlineTransition>{' beautiful '}</UnderlineTransition>
+                            {' and '}
+                            <UnderlineTransition>{' functional'}</UnderlineTransition>
                             {'.'}
                         </MotionGradientP>
                     </div>
