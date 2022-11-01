@@ -16,7 +16,8 @@ const Grid = tw.main`
     grid-flow-row
     auto-rows-max
     h-full
-    m-10
+    sm:m-10
+    m-5
 `;
 
 const HeadingContainer = tw.section`

@@ -33,7 +33,8 @@ const MapContainer = tw.section`
     md:grid-cols-1 
     lg:grid-cols-3 
     gap-5 
-    px-10
+    px-5
+    
 `;
 
 const HeadingText = tw.p`
