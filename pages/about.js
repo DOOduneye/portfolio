@@ -72,7 +72,7 @@ const Content = tw.section`
     text-lg 
     leading-8 
     text-slate-200 
-    text-justify
+    text-left
 `;
 
 const MotionGrid = motion(Grid);

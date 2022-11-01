@@ -21,8 +21,6 @@ const Container = tw.div`
     hover:translatex-1
     cursor-pointer
 `;
-//    text-[#B4A0E5]
-//   text-[#4ECDC4]
 
 export default function NavItem(props) {
     const state = useRouter();

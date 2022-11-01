@@ -2,10 +2,9 @@ import { Html, Head, Main, NextScript } from 'next/document';
 
 export default function Document() {
     return (
-        <Html lang="en" className="w-full h-full">
+        <Html lang="en">
             <Head>
                 {/*<!-- Primary Meta Tags -->*/}
-                <title>David Oduneye</title>
                 <meta name="title" content="David Oduneye" />
                 <meta
                     name="description"
@@ -38,7 +37,7 @@ export default function Document() {
                     content="https://metatags.io/assets/meta-tags-16a33a6a8531e519cc0936fbba0ad904e52d35f34a46c97a2c9f6f7dd7d336f2.png"
                 />
             </Head>
-            <body className="pattern-dots-sm">
+            <body className="pattern-dots-sm w-full h-full">
                 <Main />
                 <NextScript />
             </body>

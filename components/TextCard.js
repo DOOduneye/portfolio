@@ -12,7 +12,7 @@ export default function TextCard(props) {
                         </span>
                     </h1>
 
-                    <div className="mt-8 text-lg leading-8 text-slate-200 text-justify">
+                    <div className="mt-8 text-lg leading-8 text-slate-200 text-left">
                         {/* TODO: Parse string into HTML */}
                         <MDXRemote {...props.MDXRemote} />
 

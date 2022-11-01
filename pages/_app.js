@@ -9,11 +9,9 @@ import Footer from '../components/Footer';
 export default function MyApp({ Component, pageProps, router }) {
     return (
         <AnimatePresence wait>
-            <div>
-                <Navigation />
-                <Component {...pageProps} />
-                <Footer />
-            </div>
+            <Navigation />
+            <Component {...pageProps} />
+            <Footer />
         </AnimatePresence>
     );
 }

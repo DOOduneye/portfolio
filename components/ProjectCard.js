@@ -16,7 +16,7 @@ export default function ProjectCard(props) {
                         </span>
                     </h1>
 
-                    <p className="mt-5 text-lg leading-8 text-slate-200 text-justify">
+                    <p className="mt-5 text-lg leading-8 text-slate-200 text-left">
                         {props.project.frontmatter.description}
                     </p>
 
