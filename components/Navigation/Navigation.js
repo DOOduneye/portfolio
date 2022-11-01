@@ -41,23 +41,21 @@ export default function Navigation() {
 
     return active ? (
         <MotionNavContainer variants={variants} initial="hidden" animate="animate">
-            <Section className="pt-5 hidden sm:flex">
+            <Section className="pt-5 flex">
                 <NavItem title={'Home'} link={'/'} />
                 <NavItem title={'Blog'} link={'/posts'} />
                 <NavItem title={'Projects'} link={'/projects'} />
                 <NavItem title={'About'} link={'/about'} />
                 {/* <NavItem title={"Uses"} link={"/uses"} /> */}
-                <Social />
-
+                
                 {/* <Section>
                     <ThemeToggle />
                 </Section> */}
 
             </Section>
+            <Section className="sm:flex block justify-center">
+                </Section>
 
-            <Section className="pt-10 flex sm:hidden">
-                <FontAwesomeIcon icon={faBars} className="text-[#4ECDC4] text-2xl md:hidden" />
-            </Section>
         </MotionNavContainer>
         
     ) : (
