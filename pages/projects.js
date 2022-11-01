@@ -30,7 +30,8 @@ const MapContainer = tw.section`
     mx-auto 
     grid-flow-rows
     gap-4
-    px-1
+    sm:px-1
+    px-5
 `;
 
 const HeadingText = tw.p`

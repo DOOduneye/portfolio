@@ -40,7 +40,7 @@ const PostPage = ({ frontmatter: { title, date }, mdxSource }) => {
                     },
                 },
             }}
-            className="grid grid-rows-1 mx-10 pb-5"
+            className="grid grid-rows-1 sm:mx-5 mx-2 px-5 pb-5"
         >
             <div className="border-b border-l border-r border-zinc-100/20 bg-[#191919] rounded-b-md  p-10 shadow-md drop-shadow-lg hover:inner-shadow mx-auto max-w-prose text-lg">
                 <div

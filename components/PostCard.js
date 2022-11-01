@@ -3,7 +3,7 @@ import Link from 'next/link';
 export default function PostCard(props) {
     return (
         <Link href={`posts/${props.post.slug}`}>
-            <div className="py-10 px-5 rounded-md shadow-lg bg-[#191919] drop-shadow-lg shadow-gray-900/5 border border-zinc-100/10 hover:border-zinc-200/50 hover:inner-shadow hover:transition ease-in-out delay-150 hover:-translate-y-2 hover:scale-200 duration-300">
+            <div className="py-10 sm:mx-5 mx-2 px-5 rounded-md shadow-lg bg-[#191919] drop-shadow-lg shadow-gray-900/5 border border-zinc-100/10 hover:border-zinc-200/50 hover:inner-shadow hover:transition ease-in-out delay-150 hover:-translate-y-2 hover:scale-200 duration-300">
                 <div className="mx-auto max-w-prose text-lg hover:inner-shadow hover:rounded-lg">
                     <h1>
                         <span className="block text-lg font-md text-[#F57A89]">{props.post.frontmatter.date}</span>
