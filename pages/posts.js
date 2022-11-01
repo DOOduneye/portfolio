@@ -22,7 +22,9 @@ const HeadingSection = tw.section`
     flex
     flex-row
     justify-center
-    p-12
+    pt-20
+    pb-12
+    px-12
 `;
 
 const MotionContainer = motion(Container);

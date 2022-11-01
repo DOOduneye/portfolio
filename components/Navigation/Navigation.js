@@ -20,7 +20,6 @@ const variants = {
 };
 
 const NavContainer = tw.nav`
-
 `;
 
 const Section = tw.section`
@@ -40,7 +39,7 @@ export default function Navigation() {
     const active = path.includes('/posts/') ? false : true;
 
     return active ? (
-        <MotionNavContainer variants={variants} initial="hidden" animate="animate">
+        <MotionNavContainer variants={variants} initial="hidden" animate="animate" className="fixed z-50 w-full pb-1 pattern-dots-sm bg-[#191919] sm:static">
             <Section className="pt-5 flex">
                 <NavItem title={'Home'} link={'/'} />
                 <NavItem title={'Blog'} link={'/posts'} />
@@ -54,7 +53,7 @@ export default function Navigation() {
 
             </Section>
             <Section className="sm:flex block justify-center">
-                </Section>
+            </Section>
 
         </MotionNavContainer>
         

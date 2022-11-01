@@ -80,7 +80,7 @@ const MotionGrid = motion(Grid);
 
 export default function About({ frontmatter: { title, date }, mdxSource }) {
     return (
-        <MotionGrid initial="initial" animate="animate" exit="exit" variants={variants}>
+        <MotionGrid initial="initial" animate="animate" exit="exit" variants={variants} className="pt-20">
             <HeadingContainer>
                 <h1>
                     <Date>{date}</Date>
