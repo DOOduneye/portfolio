@@ -2,6 +2,9 @@ import NavItem from './NavItem';
 import Social from './Social';
 import ThemeToggle from './ThemeToggle.js';
 
+import { faBars } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 import tw from 'tailwind-styled-components';
 
 import { motion } from 'framer-motion';
@@ -17,13 +20,11 @@ const variants = {
 };
 
 const NavContainer = tw.nav`
-    flex
-    flex-row
-    justify-center
-    items-center
+
 `;
 
 const Section = tw.section`
+    justify-center
     flex 
     flex-row 
     flex-nowrap 
@@ -40,7 +41,7 @@ export default function Navigation() {
 
     return active ? (
         <MotionNavContainer variants={variants} initial="hidden" animate="animate">
-            <Section className="pt-5">
+            <Section className="pt-5 hidden sm:flex">
                 <NavItem title={'Home'} link={'/'} />
                 <NavItem title={'Blog'} link={'/posts'} />
                 <NavItem title={'Projects'} link={'/projects'} />
@@ -48,12 +49,30 @@ export default function Navigation() {
                 {/* <NavItem title={"Uses"} link={"/uses"} /> */}
                 <Social />
 
-                <Section>
+                {/* <Section>
                     <ThemeToggle />
-                </Section>
+                </Section> */}
+
+            </Section>
+
+            <Section className="pt-10 flex sm:hidden">
+                <FontAwesomeIcon icon={faBars} className="text-[#4ECDC4] text-2xl md:hidden" />
             </Section>
         </MotionNavContainer>
+        
     ) : (
         <MotionNavContainer variants={variants} initial="hidden" animate="animate" />
     );
 }
+
+// const Navagation = () => {
+//     const path = userRouter().pathname;
+//     const active = path.includes('/posts/') ? false : true;
+
+//     return active ? (
+//         <nav className="md:hiden flex flex-row justify-center">
+
+//         </nav>
+//     )
+// }
+

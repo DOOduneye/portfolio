@@ -2,7 +2,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 
 import { motion } from 'framer-motion';
-
 import tw from 'tailwind-styled-components';
 
 const variants = {
@@ -25,17 +24,14 @@ const gradientVariants = {
     },
 };
 
-const FlexColContainer = tw.section`
-    flex
-    flex-col
+const Gradient = tw.p`
+    bg-clip-text
+    bg-gradient-to-r
+    from-[#4ECDC4]
+    to-[#B4A0E5]
 `;
 
-const FlexRowContainer = tw.section`
-    flex
-    flex-row
-`;
-
-const UnderlineTransition = tw.span`
+const Underline = tw.span`
     hover:underline
     hover:decoration-[#4ECDC4]
     hover:underline-offset-8 
@@ -47,77 +43,56 @@ const UnderlineTransition = tw.span`
     hover:translatex-1
 `;
 
-const GradientP = tw.p`
-    font-sans
-    font-bold 
-    text-transparent
-    text-3xl
-    bg-clip-text
-    bg-gradient-to-r
-    from-[#4ECDC4]
-    to-[#B4A0E5]
-`;
-
-const MotionGradientP = motion(GradientP);
-
 const HeaderText = tw.h1`
+    text-slate-100
+    lg:text-9xl
+    text-7xl
     font-sans 
     font-bold 
-    text-8xl 
     pb-3
-    text-slate-100
 `;
 
+const Paragraph = motion(tw(Gradient)`
+    lg:text-3xl
+    md:text-2xl
+    text-xl
+    text-transparent
+    text-left
+    font-sans
+    font-bold
+`);
+
+
 const MotionIcon = motion(tw.a`
+    md:inline-block
+    hidden
     text-[#4ECDC4]
-    transition
-    ease-in-out 
-    delay-150
-    hover:-translate-y-1 
-    hover:scale-110 
-    duration-300 
     drop-shadow-md
+    text-8xl
+    pl-2
 `);
 
 export default function Main() {
     return (
-        <FlexRowContainer className="p-12">
-            <FlexColContainer>
-                <FlexRowContainer className="gap-20">
-                    <div>
-                        <HeaderText>
-                            <motion.span
-                                variants={variants}
-                                initial="hidden"
-                                animate="animate"
-                                className="drop-shadow-lg"
-                            >
-                                <motion.span initial="initial" animate="animate" variants={gradientVariants}>
-                                    {"Hi, I'm David Oduneye"}
-                                    <MotionIcon
-                                        variants={variants}
-                                        initial="hidden"
-                                        animate="animate"
-                                        href="mailto:oduneye.d@northeastern.edu"
-                                    >
-                                        <FontAwesomeIcon icon={faPaperPlane} />
-                                    </MotionIcon>
-                                </motion.span>
-                            </motion.span>
-                        </HeaderText>
+        <div>
+            <HeaderText>
+                <motion.span variants={variants} initial="hidden" animate="animate" className="drop-shadow-lg">
+                    <motion.span initial="initial" animate="animate" variants={gradientVariants}>
+                        David Oduneye
+                        
+                        <MotionIcon variants={variants} initial="hidden" animate="animate"
+                            href="mailto:oduneye.d@northeastern.edu">
+                            <FontAwesomeIcon icon={faPaperPlane} />
+                        </MotionIcon>
+                    </motion.span>
+                </motion.span>
+            </HeaderText>
 
-                        <MotionGradientP variants={variants} initial="hidden" animate="animate">
-                            {'Passionate about building'}
-                            <br />
-                            {'software that is both '}
-                            <UnderlineTransition>{' beautiful '}</UnderlineTransition>
-                            {' and '}
-                            <UnderlineTransition>{' functional'}</UnderlineTransition>
-                            {'.'}
-                        </MotionGradientP>
-                    </div>
-                </FlexRowContainer>
-            </FlexColContainer>
-        </FlexRowContainer>
+            <Paragraph variants={variants} initial="hidden" animate="animate">
+                Passionate about building <br /> Software that is both
+                <Underline> beautiful </Underline>and
+                <Underline> functional</Underline>.
+            </Paragraph>
+        </div>
     );
 }
