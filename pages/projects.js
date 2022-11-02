@@ -21,9 +21,7 @@ const HeadingSection = tw.section`
     flex 
     flex-row 
     justify-center 
-    pt-20
-    pb-12
-    px-12
+    p-12
 `;
 const MotionContainer = motion(Container);
 
@@ -44,7 +42,7 @@ const HeadingText = tw.p`
 
 export default function Projects({ projects }) {
     return (
-        <MotionContainer initial="initial" animate="animate" exit="exit" variants={variants}>
+        <MotionContainer initial="initial" animate="animate" exit="exit" variants={variants} >
             <HeadingSection>
                 <HeadingText>{"Things I've built* (and things I'm working on)."}</HeadingText>
             </HeadingSection>
