@@ -1,62 +1,26 @@
-import ProjectCard from '../components/ProjectCard';
-
-import { motion } from 'framer-motion';
-import variants from '../utils/motion';
+import ProjectCard from '@/components/ProjectCard'
+import CardHeader from '@/components/Card/CardHeader'
+import { ContentContainer, MapProjects } from '@/styles/styles';
 
 import fs from 'fs';
 import * as path from 'path';
 import matter from 'gray-matter';
 
-import tw from 'tailwind-styled-components';
-
-const Container = tw.main`
-    grid 
-    grid-flow-row 
-    auto-rows-max
-    h-full
-    w-full
-    mb-10
-`;
-const HeadingSection = tw.section`
-    flex 
-    flex-row 
-    justify-center 
-    p-12
-`;
-const MotionContainer = motion(Container);
-
-const MapContainer = tw.section`
-    grid
-    mx-auto 
-    grid-flow-rows
-    gap-4
-    sm:px-1
-    px-5
-`;
-
-const HeadingText = tw.p`
-    mt-1
-    text-base 
-    text-gray-500
-`;
-
-export default function Projects({ projects }) {
+const Projects = ({ projects }) => {
     return (
-        <MotionContainer initial="initial" animate="animate" exit="exit" variants={variants} >
-            <HeadingSection>
-                <HeadingText>{"Things I've built* (and things I'm working on)."}</HeadingText>
-            </HeadingSection>
+        <ContentContainer>
+            <CardHeader title={'Things I\'ve built* (and things I\'m working on).'} />
 
-            <MapContainer>
+            <MapProjects>
                 {projects.map((project, index) => (
                     <ProjectCard key={index} project={project} />
                 ))}
-            </MapContainer>
-        </MotionContainer>
+            </MapProjects>
+        </ContentContainer>
     );
 }
 
-export const getStaticProps = async () => {
+const getStaticProps = async () => {
     const files = fs.readdirSync(path.join('pages', '../content/projects'));
 
     const projects = files.map((filename) => {
@@ -68,3 +32,6 @@ export const getStaticProps = async () => {
 
     return { props: { projects } };
 };
+
+export { getStaticProps };
+export default Projects;

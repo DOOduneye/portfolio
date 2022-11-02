@@ -1,67 +1,27 @@
-import PostCard from '../components/PostCard';
-
-import { motion } from 'framer-motion';
-import variants from '../utils/motion';
+import PostCard from '@/components/PostCard'
+import CardHeader from '@/components/Card/CardHeader'
+import { ContentContainer, MapPosts } from '@/styles/styles';
 
 import fs from 'fs';
 import * as path from 'path';
 import matter from 'gray-matter';
 
-import tw from 'tailwind-styled-components';
 
-const Container = tw.main`  
-    grid
-    grid-flow-row
-    auto-rows-max
-    h-full
-    w-full
-    mb-10
-`;
-
-const HeadingSection = tw.section`
-    flex
-    flex-row
-    justify-center
-    pt-20
-    pb-12
-    px-12
-`;
-
-const MotionContainer = motion(Container);
-
-const MapContainer = tw.section`
-    grid 
-    grid-col-1 
-    md:grid-cols-1 
-    lg:grid-cols-3 
-    gap-5 
-    px-5
-    
-`;
-
-const HeadingText = tw.p`
-    mt-1
-    text-base
-    text-gray-500
-`;
-
-export default function Posts({ posts }) {
+const Posts = ({ posts }) => {
     return (
-        <MotionContainer initial="initial" animate="animate" exit="exit" variants={variants}>
-            <HeadingSection>
-                <HeadingText>{"Things I've written."}</HeadingText>
-            </HeadingSection>
+        <ContentContainer>
+            <CardHeader title={'Things I\'ve written.'} />
 
-            <MapContainer>
+            <MapPosts>
                 {posts.map((post, index) => (
                     <PostCard key={index} post={post} />
                 ))}
-            </MapContainer>
-        </MotionContainer>
+            </MapPosts>
+        </ContentContainer>
     );
 }
 
-export const getStaticProps = async () => {
+const getStaticProps = async () => {
     const files = fs.readdirSync(path.join('pages', '../content/posts'));
 
     const posts = files.map((filename) => {
@@ -80,3 +40,6 @@ export const getStaticProps = async () => {
         },
     };
 };
+
+export { getStaticProps };
+export default Posts;
