@@ -1,9 +1,7 @@
 import Title from './Title';
-import variants from '../../utils/motion';
 
 import { motion } from 'framer-motion';
 import tw from 'tailwind-styled-components';
-
 
 const Gradient = tw.p`
     bg-clip-text
@@ -34,9 +32,22 @@ const Paragraph = motion(tw(Gradient)`
     font-bold
 `);
 
+const variants = {
+    hidden: { opacity: 0, x: -100 },
+    animate: {
+        opacity: 1,
+        x: 0,
+        transition: { duration: 1, delay: 0.5, ease: [0.6, 0.05, -0.01, 0.9] },
+    },
+    exit: {
+        opacity: 0,
+        x: 100,
+        transition: { duration: 1, ease: [0.6, 0.05, -0.01, 0.9] },
+    },
+};
 
 
-export default function Main() {
+const Main = () => {
     return (
         <div>
             <Title />
@@ -50,3 +61,4 @@ export default function Main() {
     );
 }
 
+export default Main;

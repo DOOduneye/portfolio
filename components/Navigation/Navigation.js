@@ -3,20 +3,14 @@ import { useRouter } from 'next/router';
 import NavItem from './NavItem';
 import Social from './Social';
 import ThemeToggle from './ThemeToggle.js';
-import variants from '../../utils/motion'
+import variants from '@/utils/motion'
 
 import { motion } from 'framer-motion';
 import tw from 'tailwind-styled-components';
 
-const NavContainer = tw.nav`
-    fixed 
-    z-50 
-    w-full 
-    pb-1 
-    pattern-dots-sm 
-    bg-[#191919] 
-    sm:static
-`;
+import { NavigationContainer } from '@/styles/styles';
+
+const MotionNavContainer = motion(NavigationContainer);
 
 const Section = tw.section`
     justify-center
@@ -25,8 +19,6 @@ const Section = tw.section`
     flex-nowrap 
     gap-10
 `;
-
-const MotionNavContainer = motion(NavContainer);
 
 const Navigation = () => {
     const path = useRouter().pathname;
