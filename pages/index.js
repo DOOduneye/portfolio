@@ -1,8 +1,7 @@
-import Main from '../components/Main.js';
-
-import { motion } from 'framer-motion';
+import Main from '../components/Main/Main.js';
 import variants from '../utils/motion';
 
+import { motion } from 'framer-motion';
 import tw from 'tailwind-styled-components';
 
 const Container = motion(tw.div`
@@ -12,7 +11,6 @@ const Container = motion(tw.div`
     items-center 
     p-14
 `);
-
 
 const Home = () => {
     return (
