@@ -6,43 +6,38 @@ import matter from 'gray-matter';
 import { serialize } from 'next-mdx-remote/serialize';
 import { MDXRemote } from 'next-mdx-remote';
 
-import { motion } from 'framer-motion';
-import variants from '../utils/motion';
-
 import tw from 'tailwind-styled-components';
 
-const Grid = tw.main`
-    grid
-    grid-flow-row
-    auto-rows-max
-    h-full
-    sm:m-10
-    m-5
-`;
-
-const HeadingContainer = tw.section`
+const TextContainer = tw.section`
+    flex 
+    flex-col
+    justify-center
+    bg-[#191919] 
     border
     border-zinc-100/10 
-    hover:border-zinc-200/50 
-    bg-[#191919] 
-    rounded-md 
-    p-10 
-    shadow-md 
-    drop-shadow-sm 
-    hover:inner-shadow 
-    hover:transition 
-    ease-in-out 
-    delay-150 
-    hover:-translate-y-2 
-    hover:scale-200 
-    duration-300 
-    mx-auto 
-    max-w-prose 
     text-lg 
     text-gray-400 
+    font-light
     leading-relaxed
     racking-wide 
-    font-light
+    rounded-md 
+    p-10 
+    my-10
+    mx-auto
+    max-w-prose
+
+    lg:hover:border-zinc-200/50 
+    lg:hover:inner-shadow 
+    lg:hover:transition 
+    lg:hover:scale-200 
+    lg:hover:-translate-y-2 
+    lg:ease-in-out 
+    lg:delay-150 
+    lg:duration-300 
+    lg:shadow-md 
+    lg:drop-shadow-sm 
+    lg:transform
+
 `;
 
 const Date = tw.span`
@@ -76,22 +71,18 @@ const Content = tw.section`
     text-left
 `;
 
-const MotionGrid = motion(Grid);
-
-export default function About({ frontmatter: { title, date }, mdxSource }) {
+const About = ({ frontmatter: { title, date }, mdxSource }) => {
     return (
-        <MotionGrid initial="initial" animate="animate" exit="exit" variants={variants} className="pt-20">
-            <HeadingContainer>
-                <h1>
-                    <Date>{date}</Date>
-                    <Title>{title}</Title>
-                </h1>
+        <TextContainer>
+            <h1>
+                <Date>{date}</Date>
+                <Title>{title}</Title>
+            </h1>
 
-                <Content>
-                    <MDXRemote {...mdxSource} />
-                </Content>
-            </HeadingContainer>
-        </MotionGrid>
+            <Content>
+                <MDXRemote {...mdxSource} />
+            </Content>
+        </TextContainer>
     );
 }
 
@@ -110,3 +101,4 @@ const getStaticProps = async () => {
 };
 
 export { getStaticProps };
+export default About;
