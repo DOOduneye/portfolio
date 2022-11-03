@@ -1,6 +1,7 @@
 import ProjectCard from '@/components/ProjectCard'
 import CardHeader from '@/components/Card/CardHeader'
-import { ContentContainer, MapProjects } from '@/styles/styles';
+import { ContentContainer } from '@/styles/styles';
+import { MapProjects } from '@/styles/styles';
 
 import fs from 'fs';
 import * as path from 'path';

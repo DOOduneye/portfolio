@@ -1,16 +1,9 @@
 import links from '../../content/links';
 import SocialItem from './SocialItem';
 
-import tw from 'tailwind-styled-components';
+import { SocialContainer } from '@/styles/styles';
 
-const SocialContainer = tw.ul`
-    flex 
-    flex-row 
-    gap-10 
-    animate-pulse
-`;
-
-export default function Social() {
+const Social = () => {
     return (
         <SocialContainer>
             {links.map((link) => (
@@ -19,3 +12,5 @@ export default function Social() {
         </SocialContainer>
     );
 }
+
+export default Social;

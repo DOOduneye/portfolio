@@ -9,25 +9,29 @@ import tw from 'tailwind-styled-components';
 
 import PostHeader from '@/components/Post/PostHeader';
 
-const PostContainer = tw.main`
-    flex 
-    flex-col
-    justify-center
-    bg-[#191919] 
-    border
-    border-zinc-100/10 
-    text-lg 
-    text-gray-400 
-    font-light
-    leading-relaxed
-    racking-wide 
-    rounded-md 
-    p-10 
-    my-10
-    mx-auto
-    max-w-prose
+const PostMain = tw.main`
+    grid grid-rows-1 sm:mx-5 mx-2 px-5 pb-5
 `;
 
+const PostContainer = tw.main`
+    border-b border-l border-r border-zinc-100/20 bg-[#191919] rounded-b-md  p-10 shadow-md drop-shadow-lg hover:inner-shadow mx-auto max-w-prose text-lg
+`;
+//  flex 
+// flex-col
+// justify-center
+// bg-[#191919] 
+// border
+// border-zinc-100/10 
+// text-lg 
+// text-gray-400 
+// font-light
+// leading-relaxed
+// racking-wide 
+// rounded-md 
+// p-10 
+// my-10
+// mx-auto
+// max-w-prose
 
 const Content = tw.div`
     flex
@@ -42,6 +46,7 @@ const Content = tw.div`
 
 const PostPage = ({ frontmatter: { title, date }, mdxSource }) => {
     return (
+        <PostMain>
         <PostContainer>
             <PostHeader title={title} date={date}/>
 
@@ -49,6 +54,7 @@ const PostPage = ({ frontmatter: { title, date }, mdxSource }) => {
                 <MDXRemote {...mdxSource} />
             </Content>
         </PostContainer>
+        </PostMain>
     );
 };
 

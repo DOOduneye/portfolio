@@ -6,7 +6,7 @@ module.exports = {
             height: {
                 '90': '90vh',
             }       
-         },
+        },
     },
     plugins: [],
 };

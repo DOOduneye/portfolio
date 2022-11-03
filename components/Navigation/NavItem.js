@@ -1,9 +1,9 @@
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 
-import { NavItemContainer } from 'styles/styles';
+import { NavItemContainer } from '@/styles/styles';
 
-export default function NavItem(props) {
+const NavItem = (props) => {
     const { title, link } = props;
     const location = useRouter().pathname;
     const active = location == props.link ? true : false;
@@ -16,3 +16,5 @@ export default function NavItem(props) {
         </NavItemContainer>
     );
 }
+
+export default NavItem;
