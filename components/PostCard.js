@@ -1,19 +1,25 @@
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 export default function PostCard(props) {
+    const { post: { frontmatter: { title, date, description }, slug } } = props;
+
+    const router = useRouter();
+    console.log(router.pathname);
+
     return (
-        <Link href={`posts/${props.post.slug}`}>
+        <Link href={`posts/${slug}`}>
             <div className="py-10 mx-2 px-5 rounded-md shadow-lg bg-[#191919] drop-shadow-lg shadow-gray-900/5 border border-zinc-100/10 hover:border-zinc-200/50 hover:inner-shadow hover:transition ease-in-out delay-150 hover:-translate-y-2 hover:scale-200 duration-300">
                 <div className="mx-auto max-w-prose text-lg hover:inner-shadow hover:rounded-lg">
                     <h1>
-                        <span className="block text-lg font-md text-[#F57A89]">{props.post.frontmatter.date}</span>
+                        <span className="block text-lg font-md text-[#F57A89]">{date}</span>
                         <span className="mt-2 block text-3xl font-bold leading-8 tracking-tight text-slate-200 sm:text-4xl">
-                            {props.post.frontmatter.title}
+                            {title}
                         </span>
                     </h1>
 
                     <p className="mt-5 text-lg leading-8 text-slate-200 text-left">
-                        {props.post.frontmatter.description}
+                        {description}
                     </p>
 
                     <div className="mt-5 ">
