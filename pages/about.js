@@ -56,7 +56,11 @@ const Title = tw.span`
     font-bold 
     leading-8 
     tracking-tight 
-    text-[#DA4167] 
+    text-[#F57A89] 
+    underline
+    underline-offset-8
+    decoration-[#F57A89]
+    decoration-3
     sm:text-4xl
 `;
 

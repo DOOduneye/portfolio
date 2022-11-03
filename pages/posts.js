@@ -9,25 +9,6 @@ import fs from 'fs';
 import * as path from 'path';
 import matter from 'gray-matter';
 
-// const ContentContainer = tw.main`  
-//     grid
-//     grid-flow-row
-//     auto-rows-max
-//     h-full
-//     w-full
-//     mb-10
-// `;
-
-// const MapPosts = tw.section`
-//     grid 
-//     grid-col-1 
-//     md:grid-cols-1 
-//     lg:grid-cols-3 
-//     gap-5 
-//     px-5
-    
-// `;
-
 const Posts = ({ posts }) => {
     return (
         <ContentContainer>
