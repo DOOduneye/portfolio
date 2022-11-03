@@ -1,11 +1,7 @@
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 
 export default function PostCard(props) {
     const { post: { frontmatter: { title, date, description }, slug } } = props;
-
-    const router = useRouter();
-    console.log(router.pathname);
 
     return (
         <Link href={`posts/${slug}`}>
