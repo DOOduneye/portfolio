@@ -3,13 +3,20 @@ import { motion } from 'framer-motion';
 
 /* Containers */
 
-export const HomeContainer = motion(tw.div`
-    h-90
+export const HomeContainer = tw.div`
     flex 
-    justify-center 
+    flex-col 
     items-center 
-    p-14
-`);
+    justify-center 
+    h-screen
+    py-2
+`;
+
+// h-90
+// grid
+// justify-center 
+// items-center 
+// p-14
 
 export const NavItemContainer = tw.div`
     pt-2
@@ -47,6 +54,20 @@ export const NavigationContainer = tw.nav`
     sm:static
 `;
 
+
+export const FooterContainer = tw.div`
+    w-full
+    left-0
+    bottom-0 
+    flex 
+    flex-row 
+    justify-center 
+    items-center
+    text-slate-100 
+    pb-5
+`;
+
+
 /* Posts and Projects */
 export const ContentContainer = tw.main`  
     grid
@@ -57,24 +78,23 @@ export const ContentContainer = tw.main`
     mb-10
 `;
 
-export const MotionContentContainer = motion(ContentContainer);
-
-const Map = tw.section`
+export const MapPosts = tw.section`
     grid 
-    px-5
-    gap-5
-`
-
-export const MapPosts = tw(Map)`
     grid-col-1 
     md:grid-cols-1 
     lg:grid-cols-3 
+    gap-5 
+    px-5
+    
 `;
 
-export const MapProjects = tw(Map)`
-    grid-flow-rows
+export const MapProjects = tw.section`
+    grid
     mx-auto 
+    grid-flow-rows
+    gap-5
     sm:px-1
+    px-5
 `;
 
 export const HeadingSection = tw.section`

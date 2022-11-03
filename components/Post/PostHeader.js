@@ -6,35 +6,28 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import tw from 'tailwind-styled-components';
 
 const Header = tw.div`
-    flex
-    flex-row
-    justify-center
-    items-center
-    gap-10
-    py-8
-    mx-auto
-    max-w-prose
-    rounded-lg 
-    bg-gradient-to-r 
-    to-[#F57A89] 
-    from-[#191919]
+flex flex-row justify-center py-8  mx-auto max-w-prose px-10 rounded-lg bg-gradient-to-r to-[#F57A89] from-[#191919]
 `;
 
+// flex
+// flex-row
+// justify-center
+// items-center
+// gap-10
+// py-8
+// mx-auto
+// max-w-prose
+// rounded-lg 
+// bg-gradient-to-r 
+// to-[#F57A89] 
+// from-[#191919]
 
 const Title = tw.span`
-    text-3xl 
-    font-bold 
-    leading-8 
-    tracking-tight
-    sm:text-4xl 
-    text-slate-200
+flex-auto mt-2 block text-center text-3xl font-bold leading-8 tracking-tightsm:text-4xl text-slate-200
 `;
 
 const Date = tw.span`
-    font-bold 
-    leading-8 
-    tracking-tight 
-    text-slate-200
+flex-2 mt-2 block font-bold leading-8 tracking-tight text-slate-200
 `;
 
 const BackButton = tw.span`

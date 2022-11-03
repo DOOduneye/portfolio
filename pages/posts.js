@@ -1,11 +1,32 @@
 import PostCard from '@/components/PostCard'
 import CardHeader from '@/components/Card/CardHeader'
-import { ContentContainer, MapPosts } from '@/styles/styles';
+import { ContentContainer } from '@/styles/styles';
+import { MapPosts } from '@/styles/styles';
+
+import tw from 'tailwind-styled-components';
 
 import fs from 'fs';
 import * as path from 'path';
 import matter from 'gray-matter';
 
+// const ContentContainer = tw.main`  
+//     grid
+//     grid-flow-row
+//     auto-rows-max
+//     h-full
+//     w-full
+//     mb-10
+// `;
+
+// const MapPosts = tw.section`
+//     grid 
+//     grid-col-1 
+//     md:grid-cols-1 
+//     lg:grid-cols-3 
+//     gap-5 
+//     px-5
+    
+// `;
 
 const Posts = ({ posts }) => {
     return (
