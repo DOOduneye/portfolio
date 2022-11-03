@@ -12,12 +12,6 @@ export const HomeContainer = tw.div`
     py-2
 `;
 
-// h-90
-// grid
-// justify-center 
-// items-center 
-// p-14
-
 export const NavItemContainer = tw.div`
     pt-2
     font-sans

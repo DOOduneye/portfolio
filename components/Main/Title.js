@@ -13,10 +13,10 @@ const HeaderText = tw.h1`
     pb-3
 `;
 
-const Icon = tw.div`
+const Icon = tw.a`
     md:inline-block
     hidden
-    text-[#4ECDC4]
+    text-[#B4A0E5]
     drop-shadow-md
     text-8xl
     pl-2
