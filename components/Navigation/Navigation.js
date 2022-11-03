@@ -3,14 +3,10 @@ import { useRouter } from 'next/router';
 import NavItem from './NavItem';
 import Social from './Social';
 import ThemeToggle from './ThemeToggle.js';
-import variants from '@/utils/motion'
 
-import { motion } from 'framer-motion';
 import tw from 'tailwind-styled-components';
 
 import { NavigationContainer } from '@/styles/styles';
-
-const MotionNavContainer = motion(NavigationContainer);
 
 const Section = tw.section`
     justify-center
@@ -26,7 +22,7 @@ const Navigation = () => {
 
     return active ? 
     (
-        <MotionNavContainer variants={variants} initial="hidden" animate="animate">
+        <NavigationContainer>
             <Section className="pt-5 flex">
                 <NavItem title={'Home'} link={'/'} />
                 <NavItem title={'Blog'} link={'/posts'} />
@@ -42,8 +38,8 @@ const Navigation = () => {
                     <ThemeToggle />
                 </Section>
             </Section>
-        </MotionNavContainer>
-    ) : (<MotionNavContainer variants={variants} initial="hidden" animate="animate" />);
+        </NavigationContainer>
+    ) : (<NavigationContainer/>);
 }
 
 export default Navigation;
