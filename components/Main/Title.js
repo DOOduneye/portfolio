@@ -22,19 +22,26 @@ const Icon = tw.div`
     pl-2
 `;
 
-
+const Gradient = tw.div`
+    bg-clip-text
+    text-transparent
+    bg-gradient-to-r
+    from-[#4ECDC4]
+    to-[#B4A0E5]
+    max-h-fit
+`;
 
 const Title = () => {
     return (
         <HeaderText>
             <span className="drop-shadow-lg">
-                <span>
+                <Gradient>
                     David Oduneye
 
                     <Icon href="mailto:oduneye.d@northeastern.edu">
                         <FontAwesomeIcon icon={faPaperPlane} />
                     </Icon>
-                </span>
+                </Gradient>
             </span>
         </HeaderText>
     );
