@@ -33,6 +33,19 @@ const Content = tw.div`
     mx-auto 
     max-w-prose 
     text-slate-50
+    
+    px-5
+    font-normal	
+    subpixel-antialiase
+    text-lg
+    leading-normal
+    align-middle
+    break-words
+    text-justify
+    font-sans
+    text-slate-100
+    
+
 `;
 
 const PostPage = ({ frontmatter: { title, date }, mdxSource }) => {
