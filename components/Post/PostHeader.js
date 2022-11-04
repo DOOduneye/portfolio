@@ -9,6 +9,8 @@ const Header = tw.div`
     flex 
     flex-row 
     justify-center 
+    items-center
+    gap-5
     py-8  
     mx-auto 
     max-w-prose 
@@ -40,7 +42,7 @@ const BackButton = tw.span`
 const PostHeader = ({title, date}) => {
     return (
         <Header>
-            <Link href="/posts" className="text-slate-200 hover:text-slate-300">
+            <Link href="/posts" className="text-slate-200 hover:text-slate-300 pt-2">
                 <BackButton><FontAwesomeIcon icon={faArrowLeft}/></BackButton>
             </Link>
 

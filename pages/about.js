@@ -7,38 +7,7 @@ import { serialize } from 'next-mdx-remote/serialize';
 import { MDXRemote } from 'next-mdx-remote';
 
 import tw from 'tailwind-styled-components';
-
-const TextContainer = tw.section`
-    flex 
-    flex-col
-    justify-center
-    bg-[#191919] 
-    border
-    border-zinc-100/10 
-    text-lg 
-    text-gray-400 
-    font-light
-    leading-relaxed
-    racking-wide 
-    rounded-md 
-    p-10 
-    my-10
-    mx-auto
-    max-w-prose
-
-    lg:hover:border-zinc-200/50 
-    lg:hover:inner-shadow 
-    lg:hover:transition 
-    lg:hover:scale-200 
-    lg:hover:-translate-y-2 
-    lg:ease-in-out 
-    lg:delay-150 
-    lg:duration-300 
-    lg:shadow-md 
-    lg:drop-shadow-sm 
-    lg:transform
-
-`;
+import { TextContainer } from '@/styles/styles';
 
 const Date = tw.span`
     block 

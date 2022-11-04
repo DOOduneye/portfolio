@@ -48,6 +48,7 @@ export const NavigationContainer = tw.nav`
     sm:static
 `;
 
+export const MotionNavigationContainer = motion(NavigationContainer);
 
 export const FooterContainer = tw.div`
     w-full
@@ -61,6 +62,37 @@ export const FooterContainer = tw.div`
     py-5
 `;
 
+export const TextContainer = tw.section`
+    flex 
+    flex-col
+    justify-center
+    bg-[#191919] 
+    border
+    border-zinc-100/10 
+    text-lg 
+    text-gray-400 
+    font-light
+    leading-relaxed
+    racking-wide 
+    rounded-md 
+    p-10 
+    my-10
+    mx-auto
+    max-w-prose
+
+    lg:hover:border-zinc-200/50 
+    lg:hover:inner-shadow 
+    lg:hover:transition 
+    lg:hover:scale-200 
+    lg:hover:-translate-y-2 
+    lg:ease-in-out 
+    lg:delay-150 
+    lg:duration-300 
+    lg:shadow-md 
+    lg:drop-shadow-sm 
+    lg:transform
+
+`;
 
 /* Posts and Projects */
 export const ContentContainer = tw.main`  

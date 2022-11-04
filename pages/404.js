@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faFrownOpen } from '@fortawesome/free-solid-svg-icons';
 
 import { motion } from 'framer-motion';
-import variants from '../utils/motion';
+import variants from '../styles/motion';
 
 import tw from 'tailwind-styled-components';
 
