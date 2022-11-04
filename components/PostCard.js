@@ -9,7 +9,7 @@ export default function PostCard(props) {
                 <div className="mx-auto max-w-prose text-lg hover:inner-shadow hover:rounded-lg">
                     <h1>
                         <span className="block text-lg font-md text-[#F57A89]">{date}</span>
-                        <span className="mt-2 block text-3xl font-bold leading-8 tracking-tight text-slate-200 sm:text-4xl">
+                        <span className="capitalize mt-2 block text-3xl font-bold leading-8 tracking-tight text-slate-200 sm:text-4xl">
                             {title}
                         </span>
                     </h1>
