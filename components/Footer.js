@@ -21,7 +21,7 @@ const Footer = () => {
                 <Link href="/code-of-conduct">
                     {/* <LinkSpan>Code of Conduct</LinkSpan> */}
                 </Link>
-                <a href="./assets/text/Resume.pdf" target="_blank"><LinkSpan>Resume</LinkSpan></a> | © 2022 David Oduneye. All rights reserved.
+                <Link href="/assets/text/Resume.pdf"><LinkSpan>Resume</LinkSpan></Link> | © 2022 David Oduneye. All rights reserved.
             </P>
         </FooterContainer>
     );
