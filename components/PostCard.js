@@ -14,7 +14,7 @@ export default function PostCard(props) {
                         </span>
                     </h1>
 
-                    <p className="mt-5 text-lg leading-8 text-slate-200 text-left">
+                    <p className="normal-case mt-5 text-lg leading-8 text-slate-200 text-left">
                         {description}
                     </p>
 
