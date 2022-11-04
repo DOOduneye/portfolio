@@ -58,7 +58,7 @@ export const FooterContainer = tw.div`
     justify-center 
     items-center
     text-slate-100 
-    pb-5
+    py-5
 `;
 
 
@@ -69,7 +69,7 @@ export const ContentContainer = tw.main`
     auto-row-max
     h-full
     w-full
-    mb-10
+
 `;
 
 export const MapPosts = tw.section`

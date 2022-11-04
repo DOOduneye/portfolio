@@ -17,7 +17,7 @@ const LinkSpan = tw.span`
 const Footer = () => {
     return (
         <FooterContainer>
-            <P>
+            <P className="my-10">
                 <Link href="/code-of-conduct">
                     {/* <LinkSpan>Code of Conduct</LinkSpan> */}
                 </Link>
