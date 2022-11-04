@@ -66,7 +66,7 @@ export const FooterContainer = tw.div`
 export const ContentContainer = tw.main`  
     grid
     grid-flow-row
-    auto-rows-max
+    auto-row-max
     h-full
     w-full
     mb-10
