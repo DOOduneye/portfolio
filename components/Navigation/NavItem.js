@@ -9,7 +9,7 @@ const NavItem = (props) => {
     const active = location == props.link ? true : false;
 
     return (
-        <NavItemContainer >
+        <NavItemContainer>
             <Link href={active ? '#' : link} className={active ? 'text-slate-200 underline decoration-slate-200 underline-offset-8' : ''} passHref>
                 {title}
             </Link>
