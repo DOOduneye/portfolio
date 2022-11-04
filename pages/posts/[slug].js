@@ -9,6 +9,8 @@ import tw from 'tailwind-styled-components';
 
 import PostHeader from '@/components/Post/PostHeader';
 
+import { TextContainer } from '@/styles/styles';
+
 const PostMain = tw.main`
     grid 
     grid-rows-1 
@@ -35,15 +37,13 @@ const Content = tw.div`
 
 const PostPage = ({ frontmatter: { title, date }, mdxSource }) => {
     return (
-        <PostMain>
-            <PostContainer>
-                <PostHeader title={title} date={date}/>
+        <TextContainer>
+            <PostHeader title={title} date={date}/>
 
-                <Content>
-                    <MDXRemote {...mdxSource} />
-                </Content>
-            </PostContainer>
-        </PostMain>
+            <Content>
+                <MDXRemote {...mdxSource} />
+            </Content>
+        </TextContainer>
     );
 };
 

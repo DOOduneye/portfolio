@@ -23,7 +23,6 @@ const Gradient = tw.span`
     bg-clip-text text-transparent bg-gradient-to-r from-[#4ECDC4] to-[#B4A0E5]`
 ;
 
-
 const Title = () => {
     return (
         <HeaderText>

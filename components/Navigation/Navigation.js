@@ -6,7 +6,8 @@ import ThemeToggle from './ThemeToggle.js';
 
 import tw from 'tailwind-styled-components';
 
-import { NavigationContainer } from '@/styles/styles';
+import { MotionNavigationContainer as NavigationContainer } from '@/styles/styles';
+import { variants } from '@/styles/motion';
 
 const Section = tw.section`
     justify-center
@@ -22,7 +23,7 @@ const Navigation = () => {
 
     return active ? 
     (
-        <NavigationContainer>
+        <NavigationContainer inital="hidden" animate="animate" exit="exit" variants={variants}>
             <Section className="pt-5 flex">
                 <NavItem title={'Home'} link={'/'} />
                 <NavItem title={'Blog'} link={'/posts'} />
@@ -39,7 +40,7 @@ const Navigation = () => {
                 </Section>
             </Section>
         </NavigationContainer>
-    ) : (<NavigationContainer/>);
+    ) : (<NavigationContainer inital="hidden" animate="animate" exit="exit" variants={variants} />);
 }
 
 export default Navigation;
