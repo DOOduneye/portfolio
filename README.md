@@ -8,6 +8,16 @@
 - [Frame Motion](https://www.framer.com/motion/) - A great library for animation.
 - [MDX](https://mdxjs.com/) - For writing blog posts, MDX is a great library that allows you to write JSX in Markdown. In combination with NextJS, it makes it very easy to dynamically generate these posts. 
 
+
+### Theme Colors
+
+- ![#000000](https://via.placeholder.com/15/000000/000000?text=+) `#000000`
+- ![#FFFFFF](https://via.placeholder.com/15/F57A89/000000?text=+) `#F57A89`
+- ![#F9FAFB](https://via.placeholder.com/15/F9FAFB/000000?text=+) `#F9FAFB`
+- ![#F3F4F6](https://via.placeholder.com/15/F3F4F6/000000?text=+) `#F3F4F6`
+- ![#E5E7EB](https://via.placeholder.com/15/E5E7EB/000000?text=+) `#E5E7EB`
+- ![#D1D5DB](https://via.placeholder.com/15/D1D5DB/000000?text=+) `#D1D5DB`
+
 ### Running Locally
 
 Make sure you have [Node.js](http://nodejs.org/) installed.
@@ -19,4 +29,11 @@ $ npm install
 $ npm run dev
 ```
 
-Your app should now be running on [localhost:3000](http://localhost:3000/).
+The app should now be running on [localhost:3000](http://localhost:3000/).
+
+
+
+Copyright (c) - 2022
+You may not copy, distribute, or modify this project without the express written consent of the author.
+If you would like to use this project as a template for your own website, please contact me at oduneye.d@northeastern.edu.
+
