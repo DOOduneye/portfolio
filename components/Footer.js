@@ -17,11 +17,10 @@ const LinkSpan = tw.span`
 const Footer = () => {
     return (
         <FooterContainer>
-            <P className="my-10 flex justify-center">
-                <a href="/assets/text/README.html">
-                    <LinkSpan>README.md</LinkSpan> |
-                </a>
-                <Link href="/assets/text/Resume.pdf"><LinkSpan> Resume</LinkSpan></Link> | © 2022 David Oduneye. All rights reserved.
+            <P className="my-10 flex flex-row justify-center gap-0">
+                ——<a href="/assets/text/README.html"><LinkSpan> README.md—</LinkSpan></a>
+                <Link href="/assets/text/Resume.pdf"><LinkSpan>Resume—</LinkSpan></Link> 
+                <span>2022 David Oduneye © All rights reserved</span>——
             </P>
         </FooterContainer>
     );
