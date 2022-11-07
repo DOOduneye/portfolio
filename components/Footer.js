@@ -18,10 +18,10 @@ const Footer = () => {
     return (
         <FooterContainer>
             <P className="my-10">
-                <Link href="/code-of-conduct">
-                    {/* <LinkSpan>Code of Conduct</LinkSpan> */}
-                </Link>
-                <Link href="/assets/text/Resume.pdf"><LinkSpan>Resume</LinkSpan></Link> | © 2022 David Oduneye. All rights reserved.
+                <a href="/assets/text/README.html">
+                    <LinkSpan>README.md</LinkSpan> |
+                </a>
+                <Link href="/assets/text/Resume.pdf"><LinkSpan> Resume</LinkSpan></Link> | © 2022 David Oduneye. All rights reserved.
             </P>
         </FooterContainer>
     );
