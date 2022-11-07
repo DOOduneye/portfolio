@@ -44,7 +44,7 @@ const Content = tw.section`
     text-left
 `;
 
-const About = ({ frontmatter: { title, date }, mdxSource }) => {
+const Uses = ({ frontmatter: { title, date }, mdxSource }) => {
     return (
         <TextContainer>
             <h1>
@@ -74,4 +74,4 @@ const getStaticProps = async () => {
 };
 
 export { getStaticProps };
-export default About;
+export default Uses;
