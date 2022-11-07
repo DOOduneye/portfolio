@@ -35,7 +35,7 @@ const SubTitle = () => {
             Passionate about building <br /> Software that is both 
                 <Underline> functional </Underline> 
                 and 
-                <Underline> functional</Underline>.
+                <Underline> beautiful</Underline>.
         </Paragraph>
 
     )
