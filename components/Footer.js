@@ -17,7 +17,7 @@ const LinkSpan = tw.span`
 const Footer = () => {
     return (
         <FooterContainer>
-            <P className="my-10">
+            <P className="my-10 flex justify-center">
                 <a href="/assets/text/README.html">
                     <LinkSpan>README.md</LinkSpan> |
                 </a>
