@@ -12,15 +12,21 @@ const P = tw.p`
 
 const LinkSpan = tw.span`
     hover:text-gray-600 
+    cursor-pointer
+    hover:underline
+    hover:underline-offset-4
+    hover:decoration-thickness-2
+    hover:decoration-gray-600
+
 `;
 
 const Footer = () => {
     return (
         <FooterContainer>
-            <P className="my-10 flex flex-row justify-center gap-0">
-                ——<a href="/assets/text/README.html"><LinkSpan> README.md—</LinkSpan></a>
-                <Link href="/assets/text/Resume.pdf"><LinkSpan>Resume—</LinkSpan></Link> 
-                <span>2022 David Oduneye © All rights reserved</span>——
+            <P className="my-10 flex flex-col sm:flex-row justify-center gap-1">
+                <a href="/assets/text/README.html"><LinkSpan> README.md </LinkSpan></a>
+                <Link href="/assets/text/Resume.pdf"><LinkSpan> Resume </LinkSpan></Link> 
+                <span>2022 David Oduneye © All rights reserved</span>
             </P>
         </FooterContainer>
     );
