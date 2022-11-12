@@ -10,13 +10,16 @@ export default function ProjectCard(props) {
         <a href={url} rel="noopener noreferrer">
             <div className="py-10 px-5 rounded-md shadow-lg bg-[#191919] drop-shadow-lg shadow-gray-900/5 border border-zinc-100/10 hover:border-zinc-200/50 hover:inner-shadow hover:transition ease-in-out delay-150 hover:-translate-y-2 hover:scale-200 duration-300">
                 <div className="mx-auto max-w-prose text-lg hover:inner-shadow hover:rounded-lg">
-                    <h1>
-                        <span className="block text-lg font-semibold text-[#F57A89]">
-                            {props.project.frontmatter.date}
+                    <h1 className="flex flex-col gap-3 text-slate-200">
+                        <span className="flex flex-row gap-5 justify-between text-[#F57A89]">
+                            <span className="block text-3xl font-bold leading-8 tracking-tight sm:text-4xl">
+                                {props.project.frontmatter.title}
+                            </span>
+                            <span className="block text-lg font-semibold items-end mt-2">
+                                    {props.project.frontmatter.date}
+                            </span>
                         </span>
-                        <span className="mt-2 block text-3xl font-bold leading-8 tracking-tight text-slate-200 sm:text-4xl">
-                            {props.project.frontmatter.title}
-                        </span>
+                        <span className="block text-base font-medium rounded-lg px-3 py-2 text-left border border-zinc-100/10 w-max">{props.project.frontmatter.stack}</span>
                     </h1>
 
                     <p className="mt-5 text-lg leading-8 text-slate-200 text-left">
