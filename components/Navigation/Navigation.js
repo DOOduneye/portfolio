@@ -29,15 +29,14 @@ const Navigation = () => {
                 <NavItem title={'Blog'} link={'/posts'} />
                 <NavItem title={'Projects'} link={'/projects'} />
                 <NavItem title={'About'} link={'/about'} />
-                {/* <NavItem title={"Uses"} link={"/uses"} /> */}
                 
                 <Section className="sm:flex hidden">
                     <Social />
                 </Section>
 
-                <Section className="sm:flex hidden">
+                {/* <Section className="sm:flex hidden">
                     <ThemeToggle />
-                </Section>
+                </Section> */}
             </Section>
         </NavigationContainer>
     ) : (<NavigationContainer inital="hidden" animate="animate" exit="exit" variants={variants} />);
