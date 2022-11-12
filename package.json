@@ -30,11 +30,11 @@
         "react-dom": "18.2.0",
         "sass": "^1.55.0",
         "styled-components": "^5.3.6",
-        "tailwind-styled-components": "^2.2.0",
-        "twin.macro": "^2.8.2"
+        "tailwind-styled-components": "^2.2.0"
     },
     "devDependencies": {
         "autoprefixer": "^10.4.13",
+        "babel-plugin-styled-components": "^2.0.7",
         "eslint": "8.26.0",
         "eslint-config-next": "13.0.0",
         "postcss": "^8.4.18",
