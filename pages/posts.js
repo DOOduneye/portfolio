@@ -20,10 +20,7 @@ const MapPosts = tw.section`
 `;
 
 const Posts = ({ posts }) => {
-    posts = posts.sort((a, b) => {
-        return new Date(b.frontmatter.date) - new Date(a.frontmatter.date);
-    });
-
+    posts = posts.sort((a, b) => new Date(b.frontmatter.date) - new Date(a.frontmatter.date)).filter((post) => post.frontmatter.published);
     posts = posts.reverse();
 
     return (
