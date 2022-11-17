@@ -8,6 +8,11 @@ import * as path from 'path';
 import matter from 'gray-matter';
 
 const Projects = ({ projects }) => {
+
+    // Sort by date and title
+    projects = projects.sort((a, b) => new Date(b.frontmatter.date) - new Date(a.frontmatter.date));
+    projects = projects.sort((a, b) => a.frontmatter.title.localeCompare(b.frontmatter.title));
+
     return (
         <ContentContainer>
             <CardHeader title={'Things I\'ve built* (and things I\'m working on).'} />
