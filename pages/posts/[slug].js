@@ -41,7 +41,7 @@ const Content = tw.div`
     leading-normal
     align-middle
     break-words
-    text-justify
+    text-left
     font-sans
     text-slate-100
     

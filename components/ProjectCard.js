@@ -1,10 +1,13 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLink } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
+import StackCard from '@/components/StackCard'
 
 export default function ProjectCard(props) {
 
     const url = props.project.frontmatter.link == '#' ? '' : `https://www.` + props.project.frontmatter.link;
+
+    const stack = props.project.frontmatter.stack.split('—')
 
     return (
         <a href={url} rel="noopener noreferrer">
@@ -19,7 +22,9 @@ export default function ProjectCard(props) {
                                     {props.project.frontmatter.date}
                             </span>
                         </span>
-                        <span className="text-base font-medium rounded-lg px-3 py-2 text-left border border-zinc-100/10 md:w-max">{props.project.frontmatter.stack}</span>
+                        <span className="flex flex-row gap-2">
+                            {stack.map((stack) => <StackCard key={stack} stack={stack.trim()} /> )}
+                        </span>
                     </h1>
 
                     <p className="mt-5 text-lg leading-8 text-slate-200 text-left">
