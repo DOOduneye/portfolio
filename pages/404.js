@@ -82,11 +82,11 @@ export default function NotFound() {
                                 {'The page you\'re looking for doesn\'t exist. It may have been moved or deleted.'}
                             </NotFoundSubText>
                         </div>
-                        <div className="mt-10 flex space-x-3 sm:border-l sm:border-transparent sm:pl-6">
+                        <div className="flex mt-10 space-x-3 sm:border-l sm:border-transparent sm:pl-6">
                             <Button href="/">
                                 <FontAwesomeIcon
                                     icon={faArrowLeft}
-                                    className="mr-2 transition ease-in-out delay translate-x-0 hover:-translate-x-1 duration-300"
+                                    className="mr-2 transition duration-300 ease-in-out translate-x-0 delay hover:-translate-x-1"
                                 />
                                 {'Lets go home'}
                             </Button>
