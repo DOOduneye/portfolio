@@ -24,17 +24,17 @@ const Navigation = () => {
     return active ? 
     (
         <NavigationContainer inital="hidden" animate="animate" exit="exit" variants={variants}>
-            <Section className="pt-5 flex">
+            <Section className="flex pt-5">
                 <NavItem title={'Home'} link={'/'} />
                 <NavItem title={'Blog'} link={'/posts'} />
                 <NavItem title={'Projects'} link={'/projects'} />
                 <NavItem title={'About'} link={'/about'} />
                 
-                <Section className="sm:flex hidden">
+                <Section className="hidden sm:flex">
                     <Social />
                 </Section>
 
-                {/* <Section className="sm:flex hidden">
+                {/* <Section className="hidden sm:flex">
                     <ThemeToggle />
                 </Section> */}
             </Section>

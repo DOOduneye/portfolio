@@ -23,7 +23,7 @@ const LinkSpan = tw.span`
 const Footer = () => {
     return (
         <FooterContainer>
-            <P className="my-10 flex flex-col sm:flex-row justify-center gap-1">
+            <P className="flex flex-col justify-center gap-1 my-10 sm:flex-row">
                 <a href="/assets/text/README.html"><LinkSpan> README.md </LinkSpan></a>
                 <Link href="/assets/text/Resume.pdf"><LinkSpan> Resume </LinkSpan></Link> 
                 <span>2022 David Oduneye © All rights reserved</span>

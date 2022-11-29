@@ -26,7 +26,7 @@ const Gradient = tw.span`
 const Title = () => {
     return (
         <HeaderText>
-            <span className="drop-shadow-lg pb-20">
+            <span className="pb-20 drop-shadow-lg">
                 <Gradient>
                     David Oduneye
 
