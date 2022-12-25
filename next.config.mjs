@@ -7,7 +7,8 @@ const nextConfig = {
     //     path: '.',
     // },
     images: {
-        domains: ['res.craft.do']
+        domains: ['res.craft.do'],
+        unoptimized: true,
     },
     webpack: config => {
         config.resolve.fallback = { fs: false, module: false, path: false }
