@@ -38,7 +38,7 @@ const Home = ({ posts, projects, mdxSource, frontmatter: { title } }) => {
     return (
         <Layout>
 
-            <main className="flex flex-col px-20 pt-20 font-sans md:pt-28 lg:px-32">
+            <main className="flex flex-col px-6 pt-20 font-sans sm:px-20 md:pt-28 lg:px-32">
 
                 {/* Hero */}
                 <>
@@ -76,7 +76,7 @@ const Home = ({ posts, projects, mdxSource, frontmatter: { title } }) => {
                 </section>
 
                 {/* Projects */}
-                <section className="flex flex-col gap-5">
+                <section className="grid w-full h-full grid-flow-row auto-row-max">
                     <section className="flex flex-row justify-center p-10">
                         <p className="mt-1 text-base text-gray-500">
                             {`Things I've built* (and things I\'m working on)`}
@@ -89,7 +89,7 @@ const Home = ({ posts, projects, mdxSource, frontmatter: { title } }) => {
                         ))}
                     </section>
 
-                    <section className="flex flex-row justify-center p-5">
+                    <section className="flex flex-row justify-center pt-5">
                         <Link href="/projects">
                             <span className="flex flex-row items-center justify-center px-5 py-2 text-base font-medium text-white rounded-lg shadow-md bg-gradient-to-br from-purple-400 to-blue-500 hover:from-purple-500 hover:to-blue-600">
                                 <span className="mr-2">View All</span>
@@ -99,6 +99,8 @@ const Home = ({ posts, projects, mdxSource, frontmatter: { title } }) => {
                     </section>
                 </section>
 
+
+
                 {/* Blog Posts */}
                 <section className="grid w-full h-full grid-flow-row mb-5 auto-row-max">
                     <section className="flex flex-row justify-center p-10">
@@ -107,7 +109,7 @@ const Home = ({ posts, projects, mdxSource, frontmatter: { title } }) => {
                         </p>
                     </section>
 
-                    <section className="grid gap-5 px-5 grid-col-1 md:grid-cols-1 lg:grid-cols-3">
+                    <section className="grid gap-5 grid-col-1 md:grid-cols-1 lg:grid-cols-3">
                         {posts.map((post, index) => (   
                             <PostCard key={index} post={post} />
                         ))}
