@@ -12,19 +12,18 @@ const Posts = ({ posts }) => {
 
     return (
         <Layout>
-            <main className="flex flex-col gap-5 p-10 h-fit">
-                <section className="flex flex-row justify-center">
+            <main className="grid w-full h-full grid-flow-row px-6 mb-5 auto-row-max">
+                <section className="flex flex-row justify-center p-10">
                     <p className="mt-1 text-base text-gray-500">
                         {`Things I\'ve written.`}
                     </p>
                 </section>
 
-                <section className="grid content-end gap-5 h-fit grid-col-1 md:grid-cols-1 lg:grid-cols-3">
+                <section className="grid gap-5 grid-col-1 md:grid-cols-1 lg:grid-cols-3">
                     {posts.map((post, index) => (   
                         <PostCard key={index} post={post} />
                     ))}
                 </section>
-
                 <Footer />
             </main>
         </Layout>
