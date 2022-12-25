@@ -12,8 +12,8 @@ const Projects = ({ projects }) => {
 
     return (
         <Layout>
-            <main className="flex flex-col gap-5 p-10 h-fit">
-                <section className="flex flex-row justify-center">
+            <main className="grid w-full h-full grid-flow-row px-6 auto-row-max">
+                <section className="flex flex-row justify-center p-10">
                     <p className="mt-1 text-base text-gray-500">
                         {`Things I've built* (and things I\'m working on)`}
                     </p>
@@ -24,7 +24,7 @@ const Projects = ({ projects }) => {
                         <ProjectCard key={index} project={project} />
                     ))}
                 </section>
-
+                
                 <Footer />
             </main>
         </Layout>
