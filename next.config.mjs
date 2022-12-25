@@ -2,10 +2,6 @@
  * @type {import('next').NextConfig}
  */
 const nextConfig = {
-    // images: {
-    //     loader: 'akamai',
-    //     path: '.',
-    // },
     images: {
         domains: ['res.craft.do'],
         unoptimized: true,
