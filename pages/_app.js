@@ -1,17 +1,5 @@
-import { AnimatePresence } from 'framer-motion';
-import '@fortawesome/fontawesome-svg-core/styles.css';
-
 import '../styles/globals.scss';
 
-import Navigation from '../components/Navigation/Navigation';
-import Footer from '../components/Footer';
+const MyApp = ({ Component, pageProps, router }) => <Component {...pageProps} key={router.route} />;
 
-export default function MyApp({ Component, pageProps, router }) {
-    return (
-        <AnimatePresence wait>
-            <Navigation />
-            <Component {...pageProps} />
-            <Footer />
-        </AnimatePresence>
-    );
-}
+export default MyApp;

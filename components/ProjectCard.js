@@ -5,42 +5,30 @@ import StackCard from '@/components/StackCard'
 
 export default function ProjectCard(props) {
 
-    const url = props.project.frontmatter.link == '#' ? '' : `https://www.` + props.project.frontmatter.link;
+    const { project: { frontmatter: { title, date, description, link, button, stack } } } = props;
 
-    const stack = props.project.frontmatter.stack.split('—')
+    const url = link == '#' ? '' : `https://www.` +link;
+
+    const stackList = stack.split('—')
 
     return (
-        <a href={url} rel="noopener noreferrer">
-            <div className="py-10 px-5 rounded-md shadow-lg bg-[#191919] drop-shadow-lg shadow-gray-900/5 border border-zinc-100/10 hover:border-zinc-200/50 hover:inner-shadow hover:transition ease-in-out delay-150 hover:-translate-y-2 hover:scale-200 duration-300">
-                <div className="mx-auto text-lg max-w-prose hover:inner-shadow hover:rounded-lg">
-                    <h1 className="flex flex-col gap-3 text-slate-200">
-                        <span className="flex flex-row justify-between text-[#F57A89]">
-                            <span className="text-3xl font-bold leading-8 tracking-tight sm:text-4xl">
-                                {props.project.frontmatter.title}
-                            </span>
-                            <span className="items-end block mt-2 text-lg font-semibold">
-                                    {props.project.frontmatter.date}
-                            </span>
-                        </span>
-                        <span className="flex flex-row gap-2">
-                            {stack.map((stack) => <StackCard key={stack} stack={stack.trim()} /> )}
-                        </span>
-                    </h1>
-
-                    <p className="mt-5 text-lg leading-8 text-left text-slate-200">
-                        {props.project.frontmatter.description}
+        <Link href={url} rel="noopener noreferrer" className="content-end h-full duration-300 ease-in-out delay-150 border border-gray-700 rounded-lg shadow-md bg-gray-800/20 drop-shadow-lg shadow-gray-900/100 border-zinc-100/10 hover:border-zinc-200/50 hover:inner-shadow hover:transition hover:-translate-y-2 hover:scale-200">
+                <div className="p-5">
+                    <h5 className="mb-2 text-2xl font-bold tracking-tight text-white">{title}</h5>
+                    <span className="items-end block mt-2 text-lg font-semibold text-gray-400">
+                        {date}
+                    </span>
+                    <p className="mb-3 font-normal text-gray-400">
+                        {description}
                     </p>
-
-                    <div className="mt-5">
-                        <div className="inline-flex rounded-md shadow">
-                            <div className="bg-[#F57A89] transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-100 duration-300 inline-flex items-center justify-center px-5 py-3 text-base font-medium rounded-full text-slate-200 hover:text-white drop-shadow-lg shadow-lg hover:shadow-slate-500/20">
-                                <FontAwesomeIcon icon={faLink} className="mr-2" />
-                                {props.project.frontmatter.button}
-                            </div>
-                        </div>
-                    </div>
+                    <span className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white rounded-lg focus:ring-4 focus:outline-none focus:ring-blue-300 bg-gradient-to-br from-purple-400 to-blue-500 animate-gradient-x">
+                        <FontAwesomeIcon icon={faLink} className="mr-2" />
+                        {button}
+                    </span>
+                    <span className="flex flex-row flex-wrap gap-2 mt-10 text-slate-200">
+                        {stackList.map((stack) => <StackCard key={stack} stack={stack.trim()} /> )}
+                    </span>
                 </div>
-            </div>
-        </a>
+        </Link>
     );
 }
