@@ -4,7 +4,7 @@ import matter from 'gray-matter';
 import { serialize } from 'next-mdx-remote/serialize';
 import { MDXRemote } from 'next-mdx-remote';
 
-import { Markdown } from '@/styles/Markdown';
+import Markdown from '@/styles/Markdown';
 import Layout from '@/components/Layout';
 import Footer from '@/components/Footer';
 

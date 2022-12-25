@@ -44,20 +44,13 @@
 //     text-left
 // `;
 
-// const Uses = ({ frontmatter: { title, date }, mdxSource }) => {
-//     return (
-//         <TextContainer>
-//             <h1>
-//                 <Date>{date}</Date>
-//                 <Title>{title}</Title>
-//             </h1>
-
-//             <Content>
-//                 <MDXRemote {...mdxSource} />
-//             </Content>
-//         </TextContainer>
-//     );
-// }
+const Uses = () => {
+    return (
+        <h1>
+            Coming soon!
+        </h1>
+    );
+}
 
 // const getStaticProps = async () => {
 //     const markdownWithMeta = fs.readFileSync(path.join('pages', '../content/', 'uses.mdx'), 'utf-8');
@@ -74,4 +67,4 @@
 // };
 
 // export { getStaticProps };
-// export default Uses;
+export default Uses;
