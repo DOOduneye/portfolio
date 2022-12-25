@@ -3,60 +3,33 @@ import * as path from 'path';
 import matter from 'gray-matter';
 import { serialize } from 'next-mdx-remote/serialize';
 import { MDXRemote } from 'next-mdx-remote';
-import { motion } from 'framer-motion';
 
-import tw from 'tailwind-styled-components';
-
-import PostHeader from '@/components/Post/PostHeader';
-
-import { TextContainer } from '@/styles/styles';
-
-const PostMain = tw.main`
-    grid 
-    grid-rows-1 
-    sm:mx-5 
-    mx-2 
-    px-5 
-    pb-5
-`;
-
-const PostContainer = tw.main`
-    border-b border-l border-r border-zinc-100/20 bg-[#191919] rounded-b-md  p-10 shadow-md drop-shadow-lg hover:inner-shadow mx-auto max-w-prose text-lg
-`;
-
-const Content = tw.div`
-    flex
-    flex-col 
-    gap-5 
-    justify-center 
-    py-8 
-    mx-auto 
-    max-w-prose 
-    text-slate-50
-    
-    px-5
-    font-normal	
-    subpixel-antialiase
-    text-lg
-    leading-normal
-    align-middle
-    break-words
-    text-left
-    font-sans
-    text-slate-100
-    
-
-`;
+import { Markdown } from '@/styles/Markdown';
+import Layout from '@/components/Layout';
+import Footer from '@/components/Footer';
 
 const PostPage = ({ frontmatter: { title, date }, mdxSource }) => {
     return (
-        <TextContainer>
-            <PostHeader title={title} date={date}/>
+        <Layout>
+            <main className="flex flex-col items-center justify-center w-screen mt-5">
+                <div className="flex flex-col justify-center gap-5 px-5 py-8 mx-auto font-sans text-lg font-normal leading-normal text-left break-words align-middle max-w-prose text-slategrey-50 subpixel-antialiase text-slate-100">
+                    <h1 className="pb-3 font-sans text-5xl font-bold max-w-prose text-slate-100 lg:text-6xl">
+                        <span className="drop-shadow-lg">
+                            {title}
+                        </span>
+                    </h1>
 
-            <Content>
-                <MDXRemote {...mdxSource} />
-            </Content>
-        </TextContainer>
+                    <p className="pb-5 font-sans text-lg font-normal leading-normal text-left break-words align-middle max-w-prose text-slategrey-50 subpixel-antialiase text-slate-100">
+                        {date}
+                    </p>
+
+                    <hr className="w-10 pb-5 mx-auto border-t border-slate-100/20" />
+                
+                    <MDXRemote {...mdxSource} components={Markdown} />
+                </div>
+            </main>
+            <Footer />
+        </Layout>
     );
 };
 
@@ -83,6 +56,6 @@ const getStaticProps = async ({ params: { slug } }) => {
 
     return { props: { frontmatter, slug, mdxSource } };
 };
-f
+
 export { getStaticPaths, getStaticProps };
 export default PostPage;

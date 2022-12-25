@@ -1,28 +1,33 @@
-import ProjectCard from '@/components/ProjectCard'
-import CardHeader from '@/components/Card/CardHeader'
-import { ContentContainer } from '@/styles/styles';
-import { MapProjects } from '@/styles/styles';
+import ProjectCard from '@/components/ProjectCard';
+import Footer from '@/components/Footer';
+import Layout from '@/components/Layout';
 
 import fs from 'fs';
 import * as path from 'path';
 import matter from 'gray-matter';
 
 const Projects = ({ projects }) => {
-
-    // Sort by date and title
     projects = projects.sort((a, b) => new Date(b.frontmatter.date) - new Date(a.frontmatter.date));
     projects = projects.sort((a, b) => a.frontmatter.title.localeCompare(b.frontmatter.title));
 
     return (
-        <ContentContainer>
-            <CardHeader title={'Things I\'ve built* (and things I\'m working on).'} />
+        <Layout>
+            <main className="flex flex-col gap-5 p-10 h-fit">
+                <section className="flex flex-row justify-center">
+                    <p className="mt-1 text-base text-gray-500">
+                        {`Things I've built* (and things I\'m working on)`}
+                    </p>
+                </section>
 
-            <MapProjects>
-                {projects.map((project, index) => (
-                    <ProjectCard key={index} project={project} />
-                ))}
-            </MapProjects>
-        </ContentContainer>
+                <section className="grid content-end gap-5 h-fit grid-col-1 md:grid-cols-1 lg:grid-cols-3">
+                    {projects.map((project, index) => (
+                        <ProjectCard key={index} project={project} />
+                    ))}
+                </section>
+
+                <Footer />
+            </main>
+        </Layout>
     );
 }
 
@@ -33,10 +38,17 @@ const getStaticProps = async () => {
         const markdownWithMeta = fs.readFileSync(path.join('pages', '../content/projects', filename), 'utf-8');
         const { data: frontmatter } = matter(markdownWithMeta);
 
-        return { frontmatter, slug: filename.split('.')[0] };
+        return { 
+            frontmatter, 
+            slug: filename.split('.')[0] 
+        };
     });
 
-    return { props: { projects } };
+    return { 
+        props: { 
+            projects 
+        } 
+    };
 };
 
 export { getStaticProps };

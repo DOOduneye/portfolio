@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 @import '_variables.scss';
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@0,400;0,600;0,700;1,300;1,400;1,600&display=swap');
+
+@layer base {
+    html {
+        font-family: 'Nunito Sans', sans-serif;
+    }
+
+}
 
 /* Top Level Styles */
 *,
@@ -15,10 +23,13 @@
 html,
 body > #root > div {
     height: 100vh;
+    scroll-behavior: smooth;
+    scroll-snap-type: y mandatory;
+    
 }
 
 body {
-    background-color: $background-color;
+    background-color: #10101a;
     overflow-y: auto; /* Hide vertical scrollbar */
 }
 

@@ -1,34 +1,20 @@
 import Link from 'next/link';
 
-import tw from 'tailwind-styled-components';
-
-import { FooterContainer } from '@/styles/styles';
-
-const P = tw.p`
-    text-center
-    text-gray-500 
-    text-xs
-`;
-
-const LinkSpan = tw.span`
-    hover:text-gray-600 
-    cursor-pointer
-    hover:underline
-    hover:underline-offset-4
-    hover:decoration-thickness-2
-    hover:decoration-gray-600
-
-`;
-
 const Footer = () => {
     return (
-        <FooterContainer>
-            <P className="flex flex-col justify-center gap-1 my-10 sm:flex-row">
-                <a href="/assets/text/README.html"><LinkSpan> README.md </LinkSpan></a>
-                <Link href="/assets/text/Resume.pdf"><LinkSpan> Resume </LinkSpan></Link> 
-                <span>2022 David Oduneye © All rights reserved</span>
-            </P>
-        </FooterContainer>
+        <section className="flex flex-row items-center justify-between w-full h-24 px-10 mt-10 mb-5 border-t white text-slate-200 border-slate-400/30">
+            <p className="text-sm text-slate-200">
+                {`© ${new Date().getFullYear()} David Oduneye`} 
+            </p>
+            <span className="flex flex-row gap-5">
+                <Link href="/assets/text/Resume.pdf" className="hover:underline underline-offset-4">
+                    <> Resume </>
+                </Link> 
+                <a href="/assets/text/README.html" className="hover:underline underline-offset-4">
+                    <> README.md </>
+                </a>
+            </span>
+        </section>
     );
 }
 

@@ -1,45 +1,53 @@
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 
-import NavItem from './NavItem';
-import Social from './Social';
 import ThemeToggle from './ThemeToggle.js';
 
-import tw from 'tailwind-styled-components';
+const NavItem = (props) => {
+    const location = useRouter().pathname;
+    const active = location == props.link;
 
-import { MotionNavigationContainer as NavigationContainer } from '@/styles/styles';
-import { variants } from '@/styles/motion';
+    const isContact = props.link == '/contact';
 
-const Section = tw.section`
-    justify-center
-    flex 
-    flex-row 
-    flex-nowrap 
-    gap-10
-`;
+    if (isContact) {
+        return (
+            <a href="mailto:davidoduneye1@gmail.com"  className="pt-2 font-sans text-xl cursor-pointer hover:underline hover:decoration-slate-200 hover:underline-offset-8 hover:decoration-3 text-slate-200">
+                {props.title}
+            </a>
+        )
+    }
+
+    return (
+        <Link href={active ? '#' : props.link}  className="pt-2 font-sans text-xl cursor-pointer hover:underline hover:decoration-slate-200 hover:underline-offset-8 hover:decoration-3 text-slate-200">
+            {props.title}
+        </Link>
+    );
+}
 
 const Navigation = () => {
+
     const path = useRouter().pathname;
-    const active = path.includes('/posts/') ? false : true;
+    // const active = path.includes('/posts/');
+    
+    // if (active) return null;
 
-    return active ? 
-    (
-        <NavigationContainer inital="hidden" animate="animate" exit="exit" variants={variants}>
-            <Section className="flex pt-5">
-                <NavItem title={'Home'} link={'/'} />
-                <NavItem title={'Blog'} link={'/posts'} />
+    return (
+        <nav className="flex flex-row justify-between w-full p-5 px-10 pattern-dots-sm">
+            <section className="flex flex-row justify-center gap-10 flex-nowrap">
+                <NavItem title={'David'} link={'/'} />
+            </section>
+            <section className="flex flex-row justify-center gap-10 flex-nowrap">
+                {/* <NavItem title={'About'} link={'/'} /> */}
                 <NavItem title={'Projects'} link={'/projects'} />
-                <NavItem title={'About'} link={'/about'} />
-                
-                <Section className="hidden sm:flex">
-                    <Social />
-                </Section>
+                <NavItem title={'Blogs'} link={'/posts'} />
+                <NavItem title={'Contact'} link={'/contact'} />
+            </section>
 
-                {/* <Section className="hidden sm:flex">
-                    <ThemeToggle />
-                </Section> */}
-            </Section>
-        </NavigationContainer>
-    ) : (<NavigationContainer inital="hidden" animate="animate" exit="exit" variants={variants} />);
+            {/* <section className="flex flex-row justify-center gap-10 flex-nowrap">
+                <ThemeToggle />
+            </section> */}
+        </nav>
+    )
 }
 
 export default Navigation;

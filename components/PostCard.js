@@ -1,30 +1,25 @@
 import Link from 'next/link';
+import { ArrowRightIcon } from '@radix-ui/react-icons'
 
 export default function PostCard(props) {
     const { post: { frontmatter: { title, date, description }, slug } } = props;
 
     return (
-        <Link href={`posts/${slug}`}>
-            <div className="py-10 mx-2 px-5 rounded-md shadow-lg bg-[#191919] drop-shadow-lg shadow-gray-900/5 border border-zinc-100/10 hover:border-zinc-200/50 hover:inner-shadow hover:transition ease-in-out delay-150 hover:-translate-y-2 hover:scale-200 duration-300">
-                <div className="mx-auto text-lg max-w-prose hover:inner-shadow hover:rounded-lg">
-                    <h1>
-                        <span className="block text-lg font-md text-[#F57A89]">{date}</span>
-                        <span className="block mt-2 text-3xl font-bold leading-8 tracking-tight capitalize text-slate-200 sm:text-4xl">
-                            {title}
-                        </span>
-                    </h1>
+        <Link href={`posts/${slug}`} className="content-end h-full duration-300 ease-in-out delay-150 border border-gray-700 rounded-lg shadow-md bg-gray-800/20 drop-shadow-lg shadow-gray-900/100 border-zinc-100/10 hover:border-zinc-200/50 hover:inner-shadow hover:transition hover:-translate-y-2 hover:scale-200">
+            <div className="p-5">
+                <h5 className="mb-2 text-2xl font-bold tracking-tight text-white">{title}</h5>
+                <span className="items-end block mt-2 text-lg font-semibold text-gray-400">
+                    {date}
+                </span>
+                <p className="mb-3 font-normal text-gray-400">
+                    {description}
+                </p>
 
-                    <p className="mt-5 text-lg leading-8 text-left normal-case text-slate-200">
-                        {description}
-                    </p>
-
-                    <div className="mt-5 ">
-                        <div className="inline-flex rounded-md shadow">
-                            <button className="bg-[#F57A89] transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300 inline-flex items-center justify-center px-5 py-3 text-base font-medium rounded-full text-slate-100 hover:text-white drop-shadow-sm shadow-lg hover:shadow-sky-800/40">
-                                Read Article
-                            </button>
-                        </div>
-                    </div>
+                <div className="flex flex-row items-center justify-end mt-5">
+                    <span className="flex flex-row items-center justify-center px-4 py-2 text-base font-medium text-white rounded-lg shadow-md bg-gradient-to-br from-purple-400 to-blue-500 hover:from-purple-500 hover:to-blue-600">
+                        <span className="mr-2">Read More</span>
+                        <ArrowRightIcon className="w-5 h-5" />
+                    </span>
                 </div>
             </div>
         </Link>

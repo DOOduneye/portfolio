@@ -1,38 +1,33 @@
-import PostCard from '@/components/PostCard'
-import CardHeader from '@/components/Card/CardHeader'
-import { ContentContainer } from '@/styles/styles';
-// import { MapPosts } from '@/styles/styles';
-
-import tw from 'tailwind-styled-components';
+import PostCard from '@/components/PostCard';
+import Footer from '@/components/Footer';
+import Layout from '@/components/Layout';
 
 import fs from 'fs';
 import * as path from 'path';
 import matter from 'gray-matter';
-
-const MapPosts = tw.section`
-    grid 
-    grid-col-1 
-    md:grid-cols-1 
-    lg:grid-cols-3 
-    gap-5 
-    px-5
-    
-`;
 
 const Posts = ({ posts }) => {
     posts = posts.sort((a, b) => new Date(b.frontmatter.date) - new Date(a.frontmatter.date)).filter((post) => post.frontmatter.published);
     posts = posts.reverse();
 
     return (
-        <ContentContainer>
-            <CardHeader title={'Things I\'ve written.'} />
+        <Layout>
+            <main className="flex flex-col gap-5 p-10 h-fit">
+                <section className="flex flex-row justify-center">
+                    <p className="mt-1 text-base text-gray-500">
+                        {`Things I\'ve written.`}
+                    </p>
+                </section>
 
-            <MapPosts>
-                {posts.map((post, index) => (   
-                    <PostCard key={index} post={post} />
-                ))}
-            </MapPosts>
-        </ContentContainer>
+                <section className="grid content-end gap-5 h-fit grid-col-1 md:grid-cols-1 lg:grid-cols-3">
+                    {posts.map((post, index) => (   
+                        <PostCard key={index} post={post} />
+                    ))}
+                </section>
+
+                <Footer />
+            </main>
+        </Layout>
     );
 }
 

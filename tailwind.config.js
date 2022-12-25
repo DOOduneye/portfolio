@@ -5,7 +5,7 @@ module.exports = {
         extend: { 
             height: {
                 '90': '90vh',
-            }       
+            },
         },
     },
     plugins: [],
