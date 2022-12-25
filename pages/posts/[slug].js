@@ -9,6 +9,11 @@ import Layout from '@/components/Layout';
 import Footer from '@/components/Footer';
 
 const PostPage = ({ frontmatter: { title, date }, mdxSource }) => {
+
+    const wordsPerMinute = 200;
+    const words = mdxSource.compiledSource.match(/(?<=")(.*?)(?=")/g).join(" ").split(" ").length;
+    const minutes = Math.ceil(words / wordsPerMinute);
+
     return (
         <Layout>
             <main className="flex flex-col items-center justify-center w-screen mt-5">
@@ -20,7 +25,7 @@ const PostPage = ({ frontmatter: { title, date }, mdxSource }) => {
                     </h1>
 
                     <p className="pb-5 font-sans text-lg font-normal leading-normal text-left break-words align-middle max-w-prose text-slategrey-50 subpixel-antialiase text-slate-100">
-                        {date}
+                        {date} &middot; {minutes} min read
                     </p>
 
                     <hr className="w-10 pb-5 mx-auto border-t border-slate-100/20" />

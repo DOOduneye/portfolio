@@ -23,7 +23,7 @@ import Markdown from '@/styles/Markdown';
 
 const Home = ({ posts, projects, mdxSource, frontmatter: { title } }) => {
 
-    console.log(process.env.NEXT_PUBLIC_FIREBASE_API_KEY)
+    // console.log(process.env.NEXT_PUBLIC_FIREBASE_API_KEY)
 
 
     projects = projects.sort((a, b) => new Date(b.frontmatter.date) - new Date(a.frontmatter.date));
@@ -119,7 +119,7 @@ const Home = ({ posts, projects, mdxSource, frontmatter: { title } }) => {
                     </section>
 
                     <section className="flex flex-row justify-center p-5">
-                        <Link href="/blog">
+                        <Link href="/posts">
                             <span className="flex flex-row items-center justify-center px-5 py-2 text-base font-medium text-white rounded-lg shadow-md bg-gradient-to-br from-purple-400 to-blue-500 hover:from-purple-500 hover:to-blue-600">
                                 <span className="mr-2">View All</span>
                                 <ArrowRightIcon className="w-5 h-5" />
