@@ -27,7 +27,7 @@ const NavItem = (props) => {
 const Navigation = () => {
 
     return (
-        <nav className="flex flex-row justify-between w-full gap-5 p-5 px-10 pattern-dots-sm">
+        <nav className="flex flex-row justify-between w-screen px-5 py-5 mx-auto font-sans text-lg font-normal leading-normal text-left break-words align-middle sm:mx-0 max-w-prose sm:max-w-none text-slategrey-50 subpixel-antialiase text-slate-100">
             <section className="flex flex-row justify-center gap-10 flex-nowrap">
                 <NavItem title={'David'} link={'/'} />
             </section>

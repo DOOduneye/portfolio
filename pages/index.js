@@ -23,6 +23,9 @@ import Markdown from '@/styles/Markdown';
 
 const Home = ({ posts, projects, mdxSource, frontmatter: { title } }) => {
 
+    console.log(process.env.NEXT_PUBLIC_FIREBASE_API_KEY)
+
+
     projects = projects.sort((a, b) => new Date(b.frontmatter.date) - new Date(a.frontmatter.date));
     projects = projects.sort((a, b) => a.frontmatter.title.localeCompare(b.frontmatter.title));
     // limit to 3 projects
