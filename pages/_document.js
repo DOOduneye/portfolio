@@ -40,6 +40,17 @@ export default function Document() {
                 <Main />
                 <NextScript />
             </body>
+
+            <script async src="https://www.googletagmanager.com/gtag/js?id=G-XQSFSRBLQ2"></script>
+            <script
+                dangerouslySetInnerHTML={{
+                    __html: `window.dataLayer = window.dataLayer || [];
+                    function gtag(){dataLayer.push(arguments);}
+                    gtag('js', new Date());
+                    gtag('config', 'G-XQSFSRBLQ2');`,
+                }}
+            />
+
         </Html>
     );
 }
