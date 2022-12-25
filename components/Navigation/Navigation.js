@@ -26,18 +26,13 @@ const NavItem = (props) => {
 
 const Navigation = () => {
 
-    const path = useRouter().pathname;
-    // const active = path.includes('/posts/');
-    
-    // if (active) return null;
-
     return (
         <nav className="flex flex-row justify-between w-full p-5 px-10 pattern-dots-sm">
             <section className="flex flex-row justify-center gap-10 flex-nowrap">
                 <NavItem title={'David'} link={'/'} />
             </section>
             <section className="flex flex-row justify-center gap-10 flex-nowrap">
-                {/* <NavItem title={'About'} link={'/'} /> */}
+                {/* <NavItem title={'Uses'} link={'/uses'} /> */}
                 <NavItem title={'Projects'} link={'/projects'} />
                 <NavItem title={'Blogs'} link={'/posts'} />
                 <NavItem title={'Contact'} link={'/contact'} />
