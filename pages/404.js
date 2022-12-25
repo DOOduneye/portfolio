@@ -5,10 +5,10 @@ import Link from 'next/link';
 
 export default function NotFound() {
     return (
-        <main className="flex flex-col items-center justify-center w-screen mt-5">
-            <div className="flex flex-col justify-center gap-5 px-5 py-8 mx-auto font-sans text-lg font-normal leading-normal text-left break-words align-middle max-w-prose text-slategrey-50 subpixel-antialiase text-slate-100">
+        <main className="flex flex-col items-center justify-center w-screen h-screen px-5 py-5 mx-auto font-sans text-lg font-normal leading-normal text-left break-words align-middle sm:mx-0 max-w-prose sm:max-w-none text-slategrey-50 subpixel-antialiase text-slate-100">
+            <div className="flex flex-col items-center justify-center gap-5 px-5 py-8 mx-auto font-sans text-lg font-normal leading-normal text-left break-words align-middle max-w-prose text-slategrey-50 subpixel-antialiase text-slate-100">
                 <h1 className="pb-3 font-sans text-5xl font-bold max-w-prose text-slate-100 lg:text-6xl">
-                    <span className="drop-shadow-lg">
+                    <span className="text-transparent drop-shadow-lg bg-clip-text bg-gradient-to-br from-slate-100 to-slate-600">
                         404
                     </span>
                 </h1>
