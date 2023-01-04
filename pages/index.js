@@ -30,11 +30,15 @@ const Home = ({ posts, projects, mdxSource, frontmatter: { title } }) => {
 
 	const scroll = () => window.scrollTo(0, 750);
 
+	const mark = Markdown;
+	mark.p = ({ children, ...props }) => <p className="mb-3 text-base font-normal text-slate-100" {...props}>{children}</p>;
+
+
 	return (
 		<Layout>
 			<main className="flex flex-col px-6 pt-20 font-sans sm:px-20 md:pt-28 lg:px-32 ">
 				{/* Hero */}
-				<section className="">
+				<section>
 					<h1 className="pb-3 font-sans font-bold text-slate-100 lg:text-9xl text-7xl">
 						<span className="dark:drop-shadow-lg">
 							<span className="text-transparent bg-clip-text bg-gradient-to-br from-purple-400 to-blue-500 animate-gradient-x">David Oduneye</span>
@@ -52,7 +56,7 @@ const Home = ({ posts, projects, mdxSource, frontmatter: { title } }) => {
 
 				{/* About Me */}
 				<section className="flex flex-col gap-10 mt-8 mb-8 text-lg leading-8 text-left text-slate-200">
-					<div className="flex flex-col items-center border rounded-lg shadow-md border-slate-900 lg:flex-row bg-[#262640] dark:bg-transparent">
+					<div className="flex flex-col items-center border rounded-lg shadow-md dark:border-slate-900 lg:flex-row bg-[#262640] dark:bg-transparent">
 						<Image className="object-cover w-full rounded-t-lg h-96 lg:h-120 xl:h-100 xl:w-200 md:rounded-none md:rounded-l-lg" src={headshot} alt="" />
 						<div className="flex flex-col justify-between p-4 leading-normal">
 							<h1 className="mb-2 text-2xl font-bold tracking-tight ">{title}</h1>

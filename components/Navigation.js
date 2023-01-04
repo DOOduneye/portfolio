@@ -28,11 +28,11 @@ const Navigation = () => {
 
     return (
         <nav className="flex flex-row justify-between w-screen px-5 py-5 mx-auto font-sans text-lg font-normal leading-normal text-left break-words align-middle sm:mx-0 max-w-prose sm:max-w-none text-slategrey-50 subpixel-antialiase dark:text-slate-100 text-slate-600">
-            <section className="flex flex-row justify-center gap-10 flex-nowrap">
+            <section className="flex flex-row justify-center gap-2 flex-nowrap">
                 <NavItem title={'David'} link={'/'} />
             </section>
-            <section className="flex flex-row justify-center gap-6 pr-5 flex-nowrap">
-                <section className="flex flex-row justify-center gap-10 flex-nowrap">
+            <section className="flex flex-row justify-center gap-7 flex-nowrap">
+                <section className="flex flex-row justify-center gap-5 flex-nowrap">
                     {/* <NavItem title={'Uses'} link={'/uses'} /> */}
                     <NavItem title={'Projects'} link={'/projects'} />
                     <NavItem title={'Blogs'} link={'/posts'} />

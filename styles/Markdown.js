@@ -7,7 +7,7 @@ const Markdown = {
     h4: ({ children, ...props }) => <h4 className="mb-3 text-xl font-bold text-slate-900 dark:text-slate-300" {...props}>{children}</h4>,
     h5: ({ children, ...props }) => <h5 className="mb-3 text-lg font-bold text-slate-900 dark:text-slate-300" {...props}>{children}</h5>,
     h6: ({ children, ...props }) => <h6 className="mb-3 text-base font-bold text-slate-900 dark:text-slate-300" {...props}>{children}</h6>,
-    p: ({ children, ...props }) => <p className="mb-3 text-base font-normal text-slate-200 dark:text-slate-300" {...props}>{children}</p>,
+    p: ({ children, ...props }) => <p className="mb-3 text-base font-normal text-slate-900 dark:text-slate-300" {...props}>{children}</p>,
     a: ({ children, ...props }) => <a className="underline text-slate-500" {...props}>{children}</a>,
     ul: ({ children, ...props }) => <ul className="mb-3 text-base font-normal list-disc list-inside text-slate-900 dark:text-slate-300" {...props}>{children}</ul>,
     ol: ({ children, ...props }) => <ol className="mb-3 text-base font-normal list-decimal list-inside text-slate-900 dark:text-slate-300" {...props}>{children}</ol>,
