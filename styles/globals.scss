@@ -1,7 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import '_variables.scss';
+
 @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@0,400;0,600;0,700;1,300;1,400;1,600&display=swap');
 
 @layer base {
@@ -29,11 +29,32 @@ body > #root > div {
 }
 
 body {
-    background-color: #10101a;
     overflow-y: auto; /* Hide vertical scrollbar */
 }
 
 .pattern-dots-sm {
     background-image: radial-gradient(black 0.5px, transparent 0.5px);
     background-size: calc(10 * 0.5px) calc(10 * 0.5px);
+}
+
+.animated-aurora {
+    background: rgb(238,174,202);
+    background: radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%);
+    background-size: 400% 400%;
+    animation: aurora 15s ease infinite alternate;
+    background-position: 0% 0%;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    }
+    
+    @keyframes aurora {
+    0% {
+        background-position: 0% 0%;
+    }
+    50% {
+        background-position: 100% 0%;
+    }
+    100% {
+        background-position: 0% 0%;
+    }
 }

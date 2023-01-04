@@ -1,6 +1,8 @@
 import { Html, Head, Main, NextScript } from 'next/document';
+import Script from 'next/script';
 
 export default function Document() {
+
     return (
         <Html lang="en">
             <Head>
@@ -36,12 +38,12 @@ export default function Document() {
                     content="https://metatags.io/assets/meta-tags-16a33a6a8531e519cc0936fbba0ad904e52d35f34a46c97a2c9f6f7dd7d336f2.png"
                 />
             </Head>
-            <body className="overflow-x-hidden pattern-dots-sm animated">
+            <body className="overflow-x-hidden dark:pattern-dots-sm dark:animated dark:bg-[#10101a] bg-[#f5f5f5]">
                 <Main />
                 <NextScript />
             </body>
 
-            <script async src="https://www.googletagmanager.com/gtag/js?id=G-XQSFSRBLQ2"></script>
+            <Script async src="https://www.googletagmanager.com/gtag/js?id=G-XQSFSRBLQ2" />
             <script
                 dangerouslySetInnerHTML={{
                     __html: `window.dataLayer = window.dataLayer || [];

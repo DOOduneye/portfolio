@@ -1,4 +1,5 @@
 import PostCard from '@/components/PostCard';
+import Post from '@/components/Post';
 import Footer from '@/components/Footer';
 import Layout from '@/components/Layout';
 
@@ -13,17 +14,7 @@ const Posts = ({ posts }) => {
     return (
         <Layout>
             <main className="grid w-full h-full grid-flow-row px-6 mb-5 auto-row-max">
-                <section className="flex flex-row justify-center p-10">
-                    <p className="mt-1 text-base text-gray-500">
-                        {`Things I\'ve written.`}
-                    </p>
-                </section>
-
-                <section className="grid gap-5 grid-col-1 md:grid-cols-1 lg:grid-cols-3">
-                    {posts.map((post, index) => (   
-                        <PostCard key={index} post={post} />
-                    ))}
-                </section>
+                <Post posts={posts} />
                 <Footer />
             </main>
         </Layout>
