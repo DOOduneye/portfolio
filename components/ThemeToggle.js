@@ -1,15 +1,24 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { SunIcon } from '@radix-ui/react-icons';
 // import {}
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { ThemeContext } from '@/providers/ThemeProvider';
 
 export default function ThemeToggle() {
     const { theme, setTheme } = useContext(ThemeContext);
 
+    useEffect(() => {
+        const storedTheme = localStorage.getItem('theme');
+        if (storedTheme) {
+            setTheme(storedTheme);
+        }
+    });   
+
 
     const toggleTheme = () => {
-        theme === 'dark' ? setTheme('light') : setTheme('dark');
+        const newTheme = theme === 'dark' ? 'light' : 'dark';
+        setTheme(newTheme);
+        localStorage.setItem('theme', newTheme);
     };
     const themeColor = theme === 'dark' ? 'text-slate-200' : 'text-black';
 
