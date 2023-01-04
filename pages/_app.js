@@ -1,25 +1,18 @@
-import '../styles/globals.scss';
-// import { initializeApp } from "firebase/app";
-// import { getFirestore } from "firebase/firestore";
-// import * as dotenv from 'dotenv'
+import "../styles/globals.scss";
 
-const MyApp = ({ Component, pageProps, router }) => {
-    // dotenv.config()
-    
-    // const firebaseConfig = {
-    //     apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-    //     authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-    //     projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-    //     storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-    //     messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-    //     appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
-    //     measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
-    // };
+import { initializeApp } from 'firebase/app';
+import { firebaseConfig } from '@/utils/firebase';
+import { ThemeProvider } from "@/providers/ThemeProvider";
 
-    // const app = initializeApp(firebaseConfig);
-    // const db = getFirestore(app);
+const MyApp = ({ Component, pageProps }) => {
 
-    return <Component {...pageProps} />;
-}
+	const app = initializeApp(firebaseConfig);
+
+	return (
+		<ThemeProvider>
+			<Component {...pageProps} />
+		</ThemeProvider>
+	);
+};
 
 export default MyApp;

@@ -2,8 +2,8 @@ import Link from 'next/link';
 
 const Footer = () => {
     return (
-        <section className="flex flex-row items-center justify-between w-full h-24 px-2 mt-10 mb-5 border-t sm:px-5 white text-slate-200 border-slate-400/30">
-            <p className="text-sm text-slate-200">
+        <section className="flex flex-row items-center justify-between w-full h-24 px-2 mt-10 mb-5 border-t sm:px-5 white dark:text-slate-200 text-slate-900 border-slate-400/30">
+            <p className="text-sm">
                 {`© ${new Date().getFullYear()} David Oduneye`} 
             </p>
             <span className="flex flex-row gap-5">

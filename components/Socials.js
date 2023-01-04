@@ -2,7 +2,7 @@ import links from '../content/links';
 
 const SocialItem = (props) => {
     return (
-        <button className="transition duration-300 ease-out opacity-80 text-slate-400 hover:-translate-x-1 hover:scale-110">
+        <button className="transition duration-300 ease-out opacity-80 dark:text-slate-400 text-slate-800/80 hover:-translate-x-1 hover:scale-110">
             <a href={props.url} target="_blank" rel="noreferrer">
                 {props.icon}
             </a>
