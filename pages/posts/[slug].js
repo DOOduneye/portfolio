@@ -6,6 +6,8 @@ import { MDXRemote } from 'next-mdx-remote';
 
 import Markdown from '@/styles/Markdown';
 import Footer from '@/components/Footer';
+import Layout from '@/components/Layout';
+import ThemeToggle from '../../components/ThemeToggle';
 
 const PostPage = ({ frontmatter: { title, date }, mdxSource }) => {
 
@@ -15,12 +17,16 @@ const PostPage = ({ frontmatter: { title, date }, mdxSource }) => {
 
     return (
         <>
-            <button className="relative top-0 left-0 z-50 flex items-center justify-center w-12 h-12 p-2 m-5 text-xl font-bold rounded-full cursor-pointer text-slate-900 dark:text-slate-100" onClick={() => window.history.back()}>
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                </svg>
-            </button>
-            
+                <button className="w-12 h-12 p-2 m-5 text-xl font-bold rounded-full cursor-pointer text-slate-900 dark:text-slate-100" onClick={() => window.history.back()}>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                </button>
+
+
+            <section className="hidden">
+                <ThemeToggle />
+            </section>
             <main className="flex flex-col items-center justify-center w-screen mt-5">
                 <div className="flex flex-col justify-center gap-5 px-5 py-8 mx-auto font-sans text-lg font-normal leading-normal text-left break-words align-middle max-w-prose text-slategrey-50 subpixel-antialiase dark:text-slate-100 text-slate-900">
                     <h1 className="pb-3 font-sans text-5xl font-bold max-w-prose text-slate-100 lg:text-6xl">

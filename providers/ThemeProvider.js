@@ -11,7 +11,7 @@ const ThemeProvider = ({ children }) => {
         const root = window.document.documentElement;
         root.classList.remove(theme === "dark" ? "light" : "dark");
         root.classList.add(theme)
-    }, [theme]);
+    }, [theme, setTheme]);
 
     return (
         <ThemeContext.Provider value={{ theme, setTheme }}>
