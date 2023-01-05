@@ -8,7 +8,7 @@ export default function ThemeToggle() {
     const { theme, setTheme } = useContext(ThemeContext);
 
     useEffect(() => {
-        const storedTheme = localStorage.getItem('theme');
+        const storedTheme = sessionStorage.getItem('theme');
         if (storedTheme) {
             setTheme(storedTheme);
         }
@@ -18,7 +18,7 @@ export default function ThemeToggle() {
     const toggleTheme = () => {
         const newTheme = theme === 'dark' ? 'light' : 'dark';
         setTheme(newTheme);
-        localStorage.setItem('theme', newTheme);
+        sessionStorage.setItem('theme', newTheme);
     };
     const themeColor = theme === 'dark' ? 'text-slate-200' : 'text-black';
 

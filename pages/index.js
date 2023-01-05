@@ -30,9 +30,7 @@ const Home = ({ posts, projects, mdxSource, frontmatter: { title } }) => {
 
 	const scroll = () => window.scrollTo(0, 750);
 
-	const mark = Markdown;
-	mark.p = ({ children, ...props }) => <p className="mb-3 text-base font-normal text-slate-100" {...props}>{children}</p>;
-
+	const mark = {...Markdown, p: ({ children, ...props }) => <p className="mb-3 text-base font-normal text-slate-100" {...props}>{children}</p>};
 
 	return (
 		<Layout>
@@ -60,7 +58,7 @@ const Home = ({ posts, projects, mdxSource, frontmatter: { title } }) => {
 						<Image className="object-cover w-full rounded-t-lg h-96 lg:h-120 xl:h-100 xl:w-200 md:rounded-none md:rounded-l-lg" src={headshot} alt="" />
 						<div className="flex flex-col justify-between p-4 leading-normal">
 							<h1 className="mb-2 text-2xl font-bold tracking-tight ">{title}</h1>
-							<MDXRemote {...mdxSource} className="mb-3 font-normal" components={Markdown} />
+							<MDXRemote {...mdxSource} className="mb-3 font-normal" components={mark} />
 						</div>
 					</div>
 				</section>
