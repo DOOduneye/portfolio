@@ -16,7 +16,7 @@ const Footer = () => {
                     </a>
                 </span>
             </section>
-            <section className="flex flex-row items-center justify-center pb-2 dark:text-slate-200 text-slate-900 border-slate-400/30">
+            <section className="flex flex-row items-center justify-center px-5 px-2 dark:text-slate-200 text-slate-900 border-slate-400/30">
                 <p className="text-sm">
                     {`Made with Next.js, TailwindCSS, and Radix UI`} &#8211; {`Last updated: ${new Date().toLocaleDateString()}`}
 
