@@ -13,7 +13,7 @@ import { serialize } from "next-mdx-remote/serialize";
 import { MDXRemote } from "next-mdx-remote";
 import Image from "next/image";
 import headshot from "../public/assets/images/Headshot.JPG";
-s
+
 import ButtonLink from "@/components/ButtonLink";
 
 const Home = ({ posts, projects, mdxSource, frontmatter: { title } }) => {
