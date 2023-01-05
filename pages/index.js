@@ -13,8 +13,7 @@ import { serialize } from "next-mdx-remote/serialize";
 import { MDXRemote } from "next-mdx-remote";
 import Image from "next/image";
 import headshot from "../public/assets/images/Headshot.JPG";
-
-import Markdown from "@/styles/Markdown";
+s
 import ButtonLink from "@/components/ButtonLink";
 
 const Home = ({ posts, projects, mdxSource, frontmatter: { title } }) => {
@@ -56,7 +55,7 @@ const Home = ({ posts, projects, mdxSource, frontmatter: { title } }) => {
 						<Image className="object-cover w-full rounded-t-lg h-96 lg:h-120 xl:h-100 xl:w-200 md:rounded-none md:rounded-l-lg" src={headshot} alt="" />
 						<div className="flex flex-col justify-between p-4 leading-normal">
 							<h1 className="mb-2 text-2xl font-bold tracking-tight ">{title}</h1>
-							<MDXRemote {...mdxSource} className="mb-3 font-normal" components={{
+							<MDXRemote {...mdxSource} components={{
 								p: ({ children, ...props }) => <p className="mb-3 text-base font-normal text-slate-100" {...props}>{children}</p>,
 								a: ({ children, ...props }) => <a className="text-blue-300 hover:underline underline-offset-4 " {...props}>{children}</a>,
 							}} />
