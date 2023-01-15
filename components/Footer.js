@@ -12,8 +12,6 @@ const Footer = () => {
                     <a href="/assets/text/README.html" className="hover:underline underline-offset-4">
                         <> README.md </>
                     </a>
-
-                    {`Last updated: ${new Date().toLocaleDateString()}`}
                 </span>
             </section>
             
