@@ -23,7 +23,7 @@ export default function ThemeToggle() {
     const themeColor = theme === 'dark' ? 'text-slate-200' : 'text-black';
 
     return (
-        <button className='flex items-center pt-2 transition duration-300 ease-in-out delay-100 transform cursor-pointer hover:scale-125 hover:transition' onClick={toggleTheme}>
+        <button className='flex items-center pt-2 transition duration-300 ease-in-out delay-100 transform cursor-pointer scale-120 hover:scale-125 hover:transition' onClick={toggleTheme}>
             <SunIcon className={themeColor} />
         </button>
     );

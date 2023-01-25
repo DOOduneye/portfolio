@@ -16,16 +16,18 @@ const PostPage = ({ frontmatter: { title, date }, mdxSource }) => {
 
     return (
         <>
-            <button className="w-12 h-12 p-2 m-5 text-xl font-bold rounded-full cursor-pointer" onClick={() => window.history.back()}>
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                </svg>
-            </button>
+            <div className="flex flex-row justify-between mt-5">
+                <button className="w-12 h-12 p-2 m-5 text-xl font-bold rounded-full cursor-pointer dark:text-slate-100 text-slate-900" onClick={() => window.history.back()}>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                </button>
 
+                <span className="w-12 h-12 p-2 m-5 text-xl font-bold rounded-full cursor-pointer">
+                    <ThemeToggle />
+                </span>
+            </div>
 
-            <section className="hidden">
-                <ThemeToggle />
-            </section>
             <main className="flex flex-col items-center justify-center w-screen mt-5">
                 <div className="flex flex-col justify-center gap-5 px-5 py-8 mx-auto font-sans text-lg font-normal leading-normal text-left break-words align-middle max-w-prose">
                     <h1 className="pb-3 font-sans text-5xl font-bold max-w-prose lg:text-6xl">
