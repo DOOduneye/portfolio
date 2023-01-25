@@ -23,7 +23,7 @@ const Markdown = {
     tr: ({ children, ...props }) => <tr className="mb-3 text-base font-normal text-slate-900 dark:text-slate-100" {...props}>{children}</tr>,
     th: ({ children, ...props }) => <th className="mb-3 text-base font-normal text-slate-900 dark:text-slate-100" {...props}>{children}</th>,
     td: ({ children, ...props }) => <td className="mb-3 text-base font-normal text-slate-900 dark:text-slate-100" {...props}>{children}</td>,
-    em: ({ children, ...props }) => <em className="mb-3 text-base font-normal text-slate-200" {...props}>{children}</em>,
+    em: ({ children, ...props }) => <em className="mb-3 text-base font-normal text-slate-900 dark:text-slate-100" {...props}>{children}</em>,
     strong: ({ children, ...props }) => <strong className="mb-3 text-base font-normal text-slate-900 dark:text-slate-100" {...props}>{children}</strong>,
     del: ({ children, ...props }) => <del className="mb-3 text-base font-normal text-slate-900 dark:text-slate-100" {...props}>{children}</del>,
     inlineCode: ({ children, ...props }) => <code className="mb-3 text-base font-normal text-slate-900 dark:text-slate-100" {...props}>{children}</code>,
