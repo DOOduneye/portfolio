@@ -43,7 +43,7 @@ const Home = ({ posts, projects, mdxSource, frontmatter: { title } }) => {
 
 					<Socials />
 				</section>
-
+				
 				{/* Divider */}
 				<span className="flex flex-col items-center mt-24 dark:text-slate-100 text-slate-900">
 					<ChevronDownIcon className="w-10 h-10 cursor-pointer animate-pulse" onClick={scroll} />
