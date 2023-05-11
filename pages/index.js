@@ -18,8 +18,9 @@ import ButtonLink from "@/components/ButtonLink";
 
 const Home = ({ posts, projects, mdxSource, frontmatter: { title } }) => {
 
+	projects = projects.sort((a, b) => a.frontmatter.title - b.frontmatter.title);
 	projects = projects.sort((a, b) => new Date(b.frontmatter.date) - new Date(a.frontmatter.date));
-	projects = projects.sort((a, b) => a.frontmatter.title.localeCompare(b.frontmatter.title));
+
 	// limit to 3 projects
 	projects = projects.slice(0, 3);
 
