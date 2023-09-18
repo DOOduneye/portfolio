@@ -37,7 +37,7 @@ const Home = ({ posts, projects, mdxSource, frontmatter: { title } }) => {
 				<section>
 					<h1 className="pb-3 font-sans font-bold text-slate-100 lg:text-9xl text-7xl">
 						<span className="dark:drop-shadow-lg">
-							<span className="text-transparent bg-clip-text bg-gradient-to-br from-purple-400 to-blue-500 animate-gradient-x">David Oduneye</span>
+							<span className="text-transparent bg-clip-text bg-gradient-to-br from-purple-400 to-blue-500">David Oduneye</span>
 						</span>
 					</h1>
 					<span className="text-3xl font-bold text-left lg:text-7xl md:text-5xl dark:text-slate-200/80 text-slate-800/80 ">Passionate about crafting beautiful, intuitive, and performant web applications.</span>
