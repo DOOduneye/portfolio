@@ -7,14 +7,34 @@ import { LinkedinIcon, Music, GithubIcon, BookUser } from "lucide-react";
 
 import { BrandButton } from "./brand-button";
 import { ModeToggle } from "@/components/mode-toggle";
+import { motion, useAnimation } from "framer-motion";
+import { useInView } from "react-intersection-observer";
+import { useEffect } from "react";
 
 export const Navbar = () => {
     const pathname = usePathname();
 
+    const controls = useAnimation();
+    const { ref, inView } = useInView();
+
     const isHomePage = pathname === "/";
 
+    useEffect(() => {
+        if (inView) {
+            controls.start({
+                y: 0,
+                opacity: 1,
+                transition: { duration: 1, ease: 'easeOut' },
+            });
+        }
+    }, [controls, inView]);
+
     return (
-        <div className='flex flex-row justify-between my-10 flex-center'>
+        <motion.div
+            ref={ref}
+            initial={{ y: -50, opacity: 0 }}
+            animate={controls}
+            className='flex flex-row justify-between my-10 flex-center'>
             <div className='flex flex-row space-x-4'>
                 <ModeToggle />
                 <BrandButton icon={LinkedinIcon} href='https://www.linkedin.com/in/dooduneye' tip='LinkedIn' />
@@ -46,7 +66,7 @@ export const Navbar = () => {
                     </>
                 )}
             </nav>
-        </div>
+        </motion.div>
     );
 }
 

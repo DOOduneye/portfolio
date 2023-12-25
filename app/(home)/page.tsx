@@ -42,6 +42,20 @@ export default function Home() {
     },
   ]
 
+  const projects = [
+    {
+      title: 'Jurni',
+      description: 'Analyzed journal data for a mental health service. Used NLP techniques to find trigger points in the data that could support experts in their work. Developed tools for large data scraping, preprocessing and subject clustering.',
+      tags: ['Python', 'NLP', 'Machine Learning', 'Data Science'],
+    },
+    {
+      title: 'Rate My Dorm',
+      description: 'Developed a secure, responsive full-stack web application with Next.js, enabling college students to view, rate, and provide feedback on dormitories. Integrated the Collegescorecard API to pull relevant college statistics, such as student body size, ownership, and associated costs. Set up a polyrepo architecture using Express.js, creating APIs that support CRUD operations on MongoDB schema objects.',
+      tags: ['React', 'Next.js', 'Express.js', 'MongoDB'],
+    }
+  ]
+
+
 
   useEffect(() => {
     if (inView) {
@@ -98,8 +112,8 @@ export default function Home() {
             </Link>
           </div>
           <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
-            {[1, 2, 3, 4].map((project) => (
-              <ProjectCard key={project} />
+            {projects.map((project) => (
+              <ProjectCard project={project} key={project.title} />
             ))}
           </div>
         </div>
