@@ -47,21 +47,29 @@ export default function Home() {
       title: 'Jurni',
       description: 'Analyzed journal data for a mental health service. Used NLP techniques to find trigger points in the data that could support experts in their work. Developed tools for large data scraping, preprocessing and subject clustering.',
       tags: ['Python', 'NLP', 'Machine Learning', 'Data Science'],
+      date: new Date('2022'),
+      link: 'https:www.davidoduneye.com'
     },
     {
       title: 'Rate My Dorm',
       description: 'Developed a secure, responsive full-stack web application with Next.js, enabling college students to view, rate, and provide feedback on dormitories. Integrated the Collegescorecard API to pull relevant college statistics, such as student body size, ownership, and associated costs. Set up a polyrepo architecture using Express.js, creating APIs that support CRUD operations on MongoDB schema objects.',
       tags: ['React', 'Next.js', 'Express.js', 'MongoDB'],
+      date: new Date('2022'),
+      link: 'https:www.davidoduneye.com'
     },
     {
       title: 'Jurni',
       description: 'Analyzed journal data for a mental health service. Used NLP techniques to find trigger points in the data that could support experts in their work. Developed tools for large data scraping, preprocessing and subject clustering.',
       tags: ['Python', 'NLP', 'Machine Learning', 'Data Science'],
+      date: new Date('2022'),
+      link: 'https:www.davidoduneye.com'
     },
     {
       title: 'Rate My Dorm',
       description: 'Developed a secure, responsive full-stack web application with Next.js, enabling college students to view, rate, and provide feedback on dormitories. Integrated the Collegescorecard API to pull relevant college statistics, such as student body size, ownership, and associated costs. Set up a polyrepo architecture using Express.js, creating APIs that support CRUD operations on MongoDB schema objects.',
       tags: ['React', 'Next.js', 'Express.js', 'MongoDB'],
+      date: new Date('2022'),
+      link: 'https:www.davidoduneye.com'
     }
   ]
 
