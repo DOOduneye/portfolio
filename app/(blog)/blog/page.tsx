@@ -1,5 +1,3 @@
-import Link from "next/link";
-
 import { PostCard } from "../_components/post-card";
 
 const Blog = () => {
