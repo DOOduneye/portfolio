@@ -1,5 +1,4 @@
 import { Badge } from "@/components/ui/badge";
-import Link from "next/link";
 
 const Project = () => {
     return (
