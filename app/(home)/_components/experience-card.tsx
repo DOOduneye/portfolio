@@ -8,10 +8,11 @@ interface ExperienceCardProps {
         title: string
         company: string
         date: string
+        description: string
     }
 }
 
-export const ExperienceCard = ({ experience: { title, company, date } }: ExperienceCardProps) => {
+export const ExperienceCard = ({ experience: { title, company, date, description } }: ExperienceCardProps) => {
     const controls = useAnimation();
     const { ref, inView } = useInView();
 
@@ -28,14 +29,18 @@ export const ExperienceCard = ({ experience: { title, company, date } }: Experie
     return (
         <motion.div
             ref={ref}
-            initial={{ y: 50, opacity: 0 }}
+            initial={{ y: 30, opacity: 0 }}
             animate={controls}
-            className='py-5 transition-all duration-300 ease-in-out transform border-2 border-transparent border-gray-200 shadow-sm dark:border-gray-900 dark:hover:border-gray-300 rounded-xl hover:scale-105 hover:border-gray-500'
+            className='grid grid-cols-3 gap-5'
         >
-            <div className='flex flex-col justify-between gap-y-1'>
-                <h2 className='px-4 text-xl font-bold'>{title}</h2>
-                <h3 className='px-4 text-sm font-semibold text-muted-foreground'>{company}</h3>
-                <p className='px-4 text-sm font-normal text-muted-foreground'>{date}</p>
+            <span className="col-span-1 text-muted-foreground text-sm md:text-md">{date}</span>
+
+            <div className="col-span-2 flex flex-col">
+                <span className="text-md md:text-lg font-semibold">{title}</span>
+                <span className="text-sm md:text-sm font-normal text-muted-foreground">{company}</span>
+                <p className="mt-2 text-sm font-normal text-muted-foreground">
+                    {description}
+                </p>
             </div>
         </motion.div>
     )
