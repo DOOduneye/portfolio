@@ -12,6 +12,7 @@ interface ProjectCardProps {
         link?: string;
     }
 }
+
 export const ProjectCard = ({ project: { title, description, tags, date, link } }: ProjectCardProps) => {
     const controls = useAnimation();
     const { ref, inView } = useInView();
