@@ -10,7 +10,7 @@ import { useInView } from 'react-intersection-observer'
 import { ExperienceCard } from './_components/experience-card'
 import { ProjectCard } from './_components/project-card'
 
-export default function Home() {
+const Home = () => {
   const controls = useAnimation();
   const { ref, inView } = useInView();
 
@@ -86,7 +86,6 @@ export default function Home() {
   }, [controls, inView]);
 
   return (
-    <>
       <motion.main
         ref={ref}
         initial={{ y: 0, opacity: 0, }}
@@ -135,7 +134,8 @@ export default function Home() {
             ))}
           </div>
         </div>
-      </motion.main>
-    </>
+    </motion.main>
   )
 }
+
+export default Home;

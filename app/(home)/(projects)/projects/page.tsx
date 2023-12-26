@@ -1,6 +1,6 @@
 import { ProjectCard } from "../_components/project-card";
 
-const Project = () => {
+const Projects = () => {
     return (
         <main className="flex flex-col gap-4">
             <h2 className='text-2xl font-bold'>Project</h2>
@@ -10,10 +10,11 @@ const Project = () => {
                     description='This is the first project on my blog.'
                     tags={['tag1', 'tag2']}
                     year='2021'
+                    key={i}
                 />
             ))}
         </main >
     );
 }
 
-export default Project;
+export default Projects;
