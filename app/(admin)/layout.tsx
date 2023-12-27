@@ -20,10 +20,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             if (userData) {
                 setUser(userData);
             } else {
-                setUser(null);
                 if (pathname !== '/login') {
                     router.push('/login');
                 }
+                setUser(null);
             }
         }, (error) => {
             toast.error('Failed to fetch user data!');
@@ -40,7 +40,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     }
 
     if (user === null && pathname !== '/login') {
-        router.push('/login');
 
         return <Spinner />
     }

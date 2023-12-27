@@ -1,13 +1,13 @@
 
 interface PostProps {
     params: {
-        blogName: string;
+        postID: string;
     }
 }
 const Post = ({ params }: PostProps) => {
     return (
         <>
-            {params.blogName}
+            {params.postID}
         </>
     );
 }

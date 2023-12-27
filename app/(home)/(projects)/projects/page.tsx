@@ -12,7 +12,7 @@ const Projects = () => {
             {isLoading && <p>Loading...</p>}
             {error && <p>{error.message}</p>}
             {projects?.map((project) => (
-                <ProjectCard project={project} key={project.title} />
+                <ProjectCard project={project} key={project.id} />
             ))}
         </main >
     );

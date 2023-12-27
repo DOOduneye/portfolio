@@ -14,6 +14,7 @@ import { getAllProjects } from '@/services/projects'
 import { useProjects } from '@/hooks/useProjects'
 import { useExperiences } from '@/hooks/useExperiences'
 import { Experience } from '@/services/experiences'
+import { compareExperiences } from '@/lib/utils'
 
 const Home = () => {
   const controls = useAnimation();
@@ -52,18 +53,7 @@ const Home = () => {
   // ]
 
   const { data: projects, isLoading, error } = useProjects()
-  const { data: experiences, isLoading: isLoadingExperiences, error: errorExperiences } = useExperiences()
-
-  function compareExperiences(a: Experience, b: Experience): number {
-    // Convert 'from' and 'to' timestamps to Date objects
-    const fromDateA = a.from.toDate();
-    const toDateA = a.to ? a.to.toDate() : new Date(); // Consider present if 'to' is null or undefined
-    const fromDateB = b.from.toDate();
-    const toDateB = b.to ? b.to.toDate() : new Date(); // Consider present if 'to' is null or undefined
-
-    // Compare by 'to' date or 'from' date if 'to' is null/undefined
-    return toDateB.getTime() - toDateA.getTime(); // Descending order, change for ascending
-  }
+  const { data: experiences, isLoading: isLoadingExperiences, error: errorExperiences } = useExperiences();
 
   useEffect(() => {
     if (inView) {

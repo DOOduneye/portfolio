@@ -6,12 +6,17 @@ import { Button } from "@/components/ui/button";
 import { useAtomValue } from "jotai";
 import { AdminNavbar } from "./_components/admin-navbar";
 import Sidebar from "./_components/side-bar";
+import { useEffect } from "react";
+import { redirect } from "next/navigation";
 
 const Admin = () => {
-    return (
-        <>
 
-        </>
+    useEffect(() => {
+        redirect('/admin/posts')
+    }, [])
+
+    return (
+        <></>
     );
 }
 
