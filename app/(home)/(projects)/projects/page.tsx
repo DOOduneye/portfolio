@@ -1,17 +1,18 @@
-import { ProjectCard } from "../_components/project-card";
+"use client"
+
+import { ProjectCard } from "@/components/project-card";
+import { useProjects } from "@/hooks/useProjects";
 
 const Projects = () => {
+    const { data: projects, isLoading, error } = useProjects();
+
     return (
         <main className="flex flex-col gap-4">
-            <h2 className='text-2xl font-bold'>Project</h2>
-            {Array.from({ length: 10 }, (_, i) => (
-                <ProjectCard
-                    title='The First Project'
-                    description='This is the first project on my blog.'
-                    tags={['tag1', 'tag2']}
-                    year='2021'
-                    key={i}
-                />
+            <h2 className='text-2xl font-bold'>Projects</h2>
+            {isLoading && <p>Loading...</p>}
+            {error && <p>{error.message}</p>}
+            {projects?.map((project) => (
+                <ProjectCard project={project} key={project.title} />
             ))}
         </main >
     );

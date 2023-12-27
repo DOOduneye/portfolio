@@ -2,15 +2,10 @@ import { useAnimation, motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { Badge } from "@/components/ui/badge";
 import { useEffect } from "react";
+import { type Project } from "@/services/projects";
 
 interface ProjectCardProps {
-    project: {
-        title: string;
-        description: string;
-        tags: string[];
-        date: Date;
-        link?: string;
-    }
+    project: Project
 }
 
 export const ProjectCard = ({ project: { title, description, tags, date, link } }: ProjectCardProps) => {
@@ -40,7 +35,7 @@ export const ProjectCard = ({ project: { title, description, tags, date, link } 
                 <div className='flex flex-row justify-between gap-x-4 pb-2'>
                     <h2 className='text-xl font-bold'>{title}</h2>
                     <span className='text-sm text-muted-foreground'>
-                        {date.getFullYear()}
+                        {date.toDate().toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
                     </span>
                 </div>
                 <p className='text-sm font-normal text-muted-foreground'>

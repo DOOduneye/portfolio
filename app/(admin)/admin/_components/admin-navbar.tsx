@@ -1,3 +1,5 @@
+"use client"
+
 import { userAtom } from "@/atoms/user-atom";
 import { ModeToggle } from "@/components/mode-toggle"
 import { Button } from "@/components/ui/button"
