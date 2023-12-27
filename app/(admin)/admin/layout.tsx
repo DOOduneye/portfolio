@@ -7,7 +7,7 @@ export default function ContentManagmentLayout({ children }: { children: React.R
     return (
         <>
             <AdminNavbar />
-            <div className="flex flex-row gap-10">
+            <div className="flex flex-row gap-10 w-full">
                 <Sidebar />
                 {children}
             </div>

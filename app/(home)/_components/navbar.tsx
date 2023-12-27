@@ -54,9 +54,9 @@ export const Navbar = () => {
                 {isHomePage && (
                     <>
                         <Link
-                            href='/blog'
+                            href='/posts'
                             className='text-sm font-semibold hover:underline hover:underline-offset-4 underlinetext-muted-foreground hover:text-gray-500'>
-                            Blog
+                            Writing
                         </Link>
                         <Link
                             href='/projects'
