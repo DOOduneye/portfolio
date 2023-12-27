@@ -1,6 +1,6 @@
 const Projects = () => {
     return (
-        <div className="flex flex-col gap-10">
+        <div className="">
             <h1>Projects</h1>
         </div>
     );

@@ -11,49 +11,15 @@ import { ExperienceCard } from './_components/experience-card'
 import { ProjectCard } from '../../components/project-card'
 import { useQuery } from '@tanstack/react-query'
 import { getAllProjects } from '@/services/projects'
-import { useProjects } from '@/hooks/useProjects'
-import { useExperiences } from '@/hooks/useExperiences'
 import { Experience } from '@/services/experiences'
 import { compareExperiences } from '@/lib/utils'
+import { useExperiences, useProjects } from '@/hooks/useFirebase'
+import HomeScreenExperience from './_components/hs-experience'
+import HomeScreenProjects from './_components/hs-projects'
 
 const Home = () => {
   const controls = useAnimation();
   const { ref, inView } = useInView();
-
-
-  // const projects = [
-  //   {
-  //     title: 'Jurni',
-  //     description: 'Analyzed journal data for a mental health service. Used NLP techniques to find trigger points in the data that could support experts in their work. Developed tools for large data scraping, preprocessing and subject clustering.',
-  //     tags: ['Python', 'NLP', 'Machine Learning', 'Data Science'],
-  //     date: new Date('2022'),
-  //     link: 'https:www.davidoduneye.com'
-  //   },
-  //   {
-  //     title: 'Rate My Dorm',
-  //     description: 'Developed a secure, responsive full-stack web application with Next.js, enabling college students to view, rate, and provide feedback on dormitories. Integrated the Collegescorecard API to pull relevant college statistics, such as student body size, ownership, and associated costs. Set up a polyrepo architecture using Express.js, creating APIs that support CRUD operations on MongoDB schema objects.',
-  //     tags: ['React', 'Next.js', 'Express.js', 'MongoDB'],
-  //     date: new Date('2022'),
-  //     link: 'https:www.davidoduneye.com'
-  //   },
-  //   {
-  //     title: 'Jurni',
-  //     description: 'Analyzed journal data for a mental health service. Used NLP techniques to find trigger points in the data that could support experts in their work. Developed tools for large data scraping, preprocessing and subject clustering.',
-  //     tags: ['Python', 'NLP', 'Machine Learning', 'Data Science'],
-  //     date: new Date('2022'),
-  //     link: 'https:www.davidoduneye.com'
-  //   },
-  //   {
-  //     title: 'Rate My Dorm',
-  //     description: 'Developed a secure, responsive full-stack web application with Next.js, enabling college students to view, rate, and provide feedback on dormitories. Integrated the Collegescorecard API to pull relevant college statistics, such as student body size, ownership, and associated costs. Set up a polyrepo architecture using Express.js, creating APIs that support CRUD operations on MongoDB schema objects.',
-  //     tags: ['React', 'Next.js', 'Express.js', 'MongoDB'],
-  //     date: new Date('2022'),
-  //     link: 'https:www.davidoduneye.com'
-  //   }
-  // ]
-
-  const { data: projects, isLoading, error } = useProjects()
-  const { data: experiences, isLoading: isLoadingExperiences, error: errorExperiences } = useExperiences();
 
   useEffect(() => {
     if (inView) {
@@ -84,39 +50,8 @@ const Home = () => {
         I also enjoy photography, traveling, and  film.
       </p>
 
-      <div className='mt-10 space-y-4'>
-        <div className='flex flex-row items-center justify-between'>
-          <h1 className='text-md font-semibold'>
-            Experience
-          </h1>
-        </div>
-
-        <div className='space-y-4'>
-          {isLoadingExperiences && <p>Loading...</p>}
-          {errorExperiences && <p>{errorExperiences.message}</p>}
-          {experiences?.sort(compareExperiences).map((experience: any) => (
-            <ExperienceCard experience={experience} key={experience.id} />
-          ))}
-        </div>
-      </div>
-
-      <div className='mt-10 space-y-4'>
-        <div className='flex flex-row items-center justify-between'>
-          <h1 className='text-md font-semibold'>
-            Projects
-          </h1>
-          <Link href='/projects' className='flex flex-row items-center space-x-2 cursor-pointer group'>
-            <ArrowRight className='w-6 h-6 text-gray-500 group-hover:text-gray-400' />
-          </Link>
-        </div>
-        <div className='grid grid-cols-1 gap-4'>
-          {isLoading && <p>Loading...</p>}
-          {error && <p>{error.message}</p>}
-          {projects?.map((project: any) => (
-            <ProjectCard project={project} key={project.title} />
-          ))}
-        </div>
-      </div>
+      <HomeScreenExperience />
+      <HomeScreenProjects />
     </motion.main>
   )
 }

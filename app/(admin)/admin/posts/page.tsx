@@ -1,9 +1,10 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { usePosts } from "@/hooks/usePosts";
+
 import { Plus } from "lucide-react";
 import { PostCard } from "../_components/post-card";
+import { usePosts } from "@/hooks/useFirebase";
 
 const Post = () => {
     const { data: posts, error, isLoading } = usePosts();
@@ -18,7 +19,7 @@ const Post = () => {
                 <div className="flex flex-row gap-x-2">
                     <Button className="gap-x-2">
                         <Plus className="w-5 h-5" />
-                        Create
+                        New Post
                     </Button>
                 </div>
             </div>

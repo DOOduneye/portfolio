@@ -63,11 +63,6 @@ export const Navbar = () => {
                             className='text-sm font-semibold hover:underline hover:underline-offset-4 underlinetext-muted-foreground hover:text-gray-500'>
                             Projects
                         </Link>
-                        <Link
-                            href='/admin'
-                            className='text-sm font-semibold hover:underline hover:underline-offset-4 underlinetext-muted-foreground hover:text-gray-500'>
-                            Admin
-                        </Link>
                     </>
                 )}
             </nav>
