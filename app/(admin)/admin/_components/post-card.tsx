@@ -10,6 +10,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useEffect, useState } from "react";
+import { cn } from "@/lib/utils";
 
 
 interface PostCardProps {
@@ -23,19 +24,16 @@ export const PostCard = ({ post, index, totalPosts }: PostCardProps) => {
     const [isFirst, setIsFirst] = useState(index === 0);
     const [isLast, setIsLast] = useState(index === totalPosts - 1);
 
-    const cardClasses = `
-      flex flex-row p-5 justify-between border border-transparent border-gray-200 shadow-sm dark:border-gray-900
-      ${isFirst ? 'rounded-t-xl' : ''}
-      ${isLast ? 'rounded-b-xl' : ''}
-    `;
-
     useEffect(() => {
         setIsFirst(index === 0);
         setIsLast(index === totalPosts - 1);
     }, [index, totalPosts])
 
     return (
-        <div className={` ${cardClasses} `}>
+        <div className={cn('flex flex-row p-5 justify-between border border-transparent border-gray-200 shadow-sm dark:border-gray-900', {
+            'rounded-t-xl': isFirst,
+            'rounded-b-xl': isLast,
+        })}>
             <div className='flex flex-col justify-between gap-x-4'>
                 <h3 className='text-xl font-bold'>
                     {post.title}

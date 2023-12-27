@@ -19,3 +19,13 @@ export async function getAllProjects(): Promise<Project[]> {
 
     return projects;
 }
+
+// export async function getProjectById(id: string): Promise<Project> {
+//     const projectSnapshot = await getDoc(collection(db, 'projects'), id);
+
+//     const project = projectSnapshot.docs.map((project) => ({
+//         ...project.data() as Project
+//     })).find((project) => project.id === id);
+
+//     return project;
+// }

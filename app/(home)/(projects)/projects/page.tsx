@@ -1,7 +1,7 @@
 "use client"
 
 import { ProjectCard } from "@/components/project-card";
-import { useProjects } from "@/hooks/useProjects";
+import { useProjects } from "@/hooks/useFirebase";
 
 const Projects = () => {
     const { data: projects, isLoading, error } = useProjects();
