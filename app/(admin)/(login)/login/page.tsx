@@ -15,7 +15,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
-import { AdminNavbar } from "../../_components/AdminNavbar";
+import { AdminNavbar } from "../../admin/_components/admin-navbar";
 
 const Login = () => {
     const router = useRouter();
@@ -52,7 +52,7 @@ const Login = () => {
         <main className='flex flex-col items-center justify-center min-h-screen space-y-5'>
             <div role="button" className='group cursor-pointer absolute top-5 left-5 flex flex-row gap-2 items-center' onClick={() => router.replace('/')}>
                 <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-all duration-300 ease-in-out" />
-                <h1 className='text-md font-semibold'>Back</h1>
+                <h1 className='text-md font-semibold'>Home</h1>
             </div>
             <div className='flex flex-row gap-2 items-center'>
                 <Command className="w-6 h-6" />

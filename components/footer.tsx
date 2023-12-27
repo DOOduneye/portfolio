@@ -7,7 +7,16 @@ export const Footer = () => {
             <p className='text-sm font-normal'>
                 {new Date().getFullYear()} - David Oduneye.
 
-                Built with ❤️ using <a className='text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-500' href='https://nextjs.org'>Next.js</a> and <a className='text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-500' href='https://tailwindcss.com'>Tailwind CSS</a>.
+                Built with ❤️ using
+                <a className='text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-500' href='https://nextjs.org'>
+                    Next.js
+                </a>
+
+                and
+
+                <a className='text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-500' href='https://tailwindcss.com'>
+                    Tailwind CSS
+                </a>.
             </p>
         </footer >
     )

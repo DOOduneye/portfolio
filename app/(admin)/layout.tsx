@@ -2,15 +2,13 @@
 
 import { Toaster, toast } from 'sonner'
 
-import { AdminNavbar } from "./_components/AdminNavbar";
-import Providers from '@/components/providers/atom-provider';
+import Providers from '@/components/providers/providers';
 import { auth } from "@/lib/firebase";
-import { use, useEffect, useState } from 'react';
-import { User } from 'firebase/auth';
-import { Loader } from 'lucide-react';
+import { useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAtom } from 'jotai';
 import { userAtom } from '@/atoms/user-atom';
+import Spinner from '@/components/spinner';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
     const router = useRouter();
@@ -22,6 +20,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             if (userData) {
                 setUser(userData);
             } else {
+                setUser(null);
                 if (pathname !== '/login') {
                     router.push('/login');
                 }
@@ -31,24 +30,25 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         });
 
         return () => unsubscribe();
+
     }, [router]);
 
+    if (user !== null && pathname === '/login') {
+        router.push('/admin');
+
+        return <Spinner />
+    }
+
     if (user === null && pathname !== '/login') {
-        return (
-            <div className='flex flex-col justify-center items-center h-screen'>
-                <div className='w-8 h-8 flex items-center justify-center animate-spin'>
-                    <Loader />
-                </div>
-            </div>
-        );
+        router.push('/login');
+
+        return <Spinner />
     }
 
     return (
-        <Providers>
-            <main className='flex flex-col my-5 '>
-                <Toaster />
-                {children}
-            </main>
-        </Providers>
+        <main className='flex flex-col mt-5'>
+            <Toaster />
+            {children}
+        </main>
     )
 }
