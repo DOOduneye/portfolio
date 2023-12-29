@@ -29,7 +29,7 @@ const Home = () => {
       animate={controls}
     >
       <h1 className='text-2xl font-bold'>David Oduneye</h1>
-      <p className='mt-4 text-sm font-normal text-muted-foreground'>
+      <p className='mt-4 text-sm font-normal dark:text-muted-foreground text-gray-500'>
         I am a third year Computer Science student at Northeastern University.
         I am not only honing my skills in computer science but also expanding my knowledge as a
         Full Stack Software and Machine Learning Engineer. With a strong passion for building
