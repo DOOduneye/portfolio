@@ -1,6 +1,10 @@
 "use client";
-import { Post } from "@/services/posts";
+import { useEffect, useState } from "react";
 import { MoreVertical } from "lucide-react";
+
+import { cn } from "@/lib/utils";
+import { Post } from "@/services/posts";
+
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -9,8 +13,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { useEffect, useState } from "react";
-import { cn } from "@/lib/utils";
+
 
 
 interface PostCardProps {

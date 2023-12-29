@@ -1,21 +1,12 @@
 "use client"
 
 import { useEffect } from 'react'
-import Link from 'next/link'
 
-import { ArrowRight } from 'lucide-react'
 import { motion, useAnimation } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 
-import { ExperienceCard } from './_components/experience-card'
-import { ProjectCard } from '../../components/project-card'
-import { useQuery } from '@tanstack/react-query'
-import { getAllProjects } from '@/services/projects'
-import { Experience } from '@/services/experiences'
-import { compareExperiences } from '@/lib/utils'
-import { useExperiences, useProjects } from '@/hooks/useFirebase'
-import HomeScreenExperience from './_components/hs-experience'
-import HomeScreenProjects from './_components/hs-projects'
+import { HomeScreenExperience } from './_components/hs-experience'
+import { HomeScreenProjects } from './_components/hs-projects'
 
 const Home = () => {
   const controls = useAnimation();

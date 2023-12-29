@@ -2,14 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from 'next/navigation'
+import { useEffect } from "react";
 
 import { LinkedinIcon, Music, GithubIcon, BookUser } from "lucide-react";
+import { motion, useAnimation } from "framer-motion";
+import { useInView } from "react-intersection-observer";
 
 import { BrandButton } from "./brand-button";
 import { ModeToggle } from "@/components/mode-toggle";
-import { motion, useAnimation } from "framer-motion";
-import { useInView } from "react-intersection-observer";
-import { useEffect } from "react";
 
 export const Navbar = () => {
     const pathname = usePathname();
@@ -40,7 +40,7 @@ export const Navbar = () => {
                 <BrandButton icon={LinkedinIcon} href='https://www.linkedin.com/in/dooduneye' tip='LinkedIn' />
                 <BrandButton icon={Music} href='https://open.spotify.com/user/317gsn3rqunkxocwuvf7njcj5luy' tip='Spotify' />
                 <BrandButton icon={GithubIcon} href='https://github.com/DOOduneye/' tip='GitHub' />
-                <BrandButton icon={BookUser} href='/resume.pdf' tip='Resume' />
+                <BrandButton icon={BookUser} href='assets/resume.pdf' tip='Resume' />
             </div>
 
             <nav className='flex flex-row self-center justify-around space-x-4'>

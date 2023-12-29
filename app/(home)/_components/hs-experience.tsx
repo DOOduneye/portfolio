@@ -1,10 +1,18 @@
-import { useExperiences } from "@/hooks/useFirebase";
-import { compareExperiences } from "@/lib/utils";
-import { ExperienceCard } from "./experience-card";
+"use client";
 
-const HomeScreenExperience = () => {
+import { compareExperiences } from "@/lib/utils";
+import { useExperiences } from "@/hooks/useFirebase";
+
+import { ExperienceCard } from "./experience-card";
+import { Spinner } from "@/components/spinner";
+import { Error } from "@/components/error";
+
+export const HomeScreenExperience = () => {
 
     const { data: experiences, isLoading, error } = useExperiences();
+
+    if (isLoading) return <Spinner />
+    if (error) return <Error message={error.message} />
 
     return (
         <div className='mt-10 space-y-4'>
@@ -15,8 +23,6 @@ const HomeScreenExperience = () => {
             </div>
 
             <div className='space-y-4'>
-                {isLoading && <p>Loading...</p>}
-                {error && <p>{error.message}</p>}
                 {experiences?.sort(compareExperiences).map((experience: any) => (
                     <ExperienceCard experience={experience} key={experience.id} />
                 ))}
@@ -24,5 +30,3 @@ const HomeScreenExperience = () => {
         </div>
     );
 }
-
-export default HomeScreenExperience;

@@ -1,13 +1,9 @@
-"use client";
+import { Plus } from "lucide-react";
 
+import { AllPosts } from "./_components/all-posts";
 import { Button } from "@/components/ui/button";
 
-import { Plus } from "lucide-react";
-import { PostCard } from "../_components/post-card";
-import { usePosts } from "@/hooks/useFirebase";
-
 const Post = () => {
-    const { data: posts, error, isLoading } = usePosts();
 
     return (
         <div className='flex flex-col w-full max-w-5xl space-y-4 mt-10 '>
@@ -23,13 +19,7 @@ const Post = () => {
                     </Button>
                 </div>
             </div>
-            <div>
-                {isLoading && <div>Loading...</div>}
-                {error && <div>{error.message}</div>}
-                {posts && posts.map((post, index) => (
-                    <PostCard key={post.id} post={post} index={index} totalPosts={posts.length} />
-                ))}
-            </div>
+            <AllPosts />
         </div>
     );
 }

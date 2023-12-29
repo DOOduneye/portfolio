@@ -14,7 +14,8 @@ export async function getAllProjects(): Promise<Project[]> {
     const projectsSnapshot = await getDocs(collection(db, 'projects'));
 
     const projects: Project[] = projectsSnapshot.docs.map((project) => ({
-        ...project.data() as Project
+        id: project.id,
+        ...project.data() as { title: string; description: string; link: string; tags: string[]; date: Timestamp; }
     }));
 
     return projects;

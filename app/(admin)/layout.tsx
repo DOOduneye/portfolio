@@ -1,14 +1,14 @@
 "use client"
 
-import { Toaster, toast } from 'sonner'
-
-import Providers from '@/components/providers/providers';
-import { auth } from "@/lib/firebase";
 import { useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
+
 import { useAtom } from 'jotai';
+import { Toaster, toast } from 'sonner'
+
+import { auth } from "@/lib/firebase";
 import { userAtom } from '@/atoms/user-atom';
-import Spinner from '@/components/spinner';
+import { Spinner } from '@/components/spinner';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
     const router = useRouter();
@@ -25,7 +25,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 }
                 setUser(null);
             }
-        }, (error) => {
+        }, (_) => {
             toast.error('Failed to fetch user data!');
         });
 
@@ -35,14 +35,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
     if (user !== null && pathname === '/login') {
         router.push('/admin');
-
         return <Spinner />
     }
 
-    if (user === null && pathname !== '/login') {
-
-        return <Spinner />
-    }
+    if (user === null && pathname !== '/login') return <Spinner />
 
     return (
         <main className='flex flex-col mt-5'>

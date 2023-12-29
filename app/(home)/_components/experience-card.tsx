@@ -1,8 +1,9 @@
 import { useAnimation, motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { useEffect } from "react";
-import { Experience } from "@/services/experiences";
+
 import { formatDateRange } from "@/lib/utils";
+import { Experience } from "@/services/experiences";
 
 interface ExperienceCardProps {
     experience: Experience;
