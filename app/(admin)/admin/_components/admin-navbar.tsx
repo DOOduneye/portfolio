@@ -1,16 +1,20 @@
 "use client"
 
-import { userAtom } from "@/atoms/user-atom";
-import { ModeToggle } from "@/components/mode-toggle"
-import { Button } from "@/components/ui/button"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { auth } from "@/lib/firebase";
-import { useAtomValue } from "jotai";
-import { Settings } from "lucide-react";
 import Link from "next/link";
 
+import { Settings } from "lucide-react";
+
+import { auth } from "@/lib/firebase";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu";
+import { ModeToggle } from "@/components/mode-toggle"
+
 export const AdminNavbar = () => {
-    const user = useAtomValue(userAtom);
 
     const logout = async () => {
         await auth.signOut();
@@ -39,33 +43,8 @@ export const AdminNavbar = () => {
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
-                {/* <Button className='px-4 py-2 text-sm font-semibold' onClick={logout}>Logout</Button> */}
                 <ModeToggle />
             </div>
         </div>
     )
 }
-
-// export const SettingsModal = () => {
-
-//     return (
-//         <Dialog open={true} onClose={() => { }} onOpenChange={() => { }}>
-//             <DialogContent>
-//                 <DialogHeader className="border-b pb-3">
-//                     <h2 className="text-lg font-medium">My Settings</h2>
-//                 </DialogHeader>
-//                 <div className="flex item-center justify-between">
-//                     <div className="flex flex-col gap-y-1">
-//                         <Label>
-//                             Appearance
-//                         </Label>
-//                         <span className="text-[0.8rem] text-muted-foreground">
-//                             Customize how Jotion looks on your device
-//                         </span>
-//                     </div>
-//                     <ModeToggle />
-//                 </div>
-//             </DialogContent>
-//         </Dialog >
-//     )
-// }

@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { Experience, getAllExperiences } from "@/services/experiences";
-import { Post, getAllPosts } from "@/services/posts";
+import { Post, getAllPosts, getPostById } from "@/services/posts";
 import { getAllProjects, Project } from "@/services/projects";
 
 export const usePosts = () => {
@@ -10,6 +10,13 @@ export const usePosts = () => {
         queryFn: getAllPosts
     });
 };
+
+export const usePost = (id: string) => {
+    return useQuery<Post, Error>({
+        queryKey: ['posts', id],
+        queryFn: () => getPostById(id)
+    });
+}
 
 export const useExperiences = () => {
     return useQuery<Experience[], Error>({

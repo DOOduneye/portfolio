@@ -1,5 +1,6 @@
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { LucideIcon } from "lucide-react"
+
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
 interface BrandButtonProps {
     icon: LucideIcon
@@ -12,7 +13,6 @@ export const BrandButton = ({
     href,
     tip,
 }: BrandButtonProps) => {
-
     return (
         <TooltipProvider>
             <Tooltip>

@@ -1,9 +1,8 @@
 
 import { AdminNavbar } from "./_components/admin-navbar";
-import Sidebar from "./_components/side-bar";
+import { Sidebar } from "./_components/side-bar";
 
 export default function ContentManagmentLayout({ children }: { children: React.ReactNode }) {
-
     return (
         <>
             <AdminNavbar />
