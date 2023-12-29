@@ -53,11 +53,11 @@ export const Navbar = () => {
                 )}
                 {isHomePage && (
                     <>
-                        <Link
+                        {/* <Link
                             href='/posts'
                             className='text-sm font-semibold hover:underline hover:underline-offset-4 underlinetext-muted-foreground hover:text-gray-500'>
                             Writing
-                        </Link>
+                        </Link> */}
                         <Link
                             href='/projects'
                             className='text-sm font-semibold hover:underline hover:underline-offset-4 underlinetext-muted-foreground hover:text-gray-500'>
