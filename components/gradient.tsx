@@ -5,7 +5,7 @@ import { motion } from "framer-motion"
 export const Gradient = () => {
     return (
         <>
-            {/* <motion.div
+            <motion.div
                 className="bg-[#fbe2e3] absolute top-[-6rem] -z-10 right-[11rem] h-[31.25rem] w-[31.25rem] rounded-full blur-[10rem] sm:w-[68.75rem] dark:bg-[#946263]"
                 animate={{
                     y: ['0%', '-10%', '0%'], // Define y-axis animation values for a bounce effect
@@ -26,7 +26,7 @@ export const Gradient = () => {
                         loop: Infinity, // Infinite loop
                     },
                 }}
-            /> */}
+            />
         </>
     )
 }
