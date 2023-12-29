@@ -10,6 +10,7 @@ import { useInView } from "react-intersection-observer";
 
 import { BrandButton } from "./brand-button";
 import { ModeToggle } from "@/components/mode-toggle";
+import { Button } from "@/components/ui/button";
 
 export const Navbar = () => {
     const pathname = usePathname();
@@ -35,7 +36,7 @@ export const Navbar = () => {
             initial={{ y: -50, opacity: 0 }}
             animate={controls}
             className='flex flex-row justify-between my-10 flex-center'>
-            <div className='flex flex-row space-x-4'>
+            <div className='flex flex-row'>
                 <ModeToggle />
                 <BrandButton icon={LinkedinIcon} href='https://www.linkedin.com/in/dooduneye' tip='LinkedIn' />
                 <BrandButton icon={Music} href='https://open.spotify.com/user/317gsn3rqunkxocwuvf7njcj5luy' tip='Spotify' />
@@ -45,10 +46,10 @@ export const Navbar = () => {
 
             <nav className='flex flex-row self-center justify-around space-x-4'>
                 {!isHomePage && (
-                    <Link
-                        href='/'
-                        className='px-4 text-sm font-semibold hover:underline hover:underline-offset-4 underlinetext-muted-foreground hover:text-gray-500'>
-                        Home
+                    <Link href='/' passHref>
+                        <Button variant='outline' size='sm' className='text-sm font-semibold dark:text-gray-200 dark:hover:text-gray-100 hover:text-gray-500'>
+                            Home
+                        </Button>
                     </Link>
                 )}
                 {isHomePage && (
@@ -58,10 +59,10 @@ export const Navbar = () => {
                             className='text-sm font-semibold hover:underline hover:underline-offset-4 underlinetext-muted-foreground hover:text-gray-500'>
                             Writing
                         </Link> */}
-                        <Link
-                            href='/projects'
-                            className='text-sm font-semibold hover:underline hover:underline-offset-4 underlinetext-muted-foreground hover:text-gray-500'>
-                            Projects
+                        <Link href='/projects' passHref>
+                            <Button variant='outline' size='sm' className='text-sm font-semibold dark:text-gray-200 dark:hover:text-gray-100 hover:text-gray-500'>
+                                Projects
+                            </Button>
                         </Link>
                     </>
                 )}

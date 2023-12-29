@@ -37,12 +37,12 @@ export const ExperienceCard = ({ experience: { role, company, to, from, descript
             animate={controls}
             className='grid grid-cols-3 gap-5'
         >
-            <span className="col-span-1 text-muted-foreground text-sm md:text-md">{date}</span>
+            <span className="col-span-1 dark:text-muted-foreground text-gray-500 text-sm md:text-sm font-normal">{date}</span>
 
             <div className="col-span-2 flex flex-col">
                 <span className="text-md md:text-lg font-semibold">{role}</span>
-                <span className="text-sm md:text-sm font-normal text-muted-foreground">{company}</span>
-                <p className="mt-2 text-sm font-normal text-muted-foreground">
+                <span className="text-sm md:text-sm font-normal dark:text-muted-foreground text-gray-500">{company}</span>
+                <p className="mt-2 text-sm font-normal dark:text-muted-foreground text-gray-500">
                     {description}
                 </p>
             </div>

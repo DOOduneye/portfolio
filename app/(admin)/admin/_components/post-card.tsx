@@ -14,8 +14,6 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-
-
 interface PostCardProps {
     post: Post;
     index: number;

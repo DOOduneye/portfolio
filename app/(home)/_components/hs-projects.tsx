@@ -21,11 +21,11 @@ export const HomeScreenProjects = () => {
                 <h1 className='text-md font-semibold'>
                     Projects
                 </h1>
-                <Link href='/projects' className="flex flex-row items-center space-x-2 cursor-pointer transition duration-300 ease-in-out group group-hover:text-gray-400">
-                    <span className='text-sm font-normal hidden text-gray-500 group-hover:block transition duration-300 ease-in-out'>
+                <Link href='/projects' className="flex flex-row items-center space-x-2 cursor-pointer group group-hover:text-gray-400">
+                    <span className='text-sm font-normal hidden text-gray-500 group-hover:block'>
                         See More
                     </span>
-                    <ChevronRight className='w-6 h-6 text-gray-500 group-hover:text-gray-400 transition duration-300 ease-in-out' />
+                    <ChevronRight className='w-6 h-6 dark:text-gray-500 dark:group-hover:text-gray-400 text-gray-500 group-hover:text-gray-700' />
                 </Link>
             </div>
             <div className='grid grid-cols-1 gap-4'>

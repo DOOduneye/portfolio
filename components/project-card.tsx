@@ -27,7 +27,7 @@ export const ProjectCard = ({ project: { title, description, tags, date, link } 
             ref={ref}
             initial={{ y: 30, opacity: 0 }}
             animate={controls}
-            className='flex flex-col px-5 py-5 transition-all duration-300 ease-in-out transform border-2 border-transparent border-gray-200 shadow-sm dark:border-gray-900 sm:dark:hover:border-gray-300 rounded-xl sm:hover:scale-105 sm:hover:border-gray-500 cursor-pointer'
+            className='flex flex-col px-5 py-5 transition-all duration-300 ease-in-out transform border-2 border-gray-300/60 shadow-sm dark:border-gray-900 sm:dark:hover:border-gray-300 rounded-xl sm:hover:scale-105 sm:hover:border-gray-500 cursor-pointer'
             href={link}
             target='_blank'
         >
