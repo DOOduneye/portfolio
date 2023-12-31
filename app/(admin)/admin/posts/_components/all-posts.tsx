@@ -1,10 +1,11 @@
 "use client";
 
-import { usePosts } from "@/hooks/useFirebase";
 
-import { PostCard } from "../../_components/post-card";
+
+import { PostCard } from "./post-card";
 import { Spinner } from "@/components/spinner";
 import { Error } from "@/components/error";
+import { usePosts } from "@/hooks/use-post";
 
 export const AllPosts = () => {
     const { data: posts, error, isLoading } = usePosts();
@@ -14,7 +15,7 @@ export const AllPosts = () => {
 
     return (
         <>
-            {posts && posts.map((post, index) => (
+            {posts && posts.sort((a, b) => b.date.toMillis() - a.date.toMillis()).map((post, index) => (
                 <PostCard key={post.id} post={post} index={index} totalPosts={posts.length} />
             ))}
         </>

@@ -3,10 +3,11 @@
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 
-import { useProjects } from "@/hooks/useFirebase";
+
 import { ProjectCard } from "@/components/project-card";
 import { Spinner } from "@/components/spinner";
 import { Error } from "@/components/error";
+import { useProjects } from "@/hooks/use-project";
 
 export const HomeScreenProjects = () => {
 

@@ -1,18 +1,14 @@
 "use client";
 import { useEffect, useState } from "react";
-import { MoreVertical } from "lucide-react";
+
+import { toast } from "sonner";
 
 import { cn } from "@/lib/utils";
-import { Post } from "@/services/posts";
+import { type Post } from "@/types/post";
 
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+
+import { AdminDropdown } from "../../_components/admin-dropdown";
+import { useDeletePost } from "@/hooks/use-post";
 
 interface PostCardProps {
     post: Post;
@@ -24,11 +20,26 @@ export const PostCard = ({ post, index, totalPosts }: PostCardProps) => {
 
     const [isFirst, setIsFirst] = useState(index === 0);
     const [isLast, setIsLast] = useState(index === totalPosts - 1);
+    const deletePost = useDeletePost();
 
     useEffect(() => {
         setIsFirst(index === 0);
         setIsLast(index === totalPosts - 1);
     }, [index, totalPosts])
+
+    const removePost = async () => {
+        try {
+            const promise = deletePost.mutateAsync(post.id);
+            toast.promise(promise, {
+                loading: 'Deleting post...',
+                success: 'Post deleted successfully!',
+                error: 'Failed to delete post.',
+            });
+        } catch (error) {
+            console.error('Error deleting post:', error);
+            toast.error('Failed to delete post.');
+        }
+    };
 
     return (
         <div className={cn('flex flex-row p-5 justify-between border border-transparent border-gray-200 shadow-sm dark:border-gray-900', {
@@ -42,23 +53,7 @@ export const PostCard = ({ post, index, totalPosts }: PostCardProps) => {
                 <p className='text-sm text-gray-500'>{post.date.toDate().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
             </div>
 
-            <DropdownMenu>
-                <DropdownMenuTrigger>
-                    <div className='flex flex-row justify-between gap-x-4 items-center border-2 p-3 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800'>
-                        <MoreVertical className='w-4 h-4' />
-                    </div>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                    <DropdownMenuItem>
-                        <DropdownMenuLabel>Edit</DropdownMenuLabel>
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem>
-                        <DropdownMenuLabel>Delete</DropdownMenuLabel>
-                    </DropdownMenuItem>
-                </DropdownMenuContent>
-            </DropdownMenu>
-
+            <AdminDropdown onEdit={() => { }} onDelete={removePost} />
         </div>
     );
 }
