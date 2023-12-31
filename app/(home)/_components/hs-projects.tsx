@@ -4,7 +4,7 @@ import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 
 
-import { ProjectCard } from "@/components/project-card";
+import { ProjectCard } from "@/app/(home)/_components/project-card";
 import { Spinner } from "@/components/spinner";
 import { Error } from "@/components/error";
 import { useProjects } from "@/hooks/use-project";
