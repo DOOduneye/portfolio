@@ -13,20 +13,19 @@ import { useDeletePost } from "@/hooks/use-post";
 interface PostCardProps {
     post: Post;
     index: number;
-    totalPosts: number;
+    length: number;
 }
 
-export const PostCard = ({ post, index, totalPosts }: PostCardProps) => {
+export const PostCard = ({ post, index, length }: PostCardProps) => {
 
     const [isFirst, setIsFirst] = useState(index === 0);
-    const [isLast, setIsLast] = useState(index === totalPosts - 1);
+    const [isLast, setIsLast] = useState(index === length - 1);
     const deletePost = useDeletePost();
-    // const editPost =
 
     useEffect(() => {
         setIsFirst(index === 0);
-        setIsLast(index === totalPosts - 1);
-    }, [index, totalPosts])
+        setIsLast(index === length - 1);
+    }, [index, length])
 
     const removePost = async () => {
         try {

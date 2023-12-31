@@ -1,31 +1,32 @@
 "use client";
+
 import { useEffect, useState } from "react";
 
 import { toast } from "sonner";
 
 import { cn } from "@/lib/utils";
 
-import { Project } from "@/types/project";
 import { AdminDropdown } from "../../_components/admin-dropdown";
 import { useDeleteProject } from "@/hooks/use-project";
-import { useEditProjectStore, useProjectStore } from "@/store/modal-store";
+import { useEditProjectStore } from "@/store/modal-store";
+import { Experience } from "@/types/experience";
 
-interface ProjectCardProps {
-    project: Project;
+interface ExperienceCardProps {
+    experience: Experience;
     index: number;
-    length: number;
+    total: number;
 }
 
-export const ProjectCard = ({ project, index, length }: ProjectCardProps) => {
+export const ExperienceCard = ({ experience, index, total }: ExperienceCardProps) => {
     const [isFirst, setIsFirst] = useState(index === 0);
-    const [isLast, setIsLast] = useState(index === length - 1);
+    const [isLast, setIsLast] = useState(index === total - 1);
     const deleteProject = useDeleteProject();
     const editProjectStore = useEditProjectStore();
 
     useEffect(() => {
         setIsFirst(index === 0);
-        setIsLast(index === length - 1);
-    }, [index, length])
+        setIsLast(index === total - 1);
+    }, [index, total])
 
 
     const handleEditClick = () => {

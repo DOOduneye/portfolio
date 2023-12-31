@@ -16,7 +16,7 @@ export const AllPosts = () => {
     return (
         <>
             {posts && posts.sort((a, b) => b.date.toMillis() - a.date.toMillis()).map((post, index) => (
-                <PostCard key={post.id} post={post} index={index} totalPosts={posts.length} />
+                <PostCard key={post.id} post={post} index={index} length={posts.length} />
             ))}
         </>
     );

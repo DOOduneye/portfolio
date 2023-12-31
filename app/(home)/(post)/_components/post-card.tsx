@@ -4,24 +4,24 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import { cn } from "@/lib/utils";
-import { Post } from "@/services/posts";
+import { Post } from "@/types/post";
 
 interface PostCardProps {
     post: Post;
     index: number;
-    totalPosts: number;
+    length: number;
 }
 
-export const PostCard = ({ post: { id, title, subtitle, date, content }, index, totalPosts }: PostCardProps) => {
+export const PostCard = ({ post: { id, title, subtitle, date, content }, index, length }: PostCardProps) => {
     const timeToRead = Math.ceil(content.split(' ').length / 200);
 
     const [isFirst, setIsFirst] = useState(index === 0);
-    const [isLast, setIsLast] = useState(index === totalPosts - 1);
+    const [isLast, setIsLast] = useState(index === length - 1);
 
     useEffect(() => {
         setIsFirst(index === 0);
-        setIsLast(index === totalPosts - 1);
-    }, [index, totalPosts])
+        setIsLast(index === length - 1);
+    }, [index, length])
 
     return (
         <Link href={`/posts/${id}`} className={cn('p-5 border border-transparent border-gray-200 shadow-sm dark:border-gray-900 dark:hover:border-gray-300 hover:border-gray-500', {
