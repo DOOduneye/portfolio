@@ -2,10 +2,10 @@
 
 import { Plus } from "lucide-react";
 
+import { AllExperiences } from "./_components/all-experiences";
 import { Button } from "@/components/ui/button";
 
-import { AllExperiences } from "./_components/all-experiences";
-import { useExperienceStore } from "@/store/modal-store";
+import { useExperienceStore } from "@/hooks/use-modal";
 
 const Experiences = () => {
     const store = useExperienceStore();

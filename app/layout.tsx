@@ -4,7 +4,6 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 
 import { cn } from '@/lib/utils'
-import { Gradient } from '@/components/gradient'
 import Providers from '@/components/providers/providers'
 
 export const inter = Inter({ subsets: ['latin'], variable: '--font-sans' })

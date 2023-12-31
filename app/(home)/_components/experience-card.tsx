@@ -3,7 +3,7 @@ import { useInView } from "react-intersection-observer";
 import { useEffect } from "react";
 
 import { formatDateRange } from "@/lib/utils";
-import { Experience } from "@/services/experiences";
+import { Experience } from "@/types/experience";
 
 interface ExperienceCardProps {
     experience: Experience;

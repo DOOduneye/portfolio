@@ -7,10 +7,9 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
 import { AdminDropdown } from "../../_components/admin-dropdown";
-import { useDeleteProject } from "@/hooks/use-project";
-import { useEditExperienceStore, useEditProjectStore } from "@/store/modal-store";
 import { Experience } from "@/types/experience";
 import { useDeleteExperience } from "@/hooks/use-experience";
+import { useEditExperienceStore } from "@/hooks/use-modal";
 
 interface ExperienceCardProps {
     experience: Experience;

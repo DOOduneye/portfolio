@@ -1,9 +1,8 @@
-"use client";
-
-import { Experience } from "@/types/experience";
-import { Post } from "@/types/post";
-import { Project } from "@/types/project";
 import { create } from "zustand";
+
+import type { Experience } from "@/types/experience";
+import type { Post } from "@/types/post";
+import type { Project } from "@/types/project";
 
 export type ModalStore<T> = {
     isOpen: boolean;

@@ -1,7 +1,7 @@
 
-import { Footer } from "@/components/footer";
 import { AdminNavbar } from "./_components/admin-navbar";
 import { Sidebar } from "./_components/side-bar";
+import { Footer } from "@/components/footer";
 
 export default function ContentManagmentLayout({ children }: { children: React.ReactNode }) {
     return (

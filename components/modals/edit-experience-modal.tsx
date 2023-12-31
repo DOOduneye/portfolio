@@ -2,7 +2,10 @@ import { useEffect, useState } from 'react';
 
 import { toast } from 'sonner';
 
-import { Button } from '@/components/ui/button';
+import { useUpdateExperience } from '@/hooks/use-experience';
+import { experienceSchema } from '@/types/experience';
+import { useEditExperienceStore } from '@/hooks/use-modal';
+
 import {
     Dialog,
     DialogContent,
@@ -10,16 +13,8 @@ import {
     DialogTitle,
     DialogDescription
 } from '@/components/ui/dialog';
-
-import {
-    Project,
-    projectSchema
-} from '@/types/project';
-import { useUpdateProject } from '@/hooks/use-project';
-import { useEditExperienceStore, useEditProjectStore } from '@/store/modal-store';
-import { useUpdateExperience } from '@/hooks/use-experience';
-import { experienceSchema } from '@/types/experience';
-import { ExperienceModalContent } from '../experience-modal-content';
+import { Button } from '@/components/ui/button';
+import { ExperienceModalContent } from '@/components/experience-modal-content';
 
 
 export const EditExperienceModal = () => {

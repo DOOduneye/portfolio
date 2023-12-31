@@ -1,42 +1,9 @@
-import { create } from "zustand";
 import { useQuery, useMutation, type UseQueryResult, type UseMutationResult } from "@tanstack/react-query";
 import { queryClient } from "@/components/providers/providers";
 
+import type { Update } from "@/types/global";
 import type { Project, ProjectWithoutId } from "@/types/project";
-
 import { getAllProjects, getProjectById, createProject, deleteProject, updateProject } from "@/services/projects";
-import { Update } from "@/types/global";
-import { Timestamp } from "firebase/firestore";
-
-// type ProjectStore = {
-//     isOpen: boolean;
-//     onOpen: () => void;
-//     onClose: () => void;
-// };
-
-// export const useProjectStore = create<ProjectStore>((set) => ({
-//     isOpen: false,
-//     onOpen: () => set({ isOpen: true }),
-//     onClose: () => set({ isOpen: false }),
-// }));
-
-// type ModalStore<T> = {
-//     isOpen: boolean;
-//     data: T;
-//     setData: (data: T) => void;
-//     onOpen: () => void;
-//     onClose: () => void;
-// };
-
-// export const useModalStore = <T>() => create<ModalStore<T>>((set) => ({
-//     isOpen: false,
-//     data: {} as T,
-//     setData: (data: T) => set((state) => ({ data: { ...state.data, ...data } })),
-//     onOpen: () => set({ isOpen: true }),
-//     onClose: () => set({ isOpen: false }),
-// }));
-
-
 
 /**
  * Fetches all projects.
@@ -86,7 +53,6 @@ export const useUpdateProject = (): UseMutationResult<void, Error, Update<Projec
         },
     })
 }
-
 
 /**
  * Deletes a project by its ID.

@@ -1,11 +1,11 @@
 "use client"
 
+import { groupBy } from "@/lib/utils";
+import { useProjects } from "@/hooks/use-project";
 
 import { ProjectCard } from "@/app/(home)/_components/project-card";
 import { Spinner } from "@/components/spinner";
 import { Error } from "@/components/error";
-import { groupBy } from "@/lib/utils";
-import { useProjects } from "@/hooks/use-project";
 
 const Projects = () => {
     const { data: projects, isLoading, error } = useProjects();
