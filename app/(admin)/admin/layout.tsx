@@ -1,4 +1,5 @@
 
+import { Footer } from "@/components/footer";
 import { AdminNavbar } from "./_components/admin-navbar";
 import { Sidebar } from "./_components/side-bar";
 
@@ -10,6 +11,7 @@ export default function ContentManagmentLayout({ children }: { children: React.R
                 <Sidebar />
                 {children}
             </div>
+            <Footer />
         </>
     )
 }
