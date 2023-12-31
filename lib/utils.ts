@@ -1,6 +1,7 @@
-import { Experience } from "@/services/experiences";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+
+import { Experience } from "@/types/experience";
 
 /**
  * Tailwind CSS classnames generator
