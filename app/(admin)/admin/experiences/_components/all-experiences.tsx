@@ -4,6 +4,7 @@
 import { Spinner } from "@/components/spinner";
 import { Error } from "@/components/error";
 import { useExperiences } from "@/hooks/use-experience";
+import { ExperienceCard } from "./experience-card";
 
 export const AllExperiences = () => {
     const { data: experiences, error, isLoading } = useExperiences();
@@ -13,11 +14,8 @@ export const AllExperiences = () => {
 
     return (
         <>
-            {experiences && experiences.map((experience) => (
-                <div key={experience.id}>
-                    <h2>{experience.company}</h2>
-                    <p>{experience.description}</p>
-                </div>
+            {experiences && experiences.map((experience, index) => (
+                <ExperienceCard key={experience.id} experience={experience} index={index} length={experiences.length} />
             ))}
         </>
     );

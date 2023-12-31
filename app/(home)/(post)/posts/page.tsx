@@ -18,7 +18,7 @@ const Posts = () => {
             <h2 className='text-2xl font-bold'>Writing</h2>
             <div className='grid grid-cols-1'>
                 {posts?.sort((a, b) => b.date.toDate().getTime() - a.date.toDate().getTime()).map((post, index) => (
-                    <PostCard post={post} key={post.id} index={index} totalPosts={posts.length} />
+                    <PostCard post={post} key={post.id} index={index} length={posts.length} />
                 ))}
             </div>
         </main >
