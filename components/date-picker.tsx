@@ -15,8 +15,8 @@ import {
 } from "@/components/ui/popover"
 
 interface DatePickerProps {
-    date: Date | undefined // Adjust the type to accept undefined as well
-    onSelect: (date: Date | undefined) => void // Adjust the type of onSelect
+    date: Date | undefined
+    onSelect: (date: Date | undefined) => void
 }
 
 export const DatePicker = ({ date, onSelect }: DatePickerProps) => {

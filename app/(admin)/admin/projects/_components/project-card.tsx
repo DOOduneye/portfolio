@@ -7,7 +7,8 @@ import { cn } from "@/lib/utils";
 
 import { Project } from "@/types/project";
 import { AdminDropdown } from "../../_components/admin-dropdown";
-import { useDeleteProject, useEditProjectStore } from "@/hooks/use-project";
+import { useDeleteProject } from "@/hooks/use-project";
+import { useEditProjectStore, useProjectStore } from "@/store/modal-store";
 
 interface ProjectCardProps {
     project: Project;
@@ -16,7 +17,6 @@ interface ProjectCardProps {
 }
 
 export const ProjectCard = ({ project, index, totalProjects }: ProjectCardProps) => {
-
     const [isFirst, setIsFirst] = useState(index === 0);
     const [isLast, setIsLast] = useState(index === totalProjects - 1);
     const deleteProject = useDeleteProject();
@@ -29,7 +29,7 @@ export const ProjectCard = ({ project, index, totalProjects }: ProjectCardProps)
 
 
     const handleEditClick = () => {
-        editProjectStore.setProject(project);
+        editProjectStore.setData(project);
         editProjectStore.onOpen();
     };
 

@@ -18,8 +18,8 @@ export const ModalProvider = () => {
 
     return (
         <>
-            <EditProjectModal />
             <CreateProjectModal />
+            <EditProjectModal />
             <SettingsModal />
         </>
 
