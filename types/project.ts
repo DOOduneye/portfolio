@@ -1,6 +1,5 @@
-import { Timestamp } from "firebase/firestore";
 import { z } from "zod";
-
+import { Timestamp } from "firebase/firestore";
 
 export const projectSchema = z.object({
     title: z.string().min(3).max(50),

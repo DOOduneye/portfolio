@@ -1,31 +1,14 @@
 "use client";
 
 import { Plus } from "lucide-react";
-import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 
-import { Timestamp } from "firebase/firestore";
-import { Experience } from '@/types/experience';
 import { AllExperiences } from "./_components/all-experiences";
+import { useExperienceStore } from "@/store/modal-store";
 
 const Experiences = () => {
-    // const createProjects = useCreateProjects();
-
-    // const handleCreateProjects = async () => {
-    //     try {
-    //         const promise = createProjects.mutateAsync({
-    //         });
-    //         toast.promise(promise, {
-    //             loading: 'Creating post...',
-    //             success: 'Post created successfully!',
-    //             error: 'Failed to create post.',
-    //         });
-    //     } catch (error) {
-    //         console.error('Error creating post:', error);
-    //         toast.error('Failed to create post.');
-    //     }
-    // }
+    const store = useExperienceStore();
 
     return (
         <div className='flex flex-col w-full max-w-5xl space-y-4 mt-10 '>
@@ -34,9 +17,9 @@ const Experiences = () => {
                     <h1 className='text-3xl font-bold'>Experience</h1>
                     <span className='text-sm text-muted-foreground sm:text-md'>Manage your experience.</span>
                 </div>
-                <Button onClick={() => { }}>
+                <Button onClick={store.onOpen}>
                     <Plus className='w-4 h-4' />
-                    <span className='ml-2'>New Post</span>
+                    <span className='ml-2'>New Experience</span>
                 </Button>
             </div>
             <div>

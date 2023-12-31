@@ -23,7 +23,7 @@ import { ProjectModalContent } from '@/components/project-modal-content';
 export const EditProjectModal = () => {
     const store = useEditProjectStore();
     const updateProject = useUpdateProject();
-    const [project, setProject] = useState<Project>(store.data);
+    const [project, setProject] = useState(store.data);
 
     useEffect(() => {
         setProject(store.data);

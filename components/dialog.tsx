@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { Textarea } from "@/components/ui/textarea"
 
 type DialogInputProps = {
     title: string
@@ -29,18 +30,41 @@ export const DialogInput = ({ title, label, value, onChange }: DialogInputProps)
     )
 }
 
+type DialogTextAreaProps = {
+    title: string
+    label: string
+    value: string
+    onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void
+}
+
+export const DialogTextArea = ({ title, label, value, onChange }: DialogTextAreaProps) => {
+    return (
+        <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor={label} className="text-right">
+                {title}
+            </Label>
+            <Textarea
+                id={label}
+                value={value}
+                onChange={onChange}
+                className="col-span-3"
+            />
+        </div>
+    )
+}
 
 type DialogDateProps = {
     date: Date
+    title: string
     label: string
     onSelect: (date: Date | undefined) => void
 }
 
-export const DialogDate = ({ date, label, onSelect }: DialogDateProps) => {
+export const DialogDate = ({ title, date, label, onSelect }: DialogDateProps) => {
     return (
         <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor={label} className="text-right">
-                Date
+                {title}
             </Label>
             <DatePicker
                 date={date}

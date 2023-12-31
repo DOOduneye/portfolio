@@ -5,6 +5,8 @@ import { SettingsModal } from "@/components/modals/settings-modal";
 import { CreateProjectModal } from "../modals/create-project-modal";
 import { EditProjectModal } from "../modals/edit-project-modal";
 import { Timestamp } from 'firebase/firestore';
+import { CreateExperienceModal } from "../modals/create-experience-modal";
+import { EditExperienceModal } from "../modals/edit-experience-modal";
 
 
 export const ModalProvider = () => {
@@ -18,6 +20,8 @@ export const ModalProvider = () => {
 
     return (
         <>
+            <EditExperienceModal />
+            <CreateExperienceModal />
             <CreateProjectModal />
             <EditProjectModal />
             <SettingsModal />
