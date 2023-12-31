@@ -8,40 +8,34 @@ import { getAllProjects, getProjectById, createProject, deleteProject, updatePro
 import { Update } from "@/types/global";
 import { Timestamp } from "firebase/firestore";
 
-type ProjectStore = {
-    isOpen: boolean;
-    onOpen: () => void;
-    onClose: () => void;
-};
+// type ProjectStore = {
+//     isOpen: boolean;
+//     onOpen: () => void;
+//     onClose: () => void;
+// };
 
-export const useProjectStore = create<ProjectStore>((set) => ({
-    isOpen: false,
-    onOpen: () => set({ isOpen: true }),
-    onClose: () => set({ isOpen: false }),
-}));
+// export const useProjectStore = create<ProjectStore>((set) => ({
+//     isOpen: false,
+//     onOpen: () => set({ isOpen: true }),
+//     onClose: () => set({ isOpen: false }),
+// }));
 
-type EditProjectStore = {
-    isOpen: boolean;
-    project: Project;
-    setProject: (project: Project) => void;
-    onOpen: () => void;
-    onClose: () => void;
-};
+// type ModalStore<T> = {
+//     isOpen: boolean;
+//     data: T;
+//     setData: (data: T) => void;
+//     onOpen: () => void;
+//     onClose: () => void;
+// };
 
-export const useEditProjectStore = create<EditProjectStore>((set) => ({
-    isOpen: false,
-    project: {
-        id: '',
-        title: '',
-        description: '',
-        tags: [],
-        date: Timestamp.fromDate(new Date()),
-        link: '',
-    },
-    setProject: (project: Project) => set((state) => ({ project: { ...state.project, ...project } })),
-    onOpen: () => set({ isOpen: true }),
-    onClose: () => set({ isOpen: false }),
-}));
+// export const useModalStore = <T>() => create<ModalStore<T>>((set) => ({
+//     isOpen: false,
+//     data: {} as T,
+//     setData: (data: T) => set((state) => ({ data: { ...state.data, ...data } })),
+//     onOpen: () => set({ isOpen: true }),
+//     onClose: () => set({ isOpen: false }),
+// }));
+
 
 
 /**

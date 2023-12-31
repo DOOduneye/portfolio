@@ -1,5 +1,4 @@
 import { Timestamp } from "firebase/firestore";
-import { Project } from "./project";
 
 export type Experience = {
     id: string;
