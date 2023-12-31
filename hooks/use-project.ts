@@ -6,6 +6,7 @@ import type { Project, ProjectWithoutId } from "@/types/project";
 
 import { getAllProjects, getProjectById, createProject, deleteProject, updateProject } from "@/services/projects";
 import { Update } from "@/types/global";
+import { Timestamp } from "firebase/firestore";
 
 type ProjectStore = {
     isOpen: boolean;
@@ -18,6 +19,30 @@ export const useProjectStore = create<ProjectStore>((set) => ({
     onOpen: () => set({ isOpen: true }),
     onClose: () => set({ isOpen: false }),
 }));
+
+type EditProjectStore = {
+    isOpen: boolean;
+    project: Project;
+    setProject: (project: Project) => void;
+    onOpen: () => void;
+    onClose: () => void;
+};
+
+export const useEditProjectStore = create<EditProjectStore>((set) => ({
+    isOpen: false,
+    project: {
+        id: '',
+        title: '',
+        description: '',
+        tags: [],
+        date: Timestamp.fromDate(new Date()),
+        link: '',
+    },
+    setProject: (project: Project) => set((state) => ({ project: { ...state.project, ...project } })),
+    onOpen: () => set({ isOpen: true }),
+    onClose: () => set({ isOpen: false }),
+}));
+
 
 /**
  * Fetches all projects.
@@ -63,7 +88,7 @@ export const useUpdateProject = (): UseMutationResult<void, Error, Update<Projec
     return useMutation({
         mutationFn: ({ id, data }) => updateProject(id, data),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['project'] });
+            queryClient.invalidateQueries({ queryKey: ['projects'] });
         },
     })
 }

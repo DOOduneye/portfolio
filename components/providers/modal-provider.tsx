@@ -18,14 +18,7 @@ export const ModalProvider = () => {
 
     return (
         <>
-            <EditProjectModal initialProject={{
-                id: '1',
-                title: 'test',
-                description: 'test',
-                date: Timestamp.fromDate(new Date()),
-                link: 'test',
-                tags: ['test'],
-            }} />
+            <EditProjectModal />
             <CreateProjectModal />
             <SettingsModal />
         </>

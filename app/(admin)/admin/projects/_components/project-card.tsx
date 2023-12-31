@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 
 import { Project } from "@/types/project";
 import { AdminDropdown } from "../../_components/admin-dropdown";
-import { useDeleteProject, useProjectStore } from "@/hooks/use-project";
+import { useDeleteProject, useEditProjectStore } from "@/hooks/use-project";
 
 interface ProjectCardProps {
     project: Project;
@@ -20,12 +20,18 @@ export const ProjectCard = ({ project, index, totalProjects }: ProjectCardProps)
     const [isFirst, setIsFirst] = useState(index === 0);
     const [isLast, setIsLast] = useState(index === totalProjects - 1);
     const deleteProject = useDeleteProject();
-    const projectStore = useProjectStore();
+    const editProjectStore = useEditProjectStore();
 
     useEffect(() => {
         setIsFirst(index === 0);
         setIsLast(index === totalProjects - 1);
     }, [index, totalProjects])
+
+
+    const handleEditClick = () => {
+        editProjectStore.setProject(project);
+        editProjectStore.onOpen();
+    };
 
     const removeProject = async () => {
         try {
@@ -54,7 +60,7 @@ export const ProjectCard = ({ project, index, totalProjects }: ProjectCardProps)
 
             </div>
 
-            <AdminDropdown onEdit={() => projectStore.onOpen()} onDelete={removeProject} />
+            <AdminDropdown onEdit={handleEditClick} onDelete={removeProject} />
         </div>
     );
 }
