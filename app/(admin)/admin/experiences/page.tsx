@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 
 import { Timestamp } from "firebase/firestore";
 import { Experience } from '@/types/experience';
+import { AllExperiences } from "./_components/all-experiences";
 
 const Experiences = () => {
     // const createProjects = useCreateProjects();
@@ -38,7 +39,9 @@ const Experiences = () => {
                     <span className='ml-2'>New Post</span>
                 </Button>
             </div>
-            {/* <div><AllPosts /></div> */}
+            <div>
+                <AllExperiences />
+            </div>
         </div>
     );
 }

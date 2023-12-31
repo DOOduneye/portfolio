@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { z } from 'zod';
 import { toast } from 'sonner';
@@ -19,18 +19,24 @@ import {
 } from '@/components/ui/dialog';
 
 import { Project, ProjectWithoutId } from '@/types/project';
-import { useProjectStore, useUpdateProject } from '@/hooks/use-project';
+import { useEditProjectStore, useProjectStore, useUpdateProject } from '@/hooks/use-project';
 import { DatePicker } from '@/app/(admin)/admin/_components/date-picker';
 
 
-export const EditProjectModal = ({ initialProject }: { initialProject: Project }) => {
-    const projectStore = useProjectStore();
+export const EditProjectModal = () => {
+    const editProjectStore = useEditProjectStore();
     const updateProject = useUpdateProject();
 
-    const [project, setProject] = useState<Project>(initialProject);
+    const [project, setProject] = useState<Project>(editProjectStore.project);
+
+    useEffect(() => {
+        setProject(editProjectStore.project);
+    }, [editProjectStore.project]);
+
+    console.log('project', project)
 
     const handleDropdownClose = () => {
-        projectStore.onClose();
+        editProjectStore.onClose();
         // Clear all data when the dropdown closes
         setProject({
             id: '',
@@ -56,26 +62,26 @@ export const EditProjectModal = ({ initialProject }: { initialProject: Project }
         try {
             schema.parse(project);
         } catch (error) {
-            toast.error(`Failed to create project`);
+            toast.error(`Failed to edit project`);
             return;
         }
 
         try {
-            const promise = updateProject.mutateAsync({ data: project, id: initialProject.id });
+            const promise = updateProject.mutateAsync({ data: project, id: project.id });
             toast.promise(promise, {
-                loading: 'Creating project...',
-                success: 'Project created successfully!',
-                error: 'Failed to create project.',
+                loading: 'Editing project...',
+                success: 'Project edited successfully!',
+                error: 'Failed to edit project.',
             });
             handleDropdownClose();
         } catch (error) {
-            console.error('Error creating project:', error);
-            toast.error('Failed to create project.');
+            console.error('Error editing project:', error);
+            toast.error('Failed to edit project.');
         }
     }
 
     return (
-        <Dialog open={projectStore.isOpen} onOpenChange={handleDropdownClose}>
+        <Dialog open={editProjectStore.isOpen} onOpenChange={handleDropdownClose}>
             <DialogContent>
                 <DialogHeader className="border-b pb-3">
                     <DialogTitle>Edit Project</DialogTitle>
