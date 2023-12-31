@@ -1,8 +1,11 @@
+import { useEffect } from "react";
+
 import { useAnimation, motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
-import { Badge } from "@/components/ui/badge";
-import { useEffect } from "react";
+
 import type { Project } from "@/types/project";
+
+import { Badge } from "@/components/ui/badge";
 
 interface ProjectCardProps {
     project: Project

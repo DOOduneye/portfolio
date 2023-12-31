@@ -3,8 +3,8 @@ import { queryClient } from "@/components/providers/providers";
 
 import type { Post, PostWithoutId } from "@/types/post";
 
+import type { Update } from "@/types/global";
 import { getAllPosts, getPostById, createPost, deletePost, updatePost } from "@/services/posts";
-import { Update } from "@/types/global";
 
 /**
  * Fetches all posts.

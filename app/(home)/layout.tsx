@@ -1,5 +1,3 @@
-import Link from 'next/link'
-
 import Navbar from './_components/navbar'
 import { Footer } from '@/components/footer'
 

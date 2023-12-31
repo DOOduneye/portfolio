@@ -2,7 +2,14 @@ import { useState } from 'react';
 
 import { toast } from 'sonner';
 
-import { Button } from '@/components/ui/button';
+import {
+    ExperienceWithoutId,
+    experienceSchema,
+    initialExperienceState
+} from '@/types/experience';
+import { useCreateExperience } from '@/hooks/use-experience';
+import { useExperienceStore } from '@/hooks/use-modal';
+
 import {
     Dialog,
     DialogContent,
@@ -10,14 +17,7 @@ import {
     DialogTitle,
     DialogDescription
 } from '@/components/ui/dialog';
-
-import {
-    ExperienceWithoutId,
-    experienceSchema,
-    initialExperienceState
-} from '@/types/experience';
-import { useExperienceStore } from '@/store/modal-store';
-import { useCreateExperience } from '@/hooks/use-experience';
+import { Button } from '@/components/ui/button';
 import { ExperienceModalContent } from '@/components/experience-modal-content';
 
 

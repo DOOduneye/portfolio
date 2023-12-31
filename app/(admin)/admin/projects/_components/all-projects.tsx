@@ -1,11 +1,10 @@
 
 "use client";
 
-
-import { Error } from "@/components/error";
-import { ProjectCard } from "./project-card";
 import { useProjects } from "@/hooks/use-project";
-import { Loader } from "lucide-react";
+
+import { ProjectCard } from "./project-card";
+import { Error } from "@/components/error";
 import { Spinner } from "@/components/spinner";
 
 export const AllProjects = () => {

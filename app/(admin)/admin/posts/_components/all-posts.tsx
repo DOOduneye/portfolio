@@ -1,11 +1,10 @@
 "use client";
 
-
+import { usePosts } from "@/hooks/use-post";
 
 import { PostCard } from "./post-card";
 import { Spinner } from "@/components/spinner";
 import { Error } from "@/components/error";
-import { usePosts } from "@/hooks/use-post";
 
 export const AllPosts = () => {
     const { data: posts, error, isLoading } = usePosts();

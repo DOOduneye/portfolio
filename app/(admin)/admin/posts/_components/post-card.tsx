@@ -1,14 +1,15 @@
 "use client";
+
 import { useEffect, useState } from "react";
 
 import { toast } from "sonner";
 
 import { cn } from "@/lib/utils";
 import { type Post } from "@/types/post";
+import { useDeletePost } from "@/hooks/use-post";
 
 
 import { AdminDropdown } from "../../_components/admin-dropdown";
-import { useDeletePost } from "@/hooks/use-post";
 
 interface PostCardProps {
     post: Post;

@@ -1,10 +1,11 @@
 
 "use client";
 
+import { useExperiences } from "@/hooks/use-experience";
+
+import { ExperienceCard } from "./experience-card";
 import { Spinner } from "@/components/spinner";
 import { Error } from "@/components/error";
-import { useExperiences } from "@/hooks/use-experience";
-import { ExperienceCard } from "./experience-card";
 
 export const AllExperiences = () => {
     const { data: experiences, error, isLoading } = useExperiences();

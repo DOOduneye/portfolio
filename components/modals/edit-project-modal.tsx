@@ -2,7 +2,12 @@ import { useEffect, useState } from 'react';
 
 import { toast } from 'sonner';
 
-import { Button } from '@/components/ui/button';
+import {
+    projectSchema
+} from '@/types/project';
+import { useUpdateProject } from '@/hooks/use-project';
+import { useEditProjectStore } from '@/hooks/use-modal';
+
 import {
     Dialog,
     DialogContent,
@@ -10,15 +15,8 @@ import {
     DialogTitle,
     DialogDescription
 } from '@/components/ui/dialog';
-
-import {
-    Project,
-    projectSchema
-} from '@/types/project';
-import { useUpdateProject } from '@/hooks/use-project';
-import { useEditProjectStore } from '@/store/modal-store';
+import { Button } from '@/components/ui/button';
 import { ProjectModalContent } from '@/components/project-modal-content';
-
 
 export const EditProjectModal = () => {
     const store = useEditProjectStore();

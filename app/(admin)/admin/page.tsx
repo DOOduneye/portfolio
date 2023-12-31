@@ -9,9 +9,7 @@ const Admin = () => {
         redirect('/admin/posts')
     }, [])
 
-    return (
-        <></>
-    );
+    return <></>
 }
 
 export default Admin;
