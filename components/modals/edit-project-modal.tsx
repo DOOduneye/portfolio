@@ -1,35 +1,39 @@
 
 import { useState } from 'react';
-import { useCreateProject, useProjectStore } from '@/hooks/use-project';
-import { Label } from '../ui/label';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '../ui/dialog';
-import { Project, ProjectWithoutId } from '@/types/project';
-import { Input } from '../ui/input';
-import { Timestamp } from 'firebase/firestore';
-import { Textarea } from '../ui/textarea';
-import { DatePicker } from '@/app/(admin)/admin/_components/date-picker';
-import { Button } from '../ui/button';
-import { Badge } from '../ui/badge';
-import { toast } from 'sonner';
+
 import { z } from 'zod';
+import { toast } from 'sonner';
+import { Timestamp } from 'firebase/firestore';
+
+import { Label } from '@/components/ui/label';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogDescription
+} from '@/components/ui/dialog';
+
+import { Project, ProjectWithoutId } from '@/types/project';
+import { useProjectStore, useUpdateProject } from '@/hooks/use-project';
+import { DatePicker } from '@/app/(admin)/admin/_components/date-picker';
 
 
-export const EditProjectModal = () => {
+export const EditProjectModal = ({ initialProject }: { initialProject: Project }) => {
     const projectStore = useProjectStore();
-    const updateProject = useCreateProject();
+    const updateProject = useUpdateProject();
 
-    const [project, setProject] = useState<ProjectWithoutId>({
-        title: '',
-        description: '',
-        date: Timestamp.fromDate(new Date()),
-        link: '',
-        tags: [],
-    });
+    const [project, setProject] = useState<Project>(initialProject);
 
     const handleDropdownClose = () => {
         projectStore.onClose();
         // Clear all data when the dropdown closes
         setProject({
+            id: '',
             title: '',
             description: '',
             date: Timestamp.fromDate(new Date()),
@@ -38,7 +42,7 @@ export const EditProjectModal = () => {
         });
     };
 
-    const handleCreateProject = async () => {
+    const handleEditProject = async () => {
 
         // optional link
         const schema = z.object({
@@ -57,7 +61,7 @@ export const EditProjectModal = () => {
         }
 
         try {
-            const promise = createProject.mutateAsync(project);
+            const promise = updateProject.mutateAsync({ data: project, id: initialProject.id });
             toast.promise(promise, {
                 loading: 'Creating project...',
                 success: 'Project created successfully!',
@@ -74,9 +78,9 @@ export const EditProjectModal = () => {
         <Dialog open={projectStore.isOpen} onOpenChange={handleDropdownClose}>
             <DialogContent>
                 <DialogHeader className="border-b pb-3">
-                    <DialogTitle>New Project</DialogTitle>
+                    <DialogTitle>Edit Project</DialogTitle>
                     <DialogDescription>
-                        Create a new project.
+                        Edit project details
                     </DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
@@ -128,8 +132,8 @@ export const EditProjectModal = () => {
                     </div>
                     <ProjectModalTag project={project} setProject={setProject} />
                 </div>
-                <Button onClick={handleCreateProject}>
-                    Create
+                <Button onClick={handleEditProject}>
+                    Edit
                 </Button>
             </DialogContent>
         </Dialog>
@@ -137,7 +141,7 @@ export const EditProjectModal = () => {
 }
 
 
-const ProjectModalTag = ({ project, setProject }: { project: ProjectWithoutId, setProject: (project: ProjectWithoutId) => void }) => {
+const ProjectModalTag = ({ project, setProject }: { project: Project, setProject: (project: Project) => void }) => {
     const handleTagInput = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
             e.preventDefault();

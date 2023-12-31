@@ -9,14 +9,12 @@ import { Update } from "@/types/global";
 
 type ProjectStore = {
     isOpen: boolean;
-    projectId: string;
     onOpen: () => void;
     onClose: () => void;
 };
 
 export const useProjectStore = create<ProjectStore>((set) => ({
     isOpen: false,
-    projectId: '',
     onOpen: () => set({ isOpen: true }),
     onClose: () => set({ isOpen: false }),
 }));

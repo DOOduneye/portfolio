@@ -21,6 +21,7 @@ export const PostCard = ({ post, index, totalPosts }: PostCardProps) => {
     const [isFirst, setIsFirst] = useState(index === 0);
     const [isLast, setIsLast] = useState(index === totalPosts - 1);
     const deletePost = useDeletePost();
+    // const editPost =
 
     useEffect(() => {
         setIsFirst(index === 0);
