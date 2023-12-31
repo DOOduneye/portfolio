@@ -26,6 +26,17 @@ export function formatDateRange(fromDate: Date, toDate: Date | null) {
     })} - Present`;
   }
 
+  const diffInMonths =
+    (toDate.getFullYear() - fromDate.getFullYear()) * 12 +
+    (toDate.getMonth() - fromDate.getMonth());
+
+  if (diffInMonths <= 1) {
+    return `${fromDate.toLocaleDateString("en-US", {
+      month: "short",
+      year: "numeric",
+    })}`;
+  }
+
   const fromYear = fromDate.getFullYear();
   const toYear = toDate.getFullYear();
 

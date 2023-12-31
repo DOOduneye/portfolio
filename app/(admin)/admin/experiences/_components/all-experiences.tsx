@@ -9,7 +9,7 @@ import { ExperienceCard } from "./experience-card";
 export const AllExperiences = () => {
     const { data: experiences, error, isLoading } = useExperiences();
 
-    if (isLoading) return <Spinner />
+    if (isLoading) return <Spinner vertical={"top"} />
     if (error) return <Error message={error.message} />
 
     return (

@@ -18,7 +18,7 @@ import {
 } from '@/types/project';
 import { useProjectStore } from '@/store/modal-store';
 import { useCreateProject } from '@/hooks/use-project';
-import { ProjectModalContent } from '../project-modal-content';
+import { ProjectModalContent } from '@/components/project-modal-content';
 
 
 export const CreateProjectModal = () => {
