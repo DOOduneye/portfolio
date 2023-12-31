@@ -2,9 +2,10 @@
 
 import { Loader } from "lucide-react";
 
-import { usePosts } from "@/hooks/useFirebase";
+
 import { PostCard } from "../_components/post-card";
 import { Error } from "@/components/error";
+import { usePosts } from "@/hooks/use-post";
 
 const Posts = () => {
     const { data: posts, isLoading, error } = usePosts();

@@ -1,11 +1,11 @@
 "use client";
 
 import { compareExperiences } from "@/lib/utils";
-import { useExperiences } from "@/hooks/useFirebase";
 
 import { ExperienceCard } from "./experience-card";
 import { Spinner } from "@/components/spinner";
 import { Error } from "@/components/error";
+import { useExperiences } from "@/hooks/use-experience";
 
 export const HomeScreenExperience = () => {
 

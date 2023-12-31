@@ -1,25 +1,49 @@
+"use client";
+
 import { Plus } from "lucide-react";
+import { toast } from "sonner";
 
 import { AllPosts } from "./_components/all-posts";
 import { Button } from "@/components/ui/button";
 
+import { Timestamp } from "firebase/firestore";
+import { useCreatePost } from "@/hooks/use-post";
+
 const Post = () => {
+    const createPost = useCreatePost();
+
+    const handleCreatePost = async () => {
+        try {
+            const promise = createPost.mutateAsync({
+                title: 'Untitled Post',
+                content: '',
+                date: Timestamp.fromDate(new Date()),
+                subtitle: '',
+            });
+            toast.promise(promise, {
+                loading: 'Creating post...',
+                success: 'Post created successfully!',
+                error: 'Failed to create post.',
+            });
+        } catch (error) {
+            console.error('Error creating post:', error);
+            toast.error('Failed to create post.');
+        }
+    }
 
     return (
         <div className='flex flex-col w-full max-w-5xl space-y-4 mt-10 '>
             <div className="flex flex-row justify-between items-center">
-                <div className="flex flex-col gap-y-2">
-                    <h1 className="text-3xl font-semibold">Posts</h1>
-                    <p className="text-gray-500 dark:text-gray-400">Create and manage posts.</p>
+                <div className="flex flex-col gap-y-1">
+                    <h1 className='text-3xl font-bold'>Posts</h1>
+                    <span className='text-sm text-muted-foreground sm:text-md'>Manage your posts.</span>
                 </div>
-                <div className="flex flex-row gap-x-2">
-                    <Button className="gap-x-2">
-                        <Plus className="w-5 h-5" />
-                        New Post
-                    </Button>
-                </div>
+                <Button onClick={handleCreatePost}>
+                    <Plus className='w-4 h-4' />
+                    <span className='ml-2'>New Post</span>
+                </Button>
             </div>
-            <AllPosts />
+            <div><AllPosts /></div>
         </div>
     );
 }

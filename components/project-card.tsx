@@ -2,7 +2,7 @@ import { useAnimation, motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { Badge } from "@/components/ui/badge";
 import { useEffect } from "react";
-import { type Project } from "@/services/projects";
+import type { Project } from "@/types/project";
 
 interface ProjectCardProps {
     project: Project
