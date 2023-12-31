@@ -3,6 +3,8 @@
 import { Settings } from "lucide-react";
 
 import { auth } from "@/lib/firebase";
+import { useSettings } from "@/hooks/use-settings";
+
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -10,7 +12,6 @@ import {
     DropdownMenuLabel,
     DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
-import { useSettings } from "@/hooks/use-settings";
 
 export const SettingsButton = () => {
     const settings = useSettings();

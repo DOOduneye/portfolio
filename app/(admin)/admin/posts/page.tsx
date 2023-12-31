@@ -1,13 +1,14 @@
 "use client";
 
-import { Plus } from "lucide-react";
 import { toast } from "sonner";
+import { Plus } from "lucide-react";
+import { Timestamp } from "firebase/firestore";
+
+import { useCreatePost } from "@/hooks/use-post";
 
 import { AllPosts } from "./_components/all-posts";
 import { Button } from "@/components/ui/button";
 
-import { Timestamp } from "firebase/firestore";
-import { useCreatePost } from "@/hooks/use-post";
 
 const Post = () => {
     const createPost = useCreatePost();

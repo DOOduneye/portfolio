@@ -1,14 +1,13 @@
 "use client";
 
 import { compareExperiences } from "@/lib/utils";
+import { useExperiences } from "@/hooks/use-experience";
 
 import { ExperienceCard } from "./experience-card";
 import { Spinner } from "@/components/spinner";
 import { Error } from "@/components/error";
-import { useExperiences } from "@/hooks/use-experience";
 
 export const HomeScreenExperience = () => {
-
     const { data: experiences, isLoading, error } = useExperiences();
 
     if (isLoading) return <Spinner />

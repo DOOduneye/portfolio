@@ -2,9 +2,11 @@
 
 import { Plus } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
+import { useProjectStore } from "@/hooks/use-modal";
+
 import { AllProjects } from "./_components/all-projects";
-import { useProjectStore } from "@/store/modal-store";
+import { Button } from "@/components/ui/button";
+
 
 const Projects = () => {
     const store = useProjectStore();

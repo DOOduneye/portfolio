@@ -1,14 +1,15 @@
 "use client";
+
 import { useEffect, useState } from "react";
 
 import { toast } from "sonner";
 
 import { cn } from "@/lib/utils";
-
 import { Project } from "@/types/project";
-import { AdminDropdown } from "../../_components/admin-dropdown";
 import { useDeleteProject } from "@/hooks/use-project";
-import { useEditProjectStore, useProjectStore } from "@/store/modal-store";
+import { useEditProjectStore } from "@/hooks/use-modal";
+
+import { AdminDropdown } from "../../_components/admin-dropdown";
 
 interface ProjectCardProps {
     project: Project;

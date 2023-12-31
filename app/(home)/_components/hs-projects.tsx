@@ -3,14 +3,13 @@
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 
-
-import { ProjectCard } from "@/app/(home)/_components/project-card";
-import { Spinner } from "@/components/spinner";
-import { Error } from "@/components/error";
 import { useProjects } from "@/hooks/use-project";
 
-export const HomeScreenProjects = () => {
+import { ProjectCard } from "./project-card";
+import { Spinner } from "@/components/spinner";
+import { Error } from "@/components/error";
 
+export const HomeScreenProjects = () => {
     const { data: projects, error, isLoading } = useProjects();
 
     if (isLoading) return <Spinner />

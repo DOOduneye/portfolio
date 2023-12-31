@@ -2,7 +2,14 @@ import { useState } from 'react';
 
 import { toast } from 'sonner';
 
-import { Button } from '@/components/ui/button';
+import {
+    ProjectWithoutId,
+    initialProjectState,
+    projectSchema
+} from '@/types/project';
+import { useCreateProject } from '@/hooks/use-project';
+import { useProjectStore } from '@/hooks/use-modal';
+
 import {
     Dialog,
     DialogContent,
@@ -10,14 +17,7 @@ import {
     DialogTitle,
     DialogDescription
 } from '@/components/ui/dialog';
-
-import {
-    ProjectWithoutId,
-    initialProjectState,
-    projectSchema
-} from '@/types/project';
-import { useProjectStore } from '@/store/modal-store';
-import { useCreateProject } from '@/hooks/use-project';
+import { Button } from '@/components/ui/button';
 import { ProjectModalContent } from '@/components/project-modal-content';
 
 
