@@ -2,15 +2,18 @@
 "use client";
 
 
-import { Spinner } from "@/components/spinner";
 import { Error } from "@/components/error";
 import { ProjectCard } from "./project-card";
 import { useProjects } from "@/hooks/use-project";
+import { Loader } from "lucide-react";
+import { Spinner } from "@/components/spinner";
 
 export const AllProjects = () => {
     const { data: projects, error, isLoading } = useProjects();
 
-    if (isLoading) return <Spinner />
+    if (isLoading) return (
+        <Spinner vertical={"top"} />
+    )
     if (error) return <Error message={error.message} />
 
     return (
