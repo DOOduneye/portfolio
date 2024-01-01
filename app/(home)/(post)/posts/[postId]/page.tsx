@@ -6,6 +6,8 @@ import { ChevronLeft } from "lucide-react";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
+import { usePost } from "@/hooks/use-post";
+import React from "react";
 
 interface PostProps {
     params: {
@@ -19,132 +21,51 @@ const Post = ({ params }: PostProps) => {
     // if (isLoading) return <p>Loading...</p>;
     // if (error) return <p>{error.message}</p>;
 
-    const post = {
-        id: "1",
-        title: "Hello, world!",
-        subtitle: "This is a subtitle",
-        date: new Date(),
-        content: "This is the content",
-    };
+    const content = `
+The text below is from the [Tailwind
+CSS](https://play.tailwindcss.com/uj1vGACRJA?layout=preview) docs. I copied it
+here to test the markdown styles. **Tailwind is awesome. You should use it.**
 
-    const markdown = `
-# A demo of \`react-markdown\`
+Until now, trying to style an article, document, or blog post with Tailwind has been a tedious task that required a keen eye for typography and a lot of complex custom CSS.
 
-\`react - markdown\` is a markdown component for React.
+By default, Tailwind removes all of the default browser styling from paragraphs, headings, lists and more.This ends up being really useful for building application UIs because you spend less time undoing user - agent styles, but when you _really are_ just trying to style some content that came from a rich - text editor in a CMS or a markdown file, it can be surprising and unintuitive.
 
-👉 Changes are re-rendered as you type.
+We get lots of complaints about it actually, with people regularly asking us things like:
 
-👈 Try writing some markdown on the left.
+> Why is Tailwind removing the default styles on my \`h1\` elements ? How do I disable this ? What do you mean I lose all the other base styles too ?
+> We hear you, but we're not convinced that simply disabling our base styles is what you really want. You don't want to have to remove annoying margins every time you use a \`p\` element in a piece of your dashboard UI.And I doubt you really want your blog posts to use the user - agent styles either — you want them to look _awesome_, not awful.
 
-## Overview
+The \`@tailwindcss/typography\` plugin is our attempt to give you what you _actually_ want, without any of the downsides of doing something stupid like disabling our base styles.
 
-* Follows [CommonMark](https://commonmark.org)
-* Optionally follows [GitHub Flavored Markdown](https://github.github.com/gfm/)
-* Renders actual React elements instead of using \`dangerouslySetInnerHTML\`
-* Lets you define your own components (to render \`MyHeading\` instead of \`'h1'\`)
-* Has a lot of plugins
-
-## Contents
-
-Here is an example of a plugin in action
-([\`remark - toc\`](https://github.com/remarkjs/remark-toc)).
-**This section is replaced by an actual table of contents**.
-
-## Syntax highlighting
-
-Here is an example of a plugin to highlight code:
-[\`rehype - highlight\`](https://github.com/rehypejs/rehype-highlight).
+It adds a new \`prose\` class that you can slap on any block of vanilla HTML content and turn it into a beautiful, well - formatted document:
 
 ~~~js
-    import React from 'react'
-    import ReactDOM from 'react-dom'
-    import Markdown from 'react-markdown'
-    import rehypeHighlight from 'rehype-highlight'
-
-    const markdown = \`# Your markdown here\`
-
-    ReactDOM.render(
-        <Markdown rehypePlugins={[rehypeHighlight]}>{markdown}</Markdown>,
-        document.querySelector('#content')
-    )
+<article class="prose">
+  <h1>Garlic bread with cheese: What the science tells us</h1>
+  <p>
+    For years parents have espoused the health benefits of eating garlic bread
+    with cheese to their children, with the food earning such an iconic status
+    in our culture that kids will often dress up as warm, cheesy loaf for
+    Halloween.
+  </p>
+  <p>
+    But a recent study shows that the celebrated appetizer may be linked to a
+    series of rabies cases springing up around the country.
+  </p>
+</article>
 ~~~
 
-Pretty neat, eh?
+For more information about how to use the plugin and the features it includes, [read the documentation](https://github.com/tailwindcss/typography/blob/master/README.md).
 
-## GitHub flavored markdown (GFM)
-
-For GFM, you can *also* use a plugin:
-[\`remark - gfm\`](https://github.com/remarkjs/react-markdown#use).
-It adds support for GitHub-specific extensions to the language:
-tables, strikethrough, tasklists, and literal URLs.
-
-These features **do not work by default**.
-👆 Use the toggle above to add the plugin.
-
-| Feature    | Support              |
-| ---------: | :------------------- |
-| CommonMark | 100%                 |
-| GFM        | 100% w/ \`remark - gfm\` |
-
-~~strikethrough~~
-
-* [ ] task list
-* [x] checked item
-
-https://example.com
-
-## HTML in markdown
-
-⚠️ HTML in markdown is quite unsafe, but if you want to support it, you can
-use [\`rehype - raw\`](https://github.com/rehypejs/rehype-raw).
-You should probably combine it with
-[\`rehype - sanitize\`](https://github.com/rehypejs/rehype-sanitize).
-
-<blockquote>
-  👆 Use the toggle above to add the plugin.
-</blockquote>
-
-## Components
-
-You can pass components to change things:
-
-~~~js
-    import React from 'react'
-    import ReactDOM from 'react-dom'
-    import Markdown from 'react-markdown'
-    import MyFancyRule from './components/my-fancy-rule.js'
-
-    const markdown = \`
-        # Your markdown here
-\`
-
-    ReactDOM.render(
-        <Markdown
-            components={{
-                // Use h2s instead of h1s
-                h1: 'h2',
-                // Use a component instead of hrs
-                hr(props) {
-                    const { node, ...rest } = props
-                    return <MyFancyRule {...rest} />
-      }
-        }}
-    >
-        {markdown}
-    </Markdown>,
-    document.querySelector('#content')
-)
-~~~
-
-## More info?
-
-Much more info is available in the
-[readme on GitHub](https://github.com/remarkjs/react-markdown)!
-
-***
-
-A component by [Espen Hovlandsdal](https://espen.codes/)
+---
 `
+    const post = {
+        title: "Test",
+        subtitle: "Test",
+        content: content,
+        date: new Date()
+    }
+
     return (
         <div className="flex flex-col gap-4">
             <Link
@@ -167,11 +88,11 @@ A component by [Espen Hovlandsdal](https://espen.codes/)
                 <h3 className="text-lg text-muted-foreground">{post?.subtitle}</h3>
             </div>
             <Markdown
-                remarkPlugins={[remarkGfm]}
                 rehypePlugins={[rehypeHighlight]}
-                className="prose"
+                remarkPlugins={[remarkGfm]}
+                className="prose prose-slate dark:prose-invert prose-sm md:prose-md lg:prose-lg"
             >
-                {markdown}
+                {post?.content}
             </Markdown>
         </div>
     );
