@@ -2,6 +2,7 @@ import './globals.css'
 import type { Metadata } from 'next'
 
 import { Inter } from 'next/font/google'
+import { Analytics } from '@vercel/analytics/react';
 
 import { cn } from '@/lib/utils'
 import Providers from '@/components/providers/providers'
@@ -23,6 +24,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={cn("min-h-screen bg-background font-sans antialiased", inter.variable)}>
         {/* <Gradient /> */}
         <Providers>
+          <Analytics />
           {children}
         </Providers>
       </body>
