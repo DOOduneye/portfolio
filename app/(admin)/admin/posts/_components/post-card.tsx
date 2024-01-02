@@ -8,8 +8,8 @@ import { cn } from "@/lib/utils";
 import { type Post } from "@/types/post";
 import { useDeletePost } from "@/hooks/use-post";
 
-
 import { AdminDropdown } from "../../_components/admin-dropdown";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface PostCardProps {
     post: Post;
