@@ -5,6 +5,7 @@ import { useExperiences } from "@/hooks/use-experience";
 
 import { ExperienceCard } from "./experience-card";
 import { Error } from "@/components/error";
+import { Skeletons } from "@/components/ui/skeleton";
 
 export const HomeScreenExperience = () => {
     const { data: experiences, isLoading, error } = useExperiences();
@@ -18,14 +19,7 @@ export const HomeScreenExperience = () => {
                     Experience
                 </h1>
             </div>
-
-            {isLoading && (
-                <>
-                    {[...Array(3)].map((_, i) => (
-                        <ExperienceCard.Skeleton key={i} />
-                    ))}
-                </>
-            )}
+            {isLoading && <Skeletons skeleton={ExperienceCard.Skeleton} />}
             <div className='space-y-4'>
                 {experiences?.sort(compareExperiences).map((experience: any) => (
                     <ExperienceCard experience={experience} key={experience.id} />

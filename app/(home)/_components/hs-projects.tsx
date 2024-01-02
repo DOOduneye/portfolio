@@ -6,9 +6,9 @@ import { ChevronRight } from "lucide-react";
 import { useProjects } from "@/hooks/use-project";
 
 import { ProjectCard } from "./project-card";
-import { Spinner } from "@/components/spinner";
 import { Error } from "@/components/error";
 import { cn } from "@/lib/utils";
+import { Skeletons } from "@/components/ui/skeleton";
 
 export const HomeScreenProjects = () => {
     const { data: projects, error, isLoading } = useProjects();
@@ -34,15 +34,7 @@ export const HomeScreenProjects = () => {
                     <ChevronRight className='w-6 h-6 dark:text-gray-500 dark:group-hover:text-gray-400 text-gray-500 group-hover:text-gray-700' />
                 </Link>
             </div>
-            {
-                isLoading && (
-                    <>
-                        {[...Array(3)].map((_, i) => (
-                            <ProjectCard.Skeleton key={i} />
-                        ))}
-                    </>
-                )
-            }
+            {isLoading && <Skeletons skeleton={ProjectCard.Skeleton} />}
             <div className='grid grid-cols-1 gap-4'>
                 {projects?.sort((a, b) => b.date.toDate().getTime() - a.date.toDate().getTime()).slice(0, 3).map((project) => (
                     <ProjectCard project={project} key={project.title} />

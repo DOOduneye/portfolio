@@ -11,5 +11,21 @@ function Skeleton({
     />
   )
 }
-export { Skeleton }
+
+interface SkeletonsProps {
+  count?: number
+  skeleton: React.FC<React.HTMLAttributes<HTMLDivElement>>
+}
+
+function Skeletons({ count = 3, skeleton: Skeleton }: SkeletonsProps) {
+  return (
+    <>
+      {[...Array(count)].map((_, i) => (
+        <Skeleton key={i} />
+      ))}
+    </>
+  )
+}
+
+export { Skeleton, Skeletons }
 
