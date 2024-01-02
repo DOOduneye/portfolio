@@ -4,6 +4,7 @@ import { useEffect } from "react";
 
 import { formatDateRange } from "@/lib/utils";
 import { Experience } from "@/types/experience";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface ExperienceCardProps {
     experience: Experience;
@@ -47,5 +48,21 @@ export const ExperienceCard = ({ experience: { role, company, to, from, descript
                 </p>
             </div>
         </motion.div>
+    )
+}
+
+
+ExperienceCard.Skeleton = () => {
+    return (
+        <div className="grid grid-cols-3 gap-5">
+            <span className="col-span-1">
+                <Skeleton className="w-10 h-4" />
+            </span>
+            <div className="col-span-2">
+                <Skeleton className="w-20 h-4" />
+                <Skeleton className="w-12 h-4 mt-2" />
+                <Skeleton className="w-32 h-4 mt-2" />
+            </div>
+        </div>
     )
 }

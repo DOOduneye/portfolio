@@ -4,13 +4,11 @@ import { compareExperiences } from "@/lib/utils";
 import { useExperiences } from "@/hooks/use-experience";
 
 import { ExperienceCard } from "./experience-card";
-import { Spinner } from "@/components/spinner";
 import { Error } from "@/components/error";
 
 export const HomeScreenExperience = () => {
     const { data: experiences, isLoading, error } = useExperiences();
 
-    if (isLoading) return <Spinner />
     if (error) return <Error message={error.message} />
 
     return (
@@ -21,6 +19,13 @@ export const HomeScreenExperience = () => {
                 </h1>
             </div>
 
+            {isLoading && (
+                <>
+                    {[...Array(3)].map((_, i) => (
+                        <ExperienceCard.Skeleton key={i} />
+                    ))}
+                </>
+            )}
             <div className='space-y-4'>
                 {experiences?.sort(compareExperiences).map((experience: any) => (
                     <ExperienceCard experience={experience} key={experience.id} />

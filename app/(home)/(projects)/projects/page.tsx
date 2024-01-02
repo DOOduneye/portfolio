@@ -10,12 +10,9 @@ import { Error } from "@/components/error";
 const Projects = () => {
     const { data: projects, isLoading, error } = useProjects();
 
-    if (isLoading) return <Spinner />
     if (error) return <Error message={error.message} />
 
-    if (!projects) return null;
-
-    const groupedProjects = groupBy(projects, (project) =>
+    const groupedProjects = groupBy(projects || [], (project) =>
         project.date.toDate().getFullYear().toString()
     );
 
@@ -27,6 +24,13 @@ const Projects = () => {
     return (
         <main className="flex flex-col gap-4">
             <h2 className='text-2xl font-bold'>Projects</h2>
+            {isLoading && (
+                <>
+                    {[...Array(3)].map((_, i) => (
+                        <ProjectCard.Skeleton key={i} />
+                    ))}
+                </>
+            )}
             {sortedYears.map((year) => (
                 <div key={year} className="flex flex-col gap-4">
                     <h3 className="text-lg font-semibold mt-4">{year}</h3>
