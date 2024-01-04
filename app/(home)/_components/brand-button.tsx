@@ -1,25 +1,35 @@
 import { LucideIcon } from "lucide-react"
 
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger
+} from "@/components/ui/tooltip"
 import { Button } from "@/components/ui/button"
 
 interface BrandButtonProps {
     icon: LucideIcon
     href?: string
     tip: string
+    onClick?: () => void
+    className?: string
 }
 
 export const BrandButton = ({
     icon: Icon,
     href,
     tip,
+    onClick,
+    className,
+    disabled,
 }: BrandButtonProps) => {
     return (
         <TooltipProvider>
             <Tooltip>
                 <TooltipTrigger>
-                    <Button variant="outline" size="icon" className=" border-0 bg-transparent dark:bg-transparent" asChild>
-                        <a href={href} target="_blank" rel="noopener noreferrer">
+                    <Button variant="outline" size="icon" className={`border-0 bg-transparent dark:bg-transparent ${className}`} disabled={disabled} asChild>
+                        <a href={href} target="_blank" rel="noopener noreferrer" onClick={onClick}>
                             <Icon />
                         </a>
                     </Button>

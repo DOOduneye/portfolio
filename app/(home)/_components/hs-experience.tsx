@@ -4,13 +4,12 @@ import { compareExperiences } from "@/lib/utils";
 import { useExperiences } from "@/hooks/use-experience";
 
 import { ExperienceCard } from "./experience-card";
-import { Spinner } from "@/components/spinner";
 import { Error } from "@/components/error";
+import { Skeletons } from "@/components/ui/skeleton";
 
 export const HomeScreenExperience = () => {
     const { data: experiences, isLoading, error } = useExperiences();
 
-    if (isLoading) return <Spinner />
     if (error) return <Error message={error.message} />
 
     return (
@@ -20,7 +19,7 @@ export const HomeScreenExperience = () => {
                     Experience
                 </h1>
             </div>
-
+            {isLoading && <Skeletons skeleton={ExperienceCard.Skeleton} />}
             <div className='space-y-4'>
                 {experiences?.sort(compareExperiences).map((experience: any) => (
                     <ExperienceCard experience={experience} key={experience.id} />

@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 
 import { cn } from "@/lib/utils";
 import { Post } from "@/types/post";
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface PostCardProps {
     post: Post;
@@ -39,5 +40,21 @@ export const PostCard = ({ post: { id, title, subtitle, date, content }, index, 
                 <p className='text-sm text-gray-500'>{timeToRead} min read</p>
             </div>
         </Link >
+    );
+}
+
+
+PostCard.Skeleton = () => {
+    return (
+        <div className='p-5 border border-transparent border-gray-200 shadow-sm dark:border-gray-900 dark:hover:border-gray-300 hover:border-gray-500'>
+            <div className='flex flex-row justify-between gap-x-4'>
+                <Skeleton className='w-3/4 h-4 mb-2' />
+                <Skeleton className='w-1/4 h-4' />
+            </div>
+            <div className='flex flex-row justify-between gap-x-4'>
+                <Skeleton className='w-1/2 h-4 mb-2' />
+                <Skeleton className='w-1/6 h-4' />
+            </div>
+        </div >
     );
 }

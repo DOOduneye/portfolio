@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { Newspaper, Building, Library } from "lucide-react";
+import { Newspaper, Building, Library, UploadCloud } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
@@ -26,6 +26,11 @@ export const Sidebar = () => {
             icon: <Library className="w-5 h-5" />,
             text: 'Experiences'
         },
+        {
+            href: '/admin/upload',
+            icon: <UploadCloud className="w-5 h-5" />,
+            text: 'Update Resume'
+        }
     ]
 
     return (

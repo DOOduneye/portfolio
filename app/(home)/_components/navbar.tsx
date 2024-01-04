@@ -9,6 +9,7 @@ import { motion, useAnimation } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 
 import { BrandButton } from "./brand-button";
+import { ResumeButton } from "./resume-button";
 import { ModeToggle } from "@/components/mode-toggle";
 import { Button } from "@/components/ui/button";
 
@@ -41,7 +42,9 @@ export const Navbar = () => {
                 <BrandButton icon={LinkedinIcon} href='https://www.linkedin.com/in/dooduneye' tip='LinkedIn' />
                 <BrandButton icon={Music} href='https://open.spotify.com/user/317gsn3rqunkxocwuvf7njcj5luy' tip='Spotify' />
                 <BrandButton icon={GithubIcon} href='https://github.com/DOOduneye/' tip='GitHub' />
-                <BrandButton icon={BookUser} href='assets/resume.pdf' tip='Resume' />
+                <ResumeButton>
+                    <BrandButton icon={BookUser} tip='Resume' />
+                </ResumeButton>
             </div>
 
             <nav className='flex flex-row self-center justify-around space-x-4'>
