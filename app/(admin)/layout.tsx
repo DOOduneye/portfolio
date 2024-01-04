@@ -42,7 +42,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
     return (
         <main className='flex flex-col mt-5'>
-            <Toaster />
             {children}
         </main>
     )
