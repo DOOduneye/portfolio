@@ -22,7 +22,6 @@ export const BrandButton = ({
     tip,
     onClick,
     className,
-    disabled,
 }: BrandButtonProps) => {
     return (
         <TooltipProvider>
