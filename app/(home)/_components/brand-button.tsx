@@ -27,7 +27,7 @@ export const BrandButton = ({
         <TooltipProvider>
             <Tooltip>
                 <TooltipTrigger>
-                    <Button variant="outline" size="icon" className={`border-0 bg-transparent dark:bg-transparent ${className}`} disabled={disabled} asChild>
+                    <Button variant="outline" size="icon" className={`border-0 bg-transparent dark:bg-transparent ${className}`} asChild>
                         <a href={href} target="_blank" rel="noopener noreferrer" onClick={onClick}>
                             <Icon />
                         </a>
