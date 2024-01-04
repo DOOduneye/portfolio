@@ -9,7 +9,7 @@ import { motion, useAnimation } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 
 import { BrandButton } from "./brand-button";
-import { ResumeButton } from "./resume-button";
+import { ResumeButton } from "../../../components/resume-button";
 import { ModeToggle } from "@/components/mode-toggle";
 import { Button } from "@/components/ui/button";
 

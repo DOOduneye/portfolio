@@ -1,12 +1,15 @@
 "use client";
 
 import { useState, useRef } from "react";
+
+import { toast } from "sonner";
+
+import { cn } from "@/lib/utils";
+import { updateResume } from "@/services/resume";
+
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/spinner";
-import { updateResume } from "@/services/resume";
-import { toast } from "sonner";
-import { cn } from "@/lib/utils";
-import { ResumeButton } from "@/app/(home)/_components/resume-button";
+import { ResumeButton } from "@/components/resume-button";
 
 const Upload = () => {
     const [loading, setLoading] = useState(false);
