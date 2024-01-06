@@ -20,6 +20,7 @@ const Post = () => {
                 content: '',
                 date: Timestamp.fromDate(new Date()),
                 subtitle: '',
+                published: false,
             });
             toast.promise(promise, {
                 loading: 'Creating post...',
@@ -33,8 +34,8 @@ const Post = () => {
     }
 
     return (
-        <div className='flex flex-col w-full max-w-5xl space-y-4 mt-10 '>
-            <div className="flex flex-row justify-between items-center">
+        <div className='flex flex-col w-full max-w-5xl mt-10 space-y-4 '>
+            <div className="flex flex-row items-center justify-between">
                 <div className="flex flex-col gap-y-1">
                     <h1 className='text-3xl font-bold'>Posts</h1>
                     <span className='text-sm text-muted-foreground sm:text-md'>Manage your posts.</span>
