@@ -6,6 +6,7 @@ export type Post = {
     subtitle: string;
     date: Timestamp;
     content: string;
+    published: boolean;
 };
 
 export type PostWithoutId = Omit<Post, 'id'>;

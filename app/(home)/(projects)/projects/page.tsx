@@ -13,7 +13,9 @@ const Projects = () => {
 
     if (error) return <Error message={error.message} />
 
-    const groupedProjects = groupBy(projects || [], (project) =>
+    const publishedProjects = (projects || []).filter(project => project.published);
+
+    const groupedProjects = groupBy(publishedProjects || [], (project) =>
         project.date.toDate().getFullYear().toString()
     );
 

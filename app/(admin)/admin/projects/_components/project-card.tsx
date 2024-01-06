@@ -49,18 +49,23 @@ export const ProjectCard = ({ project, index, length }: ProjectCardProps) => {
     };
 
     return (
-        <div className={cn('flex flex-row p-5 justify-between border border-transparent border-gray-200 shadow-sm dark:border-gray-900', {
+        <div className={cn('flex flex-row p-5 gap-x-5 justify-between border border-transparent border-gray-200 shadow-sm dark:border-gray-900', {
             'rounded-t-xl': isFirst,
             'rounded-b-xl': isLast,
         })}>
-            <div className='flex flex-col justify-between gap-x-4'>
-                <h3 className='text-xl font-bold'>
-                    {project.title}
-                </h3>
-                <p className='text-sm text-gray-500'>{project.date.toDate().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
-
+            <div className='flex flex-col space-y-2'>
+                <h3 className='text-lg font-semibold'>{project.title}</h3>
+                <p className='text-sm font-normal text-gray-500'>{project.description}</p>
+                <div className='flex flex-row items-center space-x-2'>
+                    <span className='text-sm font-normal text-gray-500'>Published:</span>
+                    <span className={cn('text-sm font-normal', {
+                        'text-green-500': project.published,
+                        'text-red-500': !project.published,
+                    })}>
+                        {project.published ? 'Yes' : 'No'}
+                    </span>
+                </div>
             </div>
-
             <AdminDropdown onEdit={handleEditClick} onDelete={removeProject} />
         </div>
     );

@@ -6,7 +6,8 @@ export const projectSchema = z.object({
     description: z.string().min(3).max(500),
     date: z.instanceof(Timestamp),
     link: z.string().optional(),
-    tags: z.array(z.string().min(3).max(20)),
+    tags: z.array(z.string().min(1).max(20)),
+    published: z.boolean(),
 });
 
 export type Project = z.infer<typeof projectSchema> & { id: string };
@@ -19,4 +20,5 @@ export const initialProjectState: ProjectWithoutId = {
     date: Timestamp.fromDate(new Date()),
     link: '',
     tags: [],
+    published: false,
 };

@@ -49,26 +49,46 @@ export const ExperienceCard = ({ experience, index, length }: ExperienceCardProp
     };
 
     return (
-        <div className={cn('flex flex-row p-5 justify-between border border-transparent border-gray-200 shadow-sm dark:border-gray-900', {
+        <div className={cn('flex flex-row p-5 gap-x-5 justify-between border border-transparent border-gray-200 shadow-sm dark:border-gray-900', {
             'rounded-t-xl': isFirst,
             'rounded-b-xl': isLast,
         })}>
-            <div className='flex flex-col justify-between gap-x-4'>
-                <h3 className='text-xl font-bold'>
-                    {experience.role}
-                </h3>
-                <p className='text-gray-500 dark:text-gray-400'>
-                    {experience.company}
-                </p>
-                <p className='text-gray-500 dark:text-gray-400'>
+            <div className='flex flex-col space-y-2'>
+                <h3 className='text-lg font-semibold'>{experience.role} @ <span className='text-gray-600 dark:text-gray-400 text-md'>{experience.company}</span></h3>
+                <p>
                     {experience.from.toDate().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
                     {' - '}
                     {experience.to?.toDate().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) ?? 'Present'}
                 </p>
-
+                <p className='text-sm font-normal text-gray-500'>{experience.description}</p>
+                <div className='flex flex-row items-center space-x-2'>
+                    <span className='text-sm font-normal text-gray-500'>Published:</span>
+                    <span className={cn('text-sm font-normal', {
+                        'text-green-500': experience.published,
+                        'text-red-500': !experience.published,
+                    })}>
+                        {experience.published ? 'Yes' : 'No'}
+                    </span>
+                </div>
             </div>
-
             <AdminDropdown onEdit={handleEditClick} onDelete={removeExperience} />
         </div>
     );
 }
+
+// <div className='flex flex-col justify-between gap-x-4'>
+//                 <h3 className='text-xl font-bold'>
+//                     {experience.role}
+//                 </h3>
+//                 <p className='text-gray-500 dark:text-gray-400'>
+//                     {experience.company}
+//                 </p>
+//                 <p className='text-gray-500 dark:text-gray-400'>
+//                     {experience.from.toDate().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+//                     {' - '}
+//                     {experience.to?.toDate().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) ?? 'Present'}
+//                 </p>
+
+//             </div>
+
+//             <AdminDropdown onEdit={handleEditClick} onDelete={removeExperience} />

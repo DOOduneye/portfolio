@@ -5,6 +5,7 @@ import { Timestamp } from "firebase/firestore";
 import { Project, ProjectWithoutId } from "@/types/project";
 
 import {
+    DialogCheckbox,
     DialogDate,
     DialogInput,
     DialogSelector,
@@ -52,6 +53,12 @@ export function ProjectModalContent<T extends Project | ProjectWithoutId>({ proj
                 label="tags"
                 selected={project?.tags || []}
                 setSelected={(tags) => setProject({ ...project, tags })}
+            />
+            <DialogCheckbox
+                title="Published"
+                label="published"
+                value={project?.published}
+                onChange={(e) => setProject({ ...project, published: e.valueOf() })}
             />
         </div>
     )
