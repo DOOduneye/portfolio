@@ -6,7 +6,8 @@ export const experienceSchema = z.object({
     to: z.instanceof(Timestamp).optional(),
     company: z.string().min(3).max(50),
     role: z.string().min(3).max(50),
-    description: z.string().min(3).max(500),
+    description: z.string().min(1).max(500),
+    published: z.boolean(),
 });
 
 export type Experience = z.infer<typeof experienceSchema> & { id: string };
@@ -19,4 +20,5 @@ export const initialExperienceState: ExperienceWithoutId = {
     company: '',
     role: '',
     description: '',
+    published: false,
 };

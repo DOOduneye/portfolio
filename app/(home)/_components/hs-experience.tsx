@@ -21,7 +21,7 @@ export const HomeScreenExperience = () => {
             </div>
             {isLoading && <Skeletons skeleton={ExperienceCard.Skeleton} />}
             <div className='space-y-4'>
-                {experiences?.sort(compareExperiences).map((experience: any) => (
+                {experiences?.filter((experience) => experience.published).sort(compareExperiences).map((experience: any) => (
                     <ExperienceCard experience={experience} key={experience.id} />
                 ))}
             </div>

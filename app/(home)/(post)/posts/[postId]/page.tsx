@@ -8,6 +8,7 @@ import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
 import { usePost } from "@/hooks/use-post";
 import React from "react";
+import { getPost } from "@/services/posts";
 
 interface PostProps {
     params: {
@@ -59,6 +60,9 @@ For more information about how to use the plugin and the features it includes, [
 
 ---
 `
+
+    const file = getPost('test.md')
+
     const post = {
         title: "Test",
         subtitle: "Test",

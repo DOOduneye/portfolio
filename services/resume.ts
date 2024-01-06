@@ -6,7 +6,7 @@ import { storage } from "@/lib/firebase";
  * @returns the url of the resume
  */
 export const getResume = async () => {
-    const pathReference = ref(storage, 'Resume.pdf');
+    const pathReference = ref(storage, 'resume/Resume.pdf');
     return await getDownloadURL(pathReference);
 }
 
@@ -16,6 +16,6 @@ export const getResume = async () => {
  * @returns the url of the resume
  */
 export const updateResume = async (file: File) => {
-    const storageRef = ref(storage, 'Resume.pdf');
+    const storageRef = ref(storage, 'resume/Resume.pdf');
     await uploadBytes(storageRef, file);
 }

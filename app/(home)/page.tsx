@@ -7,6 +7,7 @@ import { useInView } from 'react-intersection-observer'
 
 import { HomeScreenExperience } from './_components/hs-experience'
 import { HomeScreenProjects } from './_components/hs-projects'
+import { getPostMetadata } from '../../services/posts';
 
 const Home = () => {
   const controls = useAnimation();
@@ -21,6 +22,16 @@ const Home = () => {
       });
     }
   }, [controls, inView]);
+
+  useEffect(() => {
+    const load = async () => {
+      await getPostMetadata();
+    }
+
+    console.log('loading');
+
+    load();
+  }, [])
 
   return (
     <motion.main

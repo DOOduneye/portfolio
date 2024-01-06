@@ -9,6 +9,8 @@ import {
 } from "firebase/firestore";
 
 import { db } from "@/lib/firebase";
+import { ref, getDownloadURL, uploadBytes, listAll } from "firebase/storage";
+import { storage } from "@/lib/firebase";
 import { PostWithoutId, type Post } from "@/types/post";
 
 /**
@@ -35,6 +37,40 @@ export const getAllPosts = async (): Promise<Post[]> => {
 
     return posts;
 }
+
+// TODO: testing
+export const getPostMetadata = async (): Promise<Post[]> => {
+    const posts: Post[] = [];
+
+    const postRef = ref(storage, 'posts/');
+
+    listAll(postRef)
+        .then((res) => {
+            res.items.forEach((itemRef) => {
+                console.log("lolz", itemRef);
+            })
+        });
+
+    return posts;
+}
+
+// TODO: add extension to file name
+export const getPost = async (name: string): Promise<string> => {
+    const pathReference = ref(storage, `posts/${name}`);
+    const url = await getDownloadURL(pathReference);
+
+    // Fetch the markdown file using its URL
+    const response = await fetch(url);
+
+    if (response.ok) {
+        // If the response is successful, extract the text content
+        const text = await response.text();
+        return text; // Return the markdown text
+    } else {
+        throw new Error("Failed to fetch the markdown file");
+    }
+};
+
 
 /**
  * Fetches a specific post by its ID from the Firestore 'posts' collection.

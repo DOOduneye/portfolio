@@ -18,12 +18,12 @@ interface AdminDropdownProps {
 export const AdminDropdown = ({ onEdit, onDelete }: AdminDropdownProps) => {
     return (
         <DropdownMenu>
-            <DropdownMenuTrigger>
-                <div className='flex flex-row justify-between gap-x-4 items-center border-2 p-3 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800'>
+            <DropdownMenuTrigger className='self-center h-10'>
+                <div className='flex flex-row items-center justify-between p-3 border-2 rounded-md gap-x-4 hover:bg-gray-100 dark:hover:bg-gray-800'>
                     <MoreVertical className='w-4 h-4' />
                 </div>
             </DropdownMenuTrigger>
-            <DropdownMenuContent>
+            <DropdownMenuContent align='end'>
                 <DropdownMenuItem>
                     <DropdownMenuLabel onClick={onEdit}>Edit</DropdownMenuLabel>
                 </DropdownMenuItem>

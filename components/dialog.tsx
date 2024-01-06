@@ -6,6 +6,30 @@ import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Textarea } from "@/components/ui/textarea"
+import { Checkbox } from "./ui/checkbox"
+
+type DialogCheckboxProps = {
+    title: string
+    label: string
+    value: boolean
+    onChange: (value: boolean) => void
+}
+
+export const DialogCheckbox = ({ title, label, value, onChange }: DialogCheckboxProps) => {
+    return (
+        <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor={label} className="text-right">
+                {title}
+            </Label>
+            <Checkbox
+                id={label}
+                checked={value}
+                onCheckedChange={onChange}
+                className="col-span-3"
+            />
+        </div>
+    )
+}
 
 type DialogInputProps = {
     title: string

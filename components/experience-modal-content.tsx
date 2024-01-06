@@ -4,6 +4,7 @@ import { Timestamp } from "firebase/firestore";
 import { Experience, ExperienceWithoutId } from "@/types/experience";
 
 import {
+    DialogCheckbox,
     DialogDate,
     DialogInput,
     DialogTextArea,
@@ -54,6 +55,12 @@ export function ExperienceModalContent<T extends Experience | ExperienceWithoutI
                 label="description"
                 value={experience?.description}
                 onChange={(e) => setExperience({ ...experience, description: e.target.value })}
+            />
+            <DialogCheckbox
+                title="Published"
+                label="published"
+                value={experience?.published}
+                onChange={(e) => setExperience({ ...experience, published: e.valueOf() })}
             />
         </div>
     )
