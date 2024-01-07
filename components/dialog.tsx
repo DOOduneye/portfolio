@@ -1,12 +1,12 @@
 import { useState } from "react"
 
-import { DatePicker } from "@/components/date-picker"
+import { DatePicker, PresentState } from "@/components/date-picker"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Textarea } from "@/components/ui/textarea"
-import { Checkbox } from "./ui/checkbox"
+import { Checkbox } from "@/components/ui/checkbox"
 
 type DialogCheckboxProps = {
     title: string
@@ -86,18 +86,23 @@ type DialogDateProps = {
     label: string
     onSelect: (date: Date | undefined) => void
     className?: string
+    present?: boolean
 }
 
-export const DialogDate = ({ title, date, label, onSelect, className }: DialogDateProps) => {
+export const DialogDate = ({ title, date, label, onSelect, className, present }: DialogDateProps) => {
     return (
         <div className={`grid grid-cols-4 items-center gap-4 ${className}`}>
             <Label htmlFor={label} className="text-right">
                 {title}
             </Label>
-            <DatePicker
-                date={date}
-                onSelect={onSelect}
-            />
+            {present ? (
+                <PresentState />
+            ) : (
+                    <DatePicker
+                        date={date}
+                        onSelect={onSelect}
+                    />
+            )}
         </div>
     )
 }

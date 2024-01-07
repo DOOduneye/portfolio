@@ -54,6 +54,7 @@ export function ExperienceModalContent<T extends Experience | ExperienceWithoutI
                     }
                 }}
                 className={experience?.to?.nanoseconds === experience?.from.nanoseconds ? 'opacity-50 pointer-events-none' : ''}
+                present={experience?.to?.nanoseconds === experience?.from.nanoseconds}
             />
             <DialogCheckbox
                 title="Current"

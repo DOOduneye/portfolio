@@ -51,3 +51,20 @@ export const DatePicker = ({ date, onSelect }: DatePickerProps) => {
         </Popover>
     )
 }
+
+
+export const PresentState = () => {
+    return (
+        <Popover>
+            <PopoverTrigger asChild>
+                <Button
+                    variant={"outline"}
+                    className={"w-[240px] sm:w-[340px] justify-start text-left font-normal"}
+                >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    Present
+                </Button>
+            </PopoverTrigger>
+        </Popover>
+    )
+}
