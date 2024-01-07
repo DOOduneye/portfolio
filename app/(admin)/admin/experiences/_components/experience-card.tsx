@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 import { toast } from "sonner";
 
-import { cn } from "@/lib/utils";
+import { cn, formatDateRange } from "@/lib/utils";
 import { Experience } from "@/types/experience";
 import { useDeleteExperience } from "@/hooks/use-experience";
 import { useEditExperienceStore } from "@/hooks/use-modal";
@@ -48,6 +48,13 @@ export const ExperienceCard = ({ experience, index, length }: ExperienceCardProp
         }
     };
 
+    let date;
+    if (experience.to === undefined) {
+        date = formatDateRange(experience.from.toDate(), null);
+    } else {
+        date = formatDateRange(experience.from.toDate(), experience.to.toDate());
+    }
+
     return (
         <div className={cn('flex flex-row p-5 gap-x-5 justify-between border border-transparent border-gray-200 shadow-sm dark:border-gray-900', {
             'rounded-t-xl': isFirst,
@@ -56,9 +63,7 @@ export const ExperienceCard = ({ experience, index, length }: ExperienceCardProp
             <div className='flex flex-col space-y-2'>
                 <h3 className='text-lg font-semibold'>{experience.role} @ <span className='text-gray-600 dark:text-gray-400 text-md'>{experience.company}</span></h3>
                 <p>
-                    {experience.from.toDate().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-                    {' - '}
-                    {experience.to?.toDate().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) ?? 'Present'}
+                    {date}
                 </p>
                 <p className='text-sm font-normal text-gray-500'>{experience.description}</p>
                 <div className='flex flex-row items-center space-x-2'>

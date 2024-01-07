@@ -13,11 +13,12 @@ type DialogCheckboxProps = {
     label: string
     value: boolean
     onChange: (value: boolean) => void
+    className?: string
 }
 
-export const DialogCheckbox = ({ title, label, value, onChange }: DialogCheckboxProps) => {
+export const DialogCheckbox = ({ title, label, value, onChange, className }: DialogCheckboxProps) => {
     return (
-        <div className="grid grid-cols-4 items-center gap-4">
+        <div className={`grid grid-cols-4 items-center gap-4 ${className}`}>
             <Label htmlFor={label} className="text-right">
                 {title}
             </Label>
@@ -36,11 +37,12 @@ type DialogInputProps = {
     label: string
     value: string
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+    className?: string
 }
 
-export const DialogInput = ({ title, label, value, onChange }: DialogInputProps) => {
+export const DialogInput = ({ title, label, value, onChange, className }: DialogInputProps) => {
     return (
-        <div className="grid grid-cols-4 items-center gap-4">
+        <div className={`grid grid-cols-4 items-center gap-4 ${className}`}>
             <Label htmlFor={label} className="text-right">
                 {title}
             </Label>
@@ -59,11 +61,12 @@ type DialogTextAreaProps = {
     label: string
     value: string
     onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void
+    className?: string
 }
 
-export const DialogTextArea = ({ title, label, value, onChange }: DialogTextAreaProps) => {
+export const DialogTextArea = ({ title, label, value, onChange, className }: DialogTextAreaProps) => {
     return (
-        <div className="grid grid-cols-4 items-center gap-4">
+        <div className={`grid grid-cols-4 items-center gap-4 ${className}`}>
             <Label htmlFor={label} className="text-right">
                 {title}
             </Label>
@@ -82,11 +85,12 @@ type DialogDateProps = {
     title: string
     label: string
     onSelect: (date: Date | undefined) => void
+    className?: string
 }
 
-export const DialogDate = ({ title, date, label, onSelect }: DialogDateProps) => {
+export const DialogDate = ({ title, date, label, onSelect, className }: DialogDateProps) => {
     return (
-        <div className="grid grid-cols-4 items-center gap-4">
+        <div className={`grid grid-cols-4 items-center gap-4 ${className}`}>
             <Label htmlFor={label} className="text-right">
                 {title}
             </Label>
@@ -104,9 +108,10 @@ type DialogSelectorProps = {
     label: string;
     selected: string[];
     setSelected: (selected: string[]) => void;
+    className?: string;
 };
 
-export const DialogSelector = ({ title, label, selected, setSelected }: DialogSelectorProps) => {
+export const DialogSelector = ({ title, label, selected, setSelected, className }: DialogSelectorProps) => {
     const [newSelection, setNewSelection] = useState('');
 
     const handleSelectionInput = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -126,7 +131,7 @@ export const DialogSelector = ({ title, label, selected, setSelected }: DialogSe
 
     return (
         <>
-            <div className="grid grid-cols-4 items-center gap-4">
+            <div className={`grid grid-cols-4 items-center gap-4 ${className}`}>
                 <Label htmlFor={label} className="text-right">
                     {title}
                 </Label>

@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useEffect } from "react";
 import { Timestamp } from "firebase/firestore";
 
 import { Experience, ExperienceWithoutId } from "@/types/experience";
@@ -16,6 +16,10 @@ interface ExperienceModalContentProps<T extends Experience | ExperienceWithoutId
 }
 
 export function ExperienceModalContent<T extends Experience | ExperienceWithoutId>({ experience, setExperience }: ExperienceModalContentProps<T>) {
+    useEffect(() => {
+        console.log(experience);
+    }, [])
+
     return (
         <div className="grid gap-4 py-4">
             <DialogInput
@@ -47,6 +51,19 @@ export function ExperienceModalContent<T extends Experience | ExperienceWithoutI
                 onSelect={(date) => {
                     if (date) {
                         setExperience({ ...experience, to: Timestamp.fromDate(date) });
+                    }
+                }}
+                className={experience?.to?.nanoseconds === experience?.from.nanoseconds ? 'opacity-50 pointer-events-none' : ''}
+            />
+            <DialogCheckbox
+                title="Current"
+                label="current"
+                value={experience?.to?.nanoseconds === experience?.from.nanoseconds}
+                onChange={(e) => {
+                    if (e.valueOf()) {
+                        setExperience({ ...experience, to: experience.from });
+                    } else {
+                        setExperience({ ...experience, to: Timestamp.fromDate(new Date()) });
                     }
                 }}
             />

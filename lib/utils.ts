@@ -19,7 +19,17 @@ export function cn(...inputs: ClassValue[]) {
  * @returns A formatted string representing the date range
  */
 export function formatDateRange(fromDate: Date, toDate: Date | null) {
+  // If no end date is provided, assume the experience is current
   if (!toDate) {
+    return `${fromDate.toLocaleDateString("en-US", {
+      month: "short",
+      year: "numeric",
+    })} - Present`;
+  }
+
+  // If the start and end dates are the same, then in (my definition) the
+  // experience is current
+  if (fromDate.getTime() === toDate.getTime()) {
     return `${fromDate.toLocaleDateString("en-US", {
       month: "short",
       year: "numeric",
@@ -30,6 +40,8 @@ export function formatDateRange(fromDate: Date, toDate: Date | null) {
     (toDate.getFullYear() - fromDate.getFullYear()) * 12 +
     (toDate.getMonth() - fromDate.getMonth());
 
+  // If the difference in months is less than or equal to 1, then we can
+  // just show the month and year
   if (diffInMonths <= 1) {
     return `${fromDate.toLocaleDateString("en-US", {
       month: "short",
