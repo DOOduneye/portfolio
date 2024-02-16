@@ -28,8 +28,6 @@ const Home = () => {
       // await getPostMetadata();
     }
 
-    console.log('loading');
-
     load();
   }, [])
 

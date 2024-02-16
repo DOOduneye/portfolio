@@ -29,7 +29,6 @@ export const ResumeButton = ({ onClick, children }: ResumeButtonProps) => {
         setIsFetchingResume(true);
 
         try {
-            console.log('Fetching resume...');
             const fetchedResumeURL = await getResume();
             setResumeURL(fetchedResumeURL);
             setResumeFetched(true);

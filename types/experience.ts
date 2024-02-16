@@ -12,7 +12,6 @@ export const experienceSchema = z.object({
     message: 'Start date must be before end date',
 });
 
-
 export type Experience = z.infer<typeof experienceSchema> & { id: string };
 
 export type ExperienceWithoutId = Omit<Experience, 'id'>;
