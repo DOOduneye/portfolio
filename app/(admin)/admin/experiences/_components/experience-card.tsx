@@ -62,9 +62,10 @@ export const ExperienceCard = ({ experience, index, length }: ExperienceCardProp
         })}>
             <div className='flex flex-col space-y-2'>
                 <h3 className='text-lg font-semibold'>{experience.role} @ <span className='text-gray-600 dark:text-gray-400 text-md'>{experience.company}</span></h3>
-                <p>
-                    {date}
-                </p>
+                <div className='flex flex-row items-center space-x-2'>
+                    <p>{date}</p>
+                    <p className='text-sm font-normal text-gray-500'>{experience.location}</p>
+                </div>
                 <p className='text-sm font-normal text-gray-500'>{experience.description}</p>
                 <div className='flex flex-row items-center space-x-2'>
                     <span className='text-sm font-normal text-gray-500'>Published:</span>

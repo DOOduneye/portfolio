@@ -30,6 +30,12 @@ export function ExperienceModalContent<T extends Experience | ExperienceWithoutI
                 value={experience?.company}
                 onChange={(e) => setExperience({ ...experience, company: e.target.value })}
             />
+            <DialogInput
+                title="Location"
+                label="location"
+                value={experience?.location}
+                onChange={(e) => setExperience({ ...experience, location: e.target.value })}
+            />
             <DialogDate
                 title="Start Date"
                 label="startDate"

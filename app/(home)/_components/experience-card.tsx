@@ -10,7 +10,7 @@ interface ExperienceCardProps {
     experience: Experience;
 }
 
-export const ExperienceCard = ({ experience: { role, company, to, from, description } }: ExperienceCardProps) => {
+export const ExperienceCard = ({ experience: { role, company, to, from, description, location } }: ExperienceCardProps) => {
     const controls = useAnimation();
     const { ref, inView } = useInView();
 
@@ -38,7 +38,10 @@ export const ExperienceCard = ({ experience: { role, company, to, from, descript
             animate={controls}
             className='grid grid-cols-3 gap-5'
         >
-            <span className="col-span-1 dark:text-muted-foreground text-gray-500 text-sm md:text-sm font-normal">{date}</span>
+            <div className="col-span-1 flex flex-col space-y-2">
+                <span className="col-span-1 dark:text-muted-foreground text-gray-500 text-sm md:text-sm font-normal">{date}</span>
+                <span className="col-span-1 dark:text-muted-foreground text-gray-500 text-sm md:text-sm font-semibold">{location}</span>
+            </div>
 
             <div className="col-span-2 flex flex-col">
                 <span className="text-md md:text-lg font-semibold">{role}</span>

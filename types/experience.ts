@@ -8,6 +8,7 @@ export const experienceSchema = z.object({
     role: z.string().min(3).max(50),
     description: z.string().min(1).max(500),
     published: z.boolean(),
+    location: z.string().min(3).max(50),
 }).refine(data => data.from.toDate().getTime() <= data.to.toDate().getTime(), {
     message: 'Start date must be before end date',
 });
@@ -23,4 +24,5 @@ export const initialExperienceState: ExperienceWithoutId = {
     role: '',
     description: '',
     published: false,
+    location: '',
 };
