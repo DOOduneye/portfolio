@@ -25,7 +25,7 @@ const Home = () => {
 
   useEffect(() => {
     const load = async () => {
-      await getPostMetadata();
+      // await getPostMetadata();
     }
 
     console.log('loading');

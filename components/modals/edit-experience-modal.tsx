@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { ExperienceModalContent } from '@/components/experience-modal-content';
+import { ZodError } from 'zod';
 
 
 export const EditExperienceModal = () => {
@@ -34,7 +35,8 @@ export const EditExperienceModal = () => {
         try {
             experienceSchema.parse(experience);
         } catch (error) {
-            toast.error(`Failed to edit experience`);
+            console.error('Error editing experience:', error);
+            toast.error("Failed to edit experience");
             return;
         }
 

@@ -80,20 +80,3 @@ export const ExperienceCard = ({ experience, index, length }: ExperienceCardProp
         </div>
     );
 }
-
-// <div className='flex flex-col justify-between gap-x-4'>
-//                 <h3 className='text-xl font-bold'>
-//                     {experience.role}
-//                 </h3>
-//                 <p className='text-gray-500 dark:text-gray-400'>
-//                     {experience.company}
-//                 </p>
-//                 <p className='text-gray-500 dark:text-gray-400'>
-//                     {experience.from.toDate().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-//                     {' - '}
-//                     {experience.to?.toDate().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) ?? 'Present'}
-//                 </p>
-
-//             </div>
-
-//             <AdminDropdown onEdit={handleEditClick} onDelete={removeExperience} />

@@ -47,7 +47,7 @@ export const ProjectCard = ({ project: { title, description, tags, date, link } 
                 </p>
             </div>
 
-            <div className='flex flex-row flex-wrap gap-2 self-end'>
+            <div className='flex flex-row flex-wrap gap-2 self-start'>
                 <div style={{ flex: '1 0 100%' }}></div>
 
                 {tags?.map((tag, index) => (

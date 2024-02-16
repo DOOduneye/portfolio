@@ -3,12 +3,15 @@ import { Timestamp } from "firebase/firestore";
 
 export const experienceSchema = z.object({
     from: z.instanceof(Timestamp),
-    to: z.instanceof(Timestamp).optional(),
+    to: z.instanceof(Timestamp),
     company: z.string().min(3).max(50),
     role: z.string().min(3).max(50),
     description: z.string().min(1).max(500),
     published: z.boolean(),
+}).refine(data => data.from.toDate().getTime() <= data.to.toDate().getTime(), {
+    message: 'Start date must be before end date',
 });
+
 
 export type Experience = z.infer<typeof experienceSchema> & { id: string };
 

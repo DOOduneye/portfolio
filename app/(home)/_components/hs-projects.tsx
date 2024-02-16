@@ -7,7 +7,7 @@ import { useProjects } from "@/hooks/use-project";
 
 import { ProjectCard } from "./project-card";
 import { Error } from "@/components/error";
-import { cn } from "@/lib/utils";
+import { cn, compareProjects } from "@/lib/utils";
 import { Skeletons } from "@/components/ui/skeleton";
 
 export const HomeScreenProjects = () => {
@@ -36,7 +36,7 @@ export const HomeScreenProjects = () => {
             </div>
             {isLoading && <Skeletons skeleton={ProjectCard.Skeleton} />}
             <div className='grid grid-cols-1 gap-4'>
-                {projects?.filter((project) => project.published).sort((a, b) => b.date.toDate().getTime() - a.date.toDate().getTime()).slice(0, 3).map((project) => (
+                {projects?.filter((project) => project.published).sort(compareProjects).slice(0, 3).map((project) => (
                     <ProjectCard project={project} key={project.title} />
                 ))}
             </div>

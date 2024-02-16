@@ -1,6 +1,9 @@
 "use client";
 
+import { useEffect } from "react";
+
 import { compareExperiences } from "@/lib/utils";
+import type { Experience } from "@/types/experience";
 import { useExperiences } from "@/hooks/use-experience";
 
 import { ExperienceCard } from "./experience-card";
@@ -21,7 +24,7 @@ export const HomeScreenExperience = () => {
             </div>
             {isLoading && <Skeletons skeleton={ExperienceCard.Skeleton} />}
             <div className='space-y-4'>
-                {experiences?.filter((experience) => experience.published).sort(compareExperiences).map((experience: any) => (
+                {experiences?.filter((experience) => experience.published).sort(compareExperiences).map((experience: Experience) => (
                     <ExperienceCard experience={experience} key={experience.id} />
                 ))}
             </div>

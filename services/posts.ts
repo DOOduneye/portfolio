@@ -47,7 +47,7 @@ export const getPostMetadata = async (): Promise<Post[]> => {
     listAll(postRef)
         .then((res) => {
             res.items.forEach((itemRef) => {
-                console.log("lolz", itemRef);
+                console.log(itemRef);
             })
         });
 

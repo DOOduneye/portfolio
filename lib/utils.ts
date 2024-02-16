@@ -2,6 +2,7 @@ import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
 import { Experience } from "@/types/experience";
+import { Project } from "@/types/project";
 
 /**
  * Tailwind CSS classnames generator
@@ -73,15 +74,48 @@ export function formatDateRange(fromDate: Date, toDate: Date | null) {
 
 /**
  * Compares two experiences based on their end dates.
+ * If end dates are the same, it compares their start dates.
+ * If start and end dates are the same, it considers them as present experiences.
  * @param a - The first experience
  * @param b - The second experience
  * @returns A number indicating the comparison result
+ *        -1: a is less than b
+ *        0: a is equal to b
+ *        1: a is greater than b
  */
 export function compareExperiences(a: Experience, b: Experience): number {
-  const toDateA = a.to ? a.to.toDate() : new Date();
-  const toDateB = b.to ? b.to.toDate() : new Date();
+  const fromDateA = a.from.toDate();
+  const fromDateB = b.from.toDate();
 
+  const toDateA = a.to.toDate();
+  const toDateB = b.to.toDate();
+
+  // If both experiences are present, then compare their start dates
+  if (fromDateA === toDateA && fromDateB === toDateB) {
+    return fromDateB.getTime() - fromDateA.getTime();
+  }
+
+  // If one of the experiences is present, then it is greater than the other
+  if (fromDateA === toDateA || fromDateB === toDateB) {
+    return 1;
+  }
+
+  // If both experiences are not present, then compare their end dates
   return toDateB.getTime() - toDateA.getTime();
+}
+
+/**
+ * Compares two projects based on their dates.
+ * @param a - The first project
+ * @param b - The second project
+ * @returns A number indicating the comparison result
+ */
+export function compareProjects(a: Project, b: Project): number {
+
+  const fromDateA = a.date.toDate();
+  const fromDateB = b.date.toDate();
+
+  return fromDateB.getTime() - fromDateA.getTime();
 }
 
 /**

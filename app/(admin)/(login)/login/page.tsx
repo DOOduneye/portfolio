@@ -84,7 +84,7 @@ const Login = () => {
                         render={({ field }) => (
                             <FormItem>
                                 <FormControl>
-                                    <Input placeholder="password" {...field} />
+                                    <Input placeholder="password" {...field} autoComplete="current-password" type="password" />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>

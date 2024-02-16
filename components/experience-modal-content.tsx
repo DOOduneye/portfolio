@@ -18,7 +18,7 @@ interface ExperienceModalContentProps<T extends Experience | ExperienceWithoutId
 export function ExperienceModalContent<T extends Experience | ExperienceWithoutId>({ experience, setExperience }: ExperienceModalContentProps<T>) {
     useEffect(() => {
         console.log(experience);
-    }, [])
+    }, [experience])
 
     return (
         <div className="grid gap-4 py-4">
@@ -47,22 +47,38 @@ export function ExperienceModalContent<T extends Experience | ExperienceWithoutI
             <DialogDate
                 title="End Date"
                 label="endDate"
+                date={experience?.to?.toDate()}
+                onSelect={(date) => {
+                    if (date) {
+                        setExperience({ ...experience, to: Timestamp.fromDate(date) });
+                    }
+                }}
+                className={experience?.to.toDate().getTime() === experience?.from.toDate().getTime() ? 'opacity-50 pointer-events-none' : ''}
+                present={experience?.to.toDate().getTime() === experience?.from.toDate().getTime()}
+            />
+            {/* <DialogDate
+                title="End Date"
+                label="endDate"
                 date={experience?.to?.toDate() || new Date()}
                 onSelect={(date) => {
                     if (date) {
                         setExperience({ ...experience, to: Timestamp.fromDate(date) });
                     }
                 }}
-                className={experience?.to?.nanoseconds === experience?.from.nanoseconds ? 'opacity-50 pointer-events-none' : ''}
-                present={experience?.to?.nanoseconds === experience?.from.nanoseconds}
-            />
+                className={!experience.to ? 'opacity-50 pointer-events-none' : ''}
+                present={!experience.to}
+            /> */}
             <DialogCheckbox
                 title="Current"
                 label="current"
-                value={experience?.to?.nanoseconds === experience?.from.nanoseconds}
+                value={experience?.to.toDate().getTime() === experience?.from.toDate().getTime()}
                 onChange={(e) => {
+                    console.log("e.valueOf()", e.valueOf());
+                    console.log("start date", experience.from, "as a date", experience.from.toDate());
+                    console.log("end date", experience.to, "as a date", experience.to.toDate());
+                    console.log("is current", !experience?.to);
                     if (e.valueOf()) {
-                        setExperience({ ...experience, to: experience.from });
+                        setExperience({ ...experience, to: Timestamp.fromDate(experience.from.toDate()) });
                     } else {
                         setExperience({ ...experience, to: Timestamp.fromDate(new Date()) });
                     }
