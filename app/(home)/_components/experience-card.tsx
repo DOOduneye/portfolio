@@ -36,16 +36,16 @@ export const ExperienceCard = ({ experience: { role, company, to, from, descript
             ref={ref}
             initial={{ y: 30, opacity: 0 }}
             animate={controls}
-            className='md:grid md:grid-cols-3 gap-2 p-5 border border-transparent border-gray-200 md:border-0 md:p-0 shadow-sm dark:border-gray-900 rounded-xl flex flex-col'
+            className='md:grid md:grid-cols-3 gap-2 p-5 border md:border-transparent border-gray-200 md:border-0 md:p-0 shadow-sm md:shadow-none md:border-none dark:border-gray-900 rounded-xl flex flex-col'
         >
-            <div className="md:col-span-1 flex flex-row justify-between md:flex-col md:justify-normal md:gap-2">
+            <div className="md:col-span-1 flex flex-row justify-between md:flex-col md:justify-normal md:gap-2 md:border-r-[1.5px] md:mr-6 pl-2 md:border-dashed">
                 <span className="text-sm md:text-md dark:text-muted-foreground text-gray-500">{date}</span>
                 <span className="dark:text-muted-foreground text-gray-500 text-sm">{location}</span>
             </div>
 
             <div className="col-span-2 flex flex-col">
                 <span className="text-md md:text-lg font-semibold">{role}</span>
-                <span className="text-sm md:text-sm font-semibold dark:text-muted-foreground text-gray-500">{company}</span>
+                <span className="text-sm md:text-sm font-normal dark:text-muted-foreground text-gray-500">{company}</span>
                 <p className="mt-2 text-sm font-normal dark:text-muted-foreground text-gray-500">
                     {description}
                 </p>
