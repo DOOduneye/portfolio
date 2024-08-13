@@ -17,59 +17,41 @@ export function cn(...inputs: ClassValue[]) {
  * Formats a date range string based on provided start and end dates.
  * @param fromDate - The start date
  * @param toDate - The end date (nullable)
- * @returns A formatted string representing the date range
+ * @returns A formatted date range string
  */
-export function formatDateRange(fromDate: Date, toDate: Date | null) {
-  // If no end date is provided, assume the experience is current
+export function formatDateRange(fromDate: Date, toDate: Date | null): string {
+  const options: Intl.DateTimeFormatOptions = {
+      year: 'numeric',
+      month: 'short',
+  };
+
+  // Edge case: toDate is null, so return only the fromDate
   if (!toDate) {
-    return `${fromDate.toLocaleDateString("en-US", {
-      month: "short",
-      year: "numeric",
-    })} - Present`;
+      return fromDate.toLocaleDateString(undefined, options);
   }
 
-  // If the start and end dates are the same, then in (my definition) the
-  // experience is current
+  // Edge case: fromDate and toDate are the same
   if (fromDate.getTime() === toDate.getTime()) {
-    return `${fromDate.toLocaleDateString("en-US", {
-      month: "short",
-      year: "numeric",
-    })} - Present`;
+      return fromDate.toLocaleDateString(undefined, options);
   }
 
-  const diffInMonths =
-    (toDate.getFullYear() - fromDate.getFullYear()) * 12 +
-    (toDate.getMonth() - fromDate.getMonth());
+  const fromFormatted = fromDate.toLocaleDateString(undefined, {
+      month: 'short',
+  });
+  const toFormatted = toDate.toLocaleDateString(undefined, options);
 
-  // If the difference in months is less than or equal to 1, then we can
-  // just show the month and year
-  if (diffInMonths <= 1) {
-    return `${fromDate.toLocaleDateString("en-US", {
-      month: "short",
-      year: "numeric",
-    })}`;
+  // Edge case: Check if dates span different years
+  if (fromDate.getFullYear() !== toDate.getFullYear()) {
+      return `${fromFormatted} ${fromDate.getFullYear()} - ${toFormatted}`;
   }
 
-  const fromYear = fromDate.getFullYear();
-  const toYear = toDate.getFullYear();
+  // Edge case: Check if dates span different months of the same year
+  if (fromDate.getMonth() !== toDate.getMonth()) {
+      return `${fromFormatted} - ${toFormatted}`;
+  }
 
-  const date =
-    fromYear !== toYear
-      ? `${fromDate.toLocaleDateString("en-US", {
-        month: "short",
-        year: "numeric",
-      })} - ${toDate.toLocaleDateString("en-US", {
-        month: "short",
-        year: "numeric",
-      })}`
-      : `${fromDate.toLocaleDateString("en-US", {
-        month: "short",
-      })} - ${toDate.toLocaleDateString("en-US", {
-        month: "short",
-        year: "numeric",
-      })}`;
-
-  return date;
+  // Default case: Same month and year
+  return toFormatted;
 }
 
 /**
