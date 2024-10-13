@@ -1,8 +1,8 @@
-import { type ClassValue, clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
+import {type ClassValue, clsx} from 'clsx';
+import {twMerge} from 'tailwind-merge';
 
-import { Experience } from "@/types/experience";
-import { Project } from "@/types/project";
+import {Experience} from '@/types/experience';
+import {Project} from '@/types/project';
 
 /**
  * Tailwind CSS classnames generator
@@ -21,33 +21,33 @@ export function cn(...inputs: ClassValue[]) {
  */
 export function formatDateRange(fromDate: Date, toDate: Date | null): string {
   const options: Intl.DateTimeFormatOptions = {
-      year: 'numeric',
-      month: 'short',
+    year: 'numeric',
+    month: 'short',
   };
 
   // Edge case: toDate is null, so return only the fromDate
   if (!toDate) {
-      return fromDate.toLocaleDateString(undefined, options);
+    return fromDate.toLocaleDateString(undefined, options);
   }
 
   // Edge case: fromDate and toDate are the same
   if (fromDate.getTime() === toDate.getTime()) {
-      return fromDate.toLocaleDateString(undefined, options);
+    return fromDate.toLocaleDateString(undefined, options);
   }
 
   const fromFormatted = fromDate.toLocaleDateString(undefined, {
-      month: 'short',
+    month: 'short',
   });
   const toFormatted = toDate.toLocaleDateString(undefined, options);
 
   // Edge case: Check if dates span different years
   if (fromDate.getFullYear() !== toDate.getFullYear()) {
-      return `${fromFormatted} ${fromDate.getFullYear()} - ${toFormatted}`;
+    return `${fromFormatted} ${fromDate.getFullYear()} - ${toFormatted}`;
   }
 
   // Edge case: Check if dates span different months of the same year
   if (fromDate.getMonth() !== toDate.getMonth()) {
-      return `${fromFormatted} - ${toFormatted}`;
+    return `${fromFormatted} - ${toFormatted}`;
   }
 
   // Default case: Same month and year
@@ -93,7 +93,6 @@ export function compareExperiences(a: Experience, b: Experience): number {
  * @returns A number indicating the comparison result
  */
 export function compareProjects(a: Project, b: Project): number {
-
   const fromDateA = a.date.toDate();
   const fromDateB = b.date.toDate();
 
@@ -113,7 +112,10 @@ type KeyGetter<T> = (item: T) => string | number;
  * @param getKey - A function to extract keys for grouping
  * @returns A record containing items grouped by their keys
  */
-export function groupBy<T>(array: T[], getKey: KeyGetter<T>): Record<string | number, T[]> {
+export function groupBy<T>(
+  array: T[],
+  getKey: KeyGetter<T>
+): Record<string | number, T[]> {
   return array.reduce((acc: Record<string | number, T[]>, element: T) => {
     const key = getKey(element);
     if (!acc[key]) {

@@ -6,7 +6,14 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "gts lint",
+    "format": "prettier --write .",
+    "clean": "gts clean",
+    "compile": "tsc",
+    "fix": "gts fix",
+    "prepare": "npm run compile",
+    "pretest": "npm run compile",
+    "posttest": "npm run lint"
   },
   "dependencies": {
     "@ant-design/icons": "^5.2.6",
@@ -40,7 +47,7 @@
     "firebase": "^10.7.1",
     "framer-motion": "^10.16.16",
     "lucide-react": "^0.301.0",
-    "next": "14.0.4",
+    "next": "^14.0.4",
     "next-themes": "^0.2.1",
     "react": "^18",
     "react-day-picker": "^8.10.0",
@@ -61,14 +68,15 @@
     "@tailwindcss/typography": "^0.5.10",
     "@tanstack/react-query-devtools": "^5.15.3",
     "@types/editorjs__header": "^2.6.3",
-    "@types/node": "^20",
+    "@types/node": "20.12.7",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "autoprefixer": "^10.0.1",
     "eslint": "^8",
     "eslint-config-next": "14.0.4",
+    "gts": "^5.3.1",
     "postcss": "^8",
     "tailwindcss": "^3.3.0",
-    "typescript": "^5"
+    "typescript": "^5.4.3"
   }
 }
