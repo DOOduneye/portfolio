@@ -1,15 +1,14 @@
-"use client"
+'use client';
 
-import { useEffect } from "react";
-import { redirect } from "next/navigation";
+import {useEffect} from 'react';
+import {redirect} from 'next/navigation';
 
 const Admin = () => {
+  useEffect(() => {
+    redirect('/admin/posts');
+  }, []);
 
-    useEffect(() => {
-        redirect('/admin/posts')
-    }, [])
-
-    return <></>
-}
+  return <></>;
+};
 
 export default Admin;

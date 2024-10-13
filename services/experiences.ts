@@ -1,39 +1,39 @@
 import {
-    collection,
-    getDocs,
-    getDoc,
-    doc,
-    addDoc,
-    setDoc,
-    deleteDoc,
-} from "firebase/firestore";
+  collection,
+  getDocs,
+  getDoc,
+  doc,
+  addDoc,
+  setDoc,
+  deleteDoc,
+} from 'firebase/firestore';
 
-import { db } from "@/lib/firebase";
-import { ExperienceWithoutId, type Experience } from "@/types/experience";
+import {db} from '@/lib/firebase';
+import {ExperienceWithoutId, type Experience} from '@/types/experience';
 
 /**
  * Fetches all experiences from the Firestore 'experiences' collection.
  * @returns A Promise that resolves to an array of Experience objects.
  */
 export const getAllExperiences = async (): Promise<Experience[]> => {
-    const experiencesSnapshot = await getDocs(collection(db, "experiences"));
+  const experiencesSnapshot = await getDocs(collection(db, 'experiences'));
 
-    if (experiencesSnapshot.empty) {
-        return [];
-    }
+  if (experiencesSnapshot.empty) {
+    return [];
+  }
 
-    const experiences: Experience[] = [];
-    experiencesSnapshot.forEach((experiencesSnapshot) => {
-        const experienceData = experiencesSnapshot.data() as Experience;
-        const experience: Experience = {
-            ...experienceData,
-            id: experiencesSnapshot.id,
-        };
+  const experiences: Experience[] = [];
+  experiencesSnapshot.forEach(experiencesSnapshot => {
+    const experienceData = experiencesSnapshot.data() as Experience;
+    const experience: Experience = {
+      ...experienceData,
+      id: experiencesSnapshot.id,
+    };
 
-        experiences.push(experience);
-    });
+    experiences.push(experience);
+  });
 
-    return experiences;
+  return experiences;
 };
 
 /**
@@ -42,19 +42,19 @@ export const getAllExperiences = async (): Promise<Experience[]> => {
  * @returns A Promise that resolves to the specified Experience object or throws an error if the experience does not exist.
  */
 export const getExperienceById = async (id: string): Promise<Experience> => {
-    const experienceSnapshot = await getDoc(doc(db, "experiences", id));
+  const experienceSnapshot = await getDoc(doc(db, 'experiences', id));
 
-    if (!experienceSnapshot.exists()) {
-        throw new Error(`Experience with ID ${id} does not exist.`);
-    }
+  if (!experienceSnapshot.exists()) {
+    throw new Error(`Experience with ID ${id} does not exist.`);
+  }
 
-    const experienceData = experienceSnapshot.data() as Experience;
-    const experience: Experience = {
-        ...experienceData,
-        id: experienceSnapshot.id,
-    };
+  const experienceData = experienceSnapshot.data() as Experience;
+  const experience: Experience = {
+    ...experienceData,
+    id: experienceSnapshot.id,
+  };
 
-    return experience;
+  return experience;
 };
 
 /**
@@ -63,9 +63,9 @@ export const getExperienceById = async (id: string): Promise<Experience> => {
  * @returns A Promise that resolves when the experience has been added.
  */
 export const createExperience = async (
-    experience: ExperienceWithoutId,
+  experience: ExperienceWithoutId
 ): Promise<void> => {
-    await addDoc(collection(db, "experiences"), experience);
+  await addDoc(collection(db, 'experiences'), experience);
 };
 
 /**
@@ -75,16 +75,16 @@ export const createExperience = async (
  * @returns A Promise that resolves when the experience has been updated.
  */
 export const updateExperience = async (
-    id: string,
-    experience: Experience,
+  id: string,
+  experience: Experience
 ): Promise<void> => {
-    await setDoc(doc(db, "experiences", id), experience);
-}
+  await setDoc(doc(db, 'experiences', id), experience);
+};
 /**
  * Deletes an experience from the Firestore 'experiences' collection by its ID.
  * @param id - The ID of the experience to delete.
  * @returns A Promise that resolves when the experience has been deleted.
  */
 export const deleteExperience = async (id: string): Promise<void> => {
-    await deleteDoc(doc(db, "experiences", id));
+  await deleteDoc(doc(db, 'experiences', id));
 };

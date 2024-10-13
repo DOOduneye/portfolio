@@ -1,28 +1,28 @@
-"use client";
+'use client';
 
-import Link from "next/link";
+import Link from 'next/link';
 
-import { ChevronLeft } from "lucide-react";
-import Markdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import rehypeHighlight from "rehype-highlight";
-import { usePost } from "@/hooks/use-post";
-import React from "react";
-import { getPost } from "@/services/posts";
+import {ChevronLeft} from 'lucide-react';
+import Markdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import rehypeHighlight from 'rehype-highlight';
+import {usePost} from '@/hooks/use-post';
+import React from 'react';
+import {getPost} from '@/services/posts';
 
 interface PostProps {
-    params: {
-        postId: string;
-    };
+  params: {
+    postId: string;
+  };
 }
 
-const Post = ({ params }: PostProps) => {
-    // const { data: post, isLoading, error } = usePost(params.postId);
+const Post = ({params}: PostProps) => {
+  // const { data: post, isLoading, error } = usePost(params.postId);
 
-    // if (isLoading) return <p>Loading...</p>;
-    // if (error) return <p>{error.message}</p>;
+  // if (isLoading) return <p>Loading...</p>;
+  // if (error) return <p>{error.message}</p>;
 
-    const content = `
+  const content = `
 The text below is from the [Tailwind
 CSS](https://play.tailwindcss.com/uj1vGACRJA?layout=preview) docs. I copied it
 here to test the markdown styles. **Tailwind is awesome. You should use it.**
@@ -59,47 +59,47 @@ It adds a new \`prose\` class that you can slap on any block of vanilla HTML con
 For more information about how to use the plugin and the features it includes, [read the documentation](https://github.com/tailwindcss/typography/blob/master/README.md).
 
 ---
-`
+`;
 
-    const file = getPost('test.md')
+  const file = getPost('test.md');
 
-    const post = {
-        title: "Test",
-        subtitle: "Test",
-        content: content,
-        date: new Date()
-    }
+  const post = {
+    title: 'Test',
+    subtitle: 'Test',
+    content: content,
+    date: new Date(),
+  };
 
-    return (
-        <div className="flex flex-col gap-4">
-            <Link
-                href="/posts"
-                className="group flex flex-row gap-2 items-center cursor-pointer duration-300 ease-in-out lg:absolute sm:left-20 md:left-10 font-semibold md:transform md:hover:-translate-x-1 md:transition-transform"
-            >
-                <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-                <span>Back to posts</span>
-            </Link>
-            <p className="text-sm text-gray-500">
-                Published on{" "}
-                {post?.date.toLocaleDateString("en-US", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                })}
-            </p>
-            <div className="flex flex-col gap-3">
-                <h2 className="text-5xl font-bold">{post?.title}</h2>
-                <h3 className="text-lg text-muted-foreground">{post?.subtitle}</h3>
-            </div>
-            <Markdown
-                rehypePlugins={[rehypeHighlight]}
-                remarkPlugins={[remarkGfm]}
-                className="prose prose-slate dark:prose-invert prose-sm md:prose-md lg:prose-lg"
-            >
-                {post?.content}
-            </Markdown>
-        </div>
-    );
+  return (
+    <div className="flex flex-col gap-4">
+      <Link
+        href="/posts"
+        className="group flex flex-row gap-2 items-center cursor-pointer duration-300 ease-in-out lg:absolute sm:left-20 md:left-10 font-semibold md:transform md:hover:-translate-x-1 md:transition-transform"
+      >
+        <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+        <span>Back to posts</span>
+      </Link>
+      <p className="text-sm text-gray-500">
+        Published on{' '}
+        {post?.date.toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+        })}
+      </p>
+      <div className="flex flex-col gap-3">
+        <h2 className="text-5xl font-bold">{post?.title}</h2>
+        <h3 className="text-lg text-muted-foreground">{post?.subtitle}</h3>
+      </div>
+      <Markdown
+        rehypePlugins={[rehypeHighlight]}
+        remarkPlugins={[remarkGfm]}
+        className="prose prose-slate dark:prose-invert prose-sm md:prose-md lg:prose-lg"
+      >
+        {post?.content}
+      </Markdown>
+    </div>
+  );
 };
 
 export default Post;
