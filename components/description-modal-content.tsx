@@ -29,18 +29,6 @@ export function DescriptionModalContent<
           setDescription({...description, description: e.target.value})
         }
       />
-      <DialogCheckbox
-        title="Published"
-        label="published"
-        value={description?.published}
-        onChange={e => {
-          if (e.valueOf()) {
-            setDescription({...description, published: true});
-          } else {
-            setDescription({...description, published: false});
-          }
-        }}
-      />
     </div>
   );
 }
