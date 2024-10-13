@@ -9,7 +9,7 @@ import { type Post } from "@/types/post";
 import { useDeletePost } from "@/hooks/use-post";
 
 import { AdminDropdown } from "../../_components/admin-dropdown";
-import { Skeleton } from "@/components/ui/skeleton";
+import { useRouter } from "next/navigation";
 
 interface PostCardProps {
     post: Post;
@@ -18,7 +18,7 @@ interface PostCardProps {
 }
 
 export const PostCard = ({ post, index, length }: PostCardProps) => {
-
+    const router = useRouter();
     const [isFirst, setIsFirst] = useState(index === 0);
     const [isLast, setIsLast] = useState(index === length - 1);
     const deletePost = useDeletePost();
@@ -53,8 +53,7 @@ export const PostCard = ({ post, index, length }: PostCardProps) => {
                 </h3>
                 <p className='text-sm text-gray-500'>{post.date.toDate().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
             </div>
-
-            <AdminDropdown onEdit={() => { }} onDelete={removePost} />
+            <AdminDropdown onEdit={() => router.push(`/admin/posts/${post.id}`)} onDelete={removePost} />
         </div>
     );
 }

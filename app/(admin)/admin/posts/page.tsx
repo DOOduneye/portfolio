@@ -8,6 +8,7 @@ import { useCreatePost } from "@/hooks/use-post";
 
 import { AllPosts } from "./_components/all-posts";
 import { Button } from "@/components/ui/button";
+import Editor from "@/components/editor/editor";
 
 
 const Post = () => {
@@ -45,7 +46,9 @@ const Post = () => {
                     <span className='ml-2'>New Post</span>
                 </Button>
             </div>
-            <div><AllPosts /></div>
+            <div>
+                <AllPosts />
+            </div>
         </div>
     );
 }
