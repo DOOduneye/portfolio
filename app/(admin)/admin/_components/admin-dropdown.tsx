@@ -1,4 +1,4 @@
-import { MoreVertical } from "lucide-react";
+import {MoreVertical} from 'lucide-react';
 
 import {
   DropdownMenu,
@@ -7,15 +7,15 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { ConfirmModal } from "@/components/modals/confirm-modal";
+} from '@/components/ui/dropdown-menu';
+import {ConfirmModal} from '@/components/modals/confirm-modal';
 
 interface AdminDropdownProps {
   onEdit?: () => void;
   onDelete?: () => void;
 }
 
-export const AdminDropdown = ({ onEdit, onDelete }: AdminDropdownProps) => {
+export const AdminDropdown = ({onEdit, onDelete}: AdminDropdownProps) => {
   return (
     <>
       {onEdit || onDelete ? (
