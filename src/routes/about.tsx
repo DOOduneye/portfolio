@@ -14,11 +14,10 @@ function AboutPage() {
         <h1 className="text-3xl font-bold tracking-tight">About</h1>
         <div className="mt-6 space-y-4 text-text-secondary leading-relaxed">
           <p>
-            I'm a software engineer focused on applied AI, automation, and the
-            engineering that makes it dependable. I care about reliability, clean
-            interfaces, and the details that make software feel effortless.
+            I'm a software engineer focused on building products people
+            actually want to use. I care about clean interfaces, reliability,
+            and the small details that make software feel right.
           </p>
-
         </div>
       </section>
 
@@ -31,42 +30,42 @@ function AboutPage() {
             company="Agency"
             role="Member of Technical Staff"
             location="New York, NY"
-            period="Aug 2025 — present"
-            description="Building product infrastructure for an AI-powered CRM platform."
+            period="Aug 2025 - present"
+            description="Building product and AI infrastructure for a CRM platform."
           />
           <ExperienceItem
             company="Google"
             role="Software Engineering Intern"
             location="New York City, NY"
-            period="Aug — Nov 2024"
-            description="Continuous Integration & Release. Enhanced test visibility for ARM and x86 architectures."
+            period="Aug - Nov 2024"
+            description="Built UI tooling to surface test visibility across ARM and x86 architectures for thousands of developers."
           />
           <ExperienceItem
             company="Microsoft"
             role="Software Engineering Intern"
             location="Seattle, WA"
-            period="May — Aug 2024"
+            period="May - Aug 2024"
             description="Performance tools for data ingestion of security information."
           />
           <ExperienceItem
             company="Boston Scientific"
             role="Software Engineer Co-op"
             location="Boston, MA"
-            period="Jan — May 2024"
-            description="Embedding Active Directory into arrhythmia software for hospital AD DC infrastructure integration."
+            period="Jan - May 2024"
+            description="Integrated Active Directory authentication into cardiac arrhythmia monitoring software for hospital environments."
           />
           <ExperienceItem
             company="Genentech"
             role="Machine Learning Co-op"
             location="San Francisco, CA"
-            period="Jan — Jun 2023"
-            description="Drug data structuring using Transformer models and rule-based matching."
+            period="Jan - Jun 2023"
+            description="Built a system to structure unstructured drug data using Transformer models and rule-based matching."
           />
           <ExperienceItem
             company="Generate"
             role="Technical Lead"
             location="Boston, MA"
-            period="Aug 2022 — Jun 2024"
+            period="Aug 2022 - Jun 2024"
             description="Led a team of 6 developers building Northeastern's community engagement system."
           />
         </div>
@@ -80,7 +79,7 @@ function AboutPage() {
           <ProjectItem
             title="SAC"
             href="https://github.com/GenerateNU/sac"
-            description="Platform for university organizations — app, website, and admin dashboards."
+            description="Platform for university organizations. App, website, and admin dashboards."
             tags={["TypeScript", "React Native", "Redis", "Docker"]}
           />
           <ProjectItem

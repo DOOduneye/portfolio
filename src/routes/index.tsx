@@ -31,9 +31,9 @@ function HomePage() {
       <section>
         <h1 className="text-3xl font-bold tracking-tight">David Oduneye</h1>
         <p className="mt-4 text-text-secondary leading-relaxed">
-          Software engineer focused on applied AI, automation, and the
-          engineering that makes it dependable. I care about reliability, clean
-          interfaces, and the details that make software feel effortless.
+          Software engineer focused on building products people actually want
+          to use. I care about clean interfaces, reliability, and the small
+          details that make software feel right.
         </p>
       </section>
 
