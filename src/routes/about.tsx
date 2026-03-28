@@ -29,7 +29,7 @@ function AboutPage() {
         <div className="space-y-8">
           <ExperienceItem
             company="Agency"
-            role="Software Engineer"
+            role="Member of Technical Staff"
             location="New York, NY"
             period="Aug 2025 — present"
             description="Building product infrastructure for an AI-powered CRM platform."
