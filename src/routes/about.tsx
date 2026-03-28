@@ -42,8 +42,8 @@ function AboutPage() {
             company="Google"
             role="Software Engineering Intern"
             location="New York City, NY"
-            period="Aug 2024"
-            description="Enhanced test visibility for ARM and x86 architectures."
+            period="Aug — Nov 2024"
+            description="Continuous Integration & Release. Enhanced test visibility for ARM and x86 architectures."
           />
           <ExperienceItem
             company="Microsoft"
@@ -180,7 +180,7 @@ function AboutPage() {
             GitHub
           </a>
           <a
-            href="https://www.linkedin.com/in/davidoduneye"
+            href="https://www.linkedin.com/in/dooduneye"
             target="_blank"
             rel="noopener noreferrer"
             className="transition-colors hover:text-accent"

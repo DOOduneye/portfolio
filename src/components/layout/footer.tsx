@@ -13,7 +13,7 @@ export function SiteFooter() {
             GitHub
           </a>
           <a
-            href="https://www.linkedin.com/in/davidoduneye"
+            href="https://www.linkedin.com/in/dooduneye"
             target="_blank"
             rel="noopener noreferrer"
             className="transition-colors hover:text-text-secondary"
