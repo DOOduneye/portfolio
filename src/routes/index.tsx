@@ -22,7 +22,7 @@ function HomePage() {
       <section>
         <h1 className="text-3xl font-bold tracking-tight">David Oduneye</h1>
         <p className="mt-2 text-text-secondary">
-          Software engineer. Building thoughtful, well-crafted software.
+          Software engineer at Agency. I think about types, systems, and building software that's safe to change.
         </p>
       </section>
 

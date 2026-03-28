@@ -13,18 +13,12 @@ export function SiteFooter() {
             GitHub
           </a>
           <a
-            href="https://linkedin.com/in/davidoduneye"
+            href="https://www.linkedin.com/in/davidoduneye"
             target="_blank"
             rel="noopener noreferrer"
             className="transition-colors hover:text-text-secondary"
           >
             LinkedIn
-          </a>
-          <a
-            href="mailto:david@oduneye.com"
-            className="transition-colors hover:text-text-secondary"
-          >
-            Email
           </a>
         </div>
       </div>
