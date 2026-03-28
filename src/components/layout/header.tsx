@@ -21,6 +21,14 @@ export function SiteHeader() {
         >
           About
         </Link>
+        <a
+          href="/resume.pdf"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="transition-colors hover:text-text-primary"
+        >
+          Resume
+        </a>
       </nav>
     </header>
   );
