@@ -12,7 +12,11 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as WritingIndexRouteImport } from './routes/writing/index'
+import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as WritingSlugRouteImport } from './routes/writing/$slug'
+import { Route as AdminLoginRouteImport } from './routes/admin/login'
+import { Route as AdminPostsNewRouteImport } from './routes/admin/posts.new'
+import { Route as AdminPostsSlugEditRouteImport } from './routes/admin/posts.$slug.edit'
 
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
@@ -29,44 +33,105 @@ const WritingIndexRoute = WritingIndexRouteImport.update({
   path: '/writing/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/admin/',
+  path: '/admin/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const WritingSlugRoute = WritingSlugRouteImport.update({
   id: '/writing/$slug',
   path: '/writing/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminLoginRoute = AdminLoginRouteImport.update({
+  id: '/admin/login',
+  path: '/admin/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminPostsNewRoute = AdminPostsNewRouteImport.update({
+  id: '/admin/posts/new',
+  path: '/admin/posts/new',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminPostsSlugEditRoute = AdminPostsSlugEditRouteImport.update({
+  id: '/admin/posts/$slug/edit',
+  path: '/admin/posts/$slug/edit',
   getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/admin/login': typeof AdminLoginRoute
   '/writing/$slug': typeof WritingSlugRoute
+  '/admin/': typeof AdminIndexRoute
   '/writing/': typeof WritingIndexRoute
+  '/admin/posts/new': typeof AdminPostsNewRoute
+  '/admin/posts/$slug/edit': typeof AdminPostsSlugEditRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/admin/login': typeof AdminLoginRoute
   '/writing/$slug': typeof WritingSlugRoute
+  '/admin': typeof AdminIndexRoute
   '/writing': typeof WritingIndexRoute
+  '/admin/posts/new': typeof AdminPostsNewRoute
+  '/admin/posts/$slug/edit': typeof AdminPostsSlugEditRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/admin/login': typeof AdminLoginRoute
   '/writing/$slug': typeof WritingSlugRoute
+  '/admin/': typeof AdminIndexRoute
   '/writing/': typeof WritingIndexRoute
+  '/admin/posts/new': typeof AdminPostsNewRoute
+  '/admin/posts/$slug/edit': typeof AdminPostsSlugEditRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/writing/$slug' | '/writing/'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/admin/login'
+    | '/writing/$slug'
+    | '/admin/'
+    | '/writing/'
+    | '/admin/posts/new'
+    | '/admin/posts/$slug/edit'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/writing/$slug' | '/writing'
-  id: '__root__' | '/' | '/about' | '/writing/$slug' | '/writing/'
+  to:
+    | '/'
+    | '/about'
+    | '/admin/login'
+    | '/writing/$slug'
+    | '/admin'
+    | '/writing'
+    | '/admin/posts/new'
+    | '/admin/posts/$slug/edit'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/admin/login'
+    | '/writing/$slug'
+    | '/admin/'
+    | '/writing/'
+    | '/admin/posts/new'
+    | '/admin/posts/$slug/edit'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  AdminLoginRoute: typeof AdminLoginRoute
   WritingSlugRoute: typeof WritingSlugRoute
+  AdminIndexRoute: typeof AdminIndexRoute
   WritingIndexRoute: typeof WritingIndexRoute
+  AdminPostsNewRoute: typeof AdminPostsNewRoute
+  AdminPostsSlugEditRoute: typeof AdminPostsSlugEditRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -92,11 +157,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WritingIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/admin'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/writing/$slug': {
       id: '/writing/$slug'
       path: '/writing/$slug'
       fullPath: '/writing/$slug'
       preLoaderRoute: typeof WritingSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/login': {
+      id: '/admin/login'
+      path: '/admin/login'
+      fullPath: '/admin/login'
+      preLoaderRoute: typeof AdminLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/posts/new': {
+      id: '/admin/posts/new'
+      path: '/admin/posts/new'
+      fullPath: '/admin/posts/new'
+      preLoaderRoute: typeof AdminPostsNewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/posts/$slug/edit': {
+      id: '/admin/posts/$slug/edit'
+      path: '/admin/posts/$slug/edit'
+      fullPath: '/admin/posts/$slug/edit'
+      preLoaderRoute: typeof AdminPostsSlugEditRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -105,8 +198,12 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  AdminLoginRoute: AdminLoginRoute,
   WritingSlugRoute: WritingSlugRoute,
+  AdminIndexRoute: AdminIndexRoute,
   WritingIndexRoute: WritingIndexRoute,
+  AdminPostsNewRoute: AdminPostsNewRoute,
+  AdminPostsSlugEditRoute: AdminPostsSlugEditRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
