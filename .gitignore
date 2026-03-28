@@ -1,14 +1,36 @@
+# dependencies
 node_modules/
+
+# build
+dist/
 .output/
 .vinxi/
-dist/
+*.tsbuildinfo
+
+# data
 data/
 *.db
 *.db-wal
 *.db-shm
+
+# env
 .env
 .env.local
+.env.*.local
+
+# os
 .DS_Store
+Thumbs.db
+
+# editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# logs
 *.log
+
+# misc
 .turbo/
 .next/

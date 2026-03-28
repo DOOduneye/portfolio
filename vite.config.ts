@@ -10,10 +10,6 @@ export default defineConfig({
   plugins: [
     tsConfigPaths(),
     tailwindcss(),
-    tanstackStart({
-      tsr: {
-        routeFileIgnorePattern: "api/",
-      },
-    }),
+    tanstackStart(),
   ],
 });
