@@ -114,11 +114,10 @@ async function seed() {
       console.log(`Post "${post.slug}" already exists, skipping.`);
       continue;
     }
-    Effect.runSync(publishPost(post.slug));
-    console.log(`Created and published: ${post.title}`);
+    console.log(`Created (draft): ${post.title}`);
   }
 
-  console.log("Seed complete.");
+  console.log("Seed complete — all posts created as drafts.");
 }
 
 seed();
