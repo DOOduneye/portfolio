@@ -84,6 +84,12 @@ function AboutPage() {
             tags={["TypeScript", "React Native", "Redis", "Docker"]}
           />
           <ProjectItem
+            title="Flow"
+            href="https://github.com/DOOduneye/flow"
+            description="Rule-based investment automation. Connects bank and portfolio accounts for recurring deposits."
+            tags={["Go", "TypeScript", "AWS", "React Native"]}
+          />
+          <ProjectItem
             title="Hydrate"
             href="https://pkg.go.dev/github.com/dooduneye/hydrate"
             description="Authentication utility for Go using JWT flow."
