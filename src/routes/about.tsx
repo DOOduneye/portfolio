@@ -36,7 +36,7 @@ function AboutPage() {
             role="Software Engineer"
             location="New York, NY"
             period="Aug 2025 — present"
-            description="Building AI-powered CRM infrastructure. Kai (Slack AI assistant), meeting intelligence pipelines, Temporal workflow optimization, full-stack product across Python/FastAPI and TypeScript/Next.js."
+            description="Building AI-powered CRM infrastructure. Slack AI assistant, meeting intelligence pipelines, Temporal workflows, full-stack across Python/FastAPI and TypeScript/Next.js."
           />
           <ExperienceItem
             company="Google"
@@ -50,28 +50,28 @@ function AboutPage() {
             role="Software Engineering Intern"
             location="Seattle, WA"
             period="May — Aug 2024"
-            description="Developing performance tools for data ingestion of security information."
+            description="Performance tools for data ingestion of security information."
           />
           <ExperienceItem
             company="Boston Scientific"
             role="Software Engineer Co-op"
             location="Boston, MA"
             period="Jan — May 2024"
-            description="Embedding Active Directory into arrhythmia software to aid application integration within hospital AD DC infrastructure."
+            description="Embedding Active Directory into arrhythmia software for hospital AD DC infrastructure integration."
           />
           <ExperienceItem
             company="Genentech"
             role="Machine Learning Co-op"
             location="San Francisco, CA"
             period="Jan — Jun 2023"
-            description="Developed a drug data structuring system using Transformer models and rule-based matching to normalize unstructured text, improving data interoperability within gRED by 20%."
+            description="Drug data structuring using Transformer models and rule-based matching. Improved data interoperability within gRED by 20%."
           />
           <ExperienceItem
             company="Generate"
             role="Technical Lead"
             location="Boston, MA"
             period="Aug 2022 — Jun 2024"
-            description="Led a team of 6 developers to improve Northeastern's community engagement system."
+            description="Led a team of 6 developers building Northeastern's community engagement system."
           />
         </div>
       </section>
@@ -84,86 +84,39 @@ function AboutPage() {
           <ProjectItem
             title="SAC"
             href="https://github.com/GenerateNU/sac"
-            description="Platform for university organizations — app, website, and admin dashboards. Event management, applications, member tools."
-            tags={["TypeScript", "React Native", "Redis", "Docker", "Nginx"]}
+            description="Platform for university organizations — app, website, and admin dashboards."
+            tags={["TypeScript", "React Native", "Redis", "Docker"]}
           />
           <ProjectItem
             title="Hydrate"
             href="https://pkg.go.dev/github.com/dooduneye/hydrate"
-            description="Authentication utility for Go using JWT flow. Easy implementation, built for customizability."
+            description="Authentication utility for Go using JWT flow."
             tags={["Go", "Open Source"]}
-          />
-          <ProjectItem
-            title="Flow"
-            description="Rule-based investment automation connecting bank and portfolio accounts for recurring deposits."
-            tags={["Go", "TypeScript", "AWS", "React Native"]}
           />
           <ProjectItem
             title="SongGPT"
             href="https://github.com/dooduneye/song-gpt"
-            description="Web app that generates songs from text using GPT-4."
+            description="Generate songs from text using GPT-4 and Spotify."
             tags={["TypeScript", "Spotify API", "GPT-4"]}
           />
           <ProjectItem
             title="Jurni"
-            description="Analyzed journal data for a mental health service. NLP techniques to find trigger points supporting experts. Tools for data scraping, preprocessing, and subject clustering."
+            description="NLP analysis of journal data for a mental health service. Trigger point detection, data scraping, subject clustering."
             tags={["Python", "NLP", "Machine Learning", "Huggingface"]}
-          />
-          <ProjectItem
-            title="Passover"
-            description="Real-time chat with file sharing and code exchange built on git-style interactions."
-            tags={["Rust", "AWS", "Redis", "Postgres"]}
-          />
-          <ProjectItem
-            title="Legacy"
-            description="End-of-life planning app. Fill out forms for wills, funeral arrangements, life insurance — store information to pass on to loved ones."
-            tags={["Go", "TypeScript", "AWS", "React Native"]}
           />
           <ProjectItem
             title="Rate My Dorm"
             href="https://github.com/dooduneye/rate-my-dorm-web-app"
-            description="Web app for students to rate and find the best dorms on campus."
+            description="Rate and find the best dorms on campus."
             tags={["MongoDB", "Express", "Node.js", "React"]}
           />
           <ProjectItem
             title="davidoduneye.com"
             href="https://github.com/DOOduneye/portfolio"
-            description="This site. Server-rendered, self-hosted, own my primitives."
+            description="This site. Server-rendered, self-hosted."
             tags={["TanStack Start", "Effect TS", "SQLite", "Docker"]}
           />
         </div>
-      </section>
-
-      <section>
-        <h2 className="mb-6 text-sm font-medium uppercase tracking-wider text-text-muted">
-          Engineering philosophy
-        </h2>
-        <ul className="space-y-3 text-text-secondary">
-          <li>
-            <strong className="text-text-primary">Parse, don't validate.</strong>{" "}
-            Data gets typed at the boundary. After that, the types do the work.
-          </li>
-          <li>
-            <strong className="text-text-primary">
-              Composition over configuration.
-            </strong>{" "}
-            Small pieces that fit together beat large pieces with many knobs.
-          </li>
-          <li>
-            <strong className="text-text-primary">
-              Server-first, client when needed.
-            </strong>{" "}
-            Ship HTML. Hydrate only what moves.
-          </li>
-          <li>
-            <strong className="text-text-primary">Layers don't leak.</strong>{" "}
-            Routes handle HTTP. Services handle logic. Data handles storage.
-          </li>
-          <li>
-            <strong className="text-text-primary">Own your primitives.</strong>{" "}
-            Self-hosted auth, SQLite, VPS. Rent less, control more.
-          </li>
-        </ul>
       </section>
 
       <section>
