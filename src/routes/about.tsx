@@ -18,11 +18,7 @@ function AboutPage() {
             engineering that makes it dependable. I care about reliability, clean
             interfaces, and the details that make software feel effortless.
           </p>
-          <p>
-            Outside of work, I'm an avid powerlifter. I also love music,
-            photography, travel, and film — anything that trains your eye and
-            keeps you curious.
-          </p>
+
         </div>
       </section>
 
