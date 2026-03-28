@@ -14,6 +14,15 @@ export const Route = createFileRoute("/")({
   component: HomePage,
 });
 
+function ProjectLink({ href, title, description }: { href: string; title: string; description: string }) {
+  return (
+    <a href={href} target="_blank" rel="noopener noreferrer" className="group block">
+      <h3 className="font-medium text-text-primary transition-colors group-hover:text-accent">{title}</h3>
+      <p className="mt-1 text-sm text-text-secondary">{description}</p>
+    </a>
+  );
+}
+
 function HomePage() {
   const posts = Route.useLoaderData();
 
@@ -51,21 +60,17 @@ function HomePage() {
         <h2 className="mb-6 text-sm font-medium uppercase tracking-wider text-text-muted">
           Selected projects
         </h2>
-        <div className="space-y-4">
-          <a
-            href="https://github.com/DOOduneye/davidoduneye.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group block"
-          >
-            <h3 className="font-medium text-text-primary transition-colors group-hover:text-accent">
-              davidoduneye.com
-            </h3>
-            <p className="mt-1 text-sm text-text-secondary">
-              This site. TanStack Start, Effect TS, SQLite. Server-rendered, no
-              fluff.
-            </p>
-          </a>
+        <div className="space-y-6">
+          <ProjectLink
+            href="https://github.com/DOOduneye/portfolio"
+            title="davidoduneye.com"
+            description="This site. TanStack Start, Effect TS, SQLite. Server-rendered, self-hosted."
+          />
+          <ProjectLink
+            href="https://github.com/DOOduneye/flow"
+            title="Flow"
+            description="Rule-based investment automation. Connects bank and portfolio accounts for recurring deposits."
+          />
         </div>
       </section>
     </div>
