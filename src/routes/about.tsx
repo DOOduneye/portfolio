@@ -36,7 +36,7 @@ function AboutPage() {
             role="Software Engineer"
             location="New York, NY"
             period="Aug 2025 — present"
-            description="Building AI-powered CRM infrastructure. Slack AI assistant, meeting intelligence pipelines, Temporal workflows, full-stack across Python/FastAPI and TypeScript/Next.js."
+            description="AI-powered CRM. Slack integration, meeting intelligence, Temporal workflows."
           />
           <ExperienceItem
             company="Google"
@@ -64,7 +64,7 @@ function AboutPage() {
             role="Machine Learning Co-op"
             location="San Francisco, CA"
             period="Jan — Jun 2023"
-            description="Drug data structuring using Transformer models and rule-based matching. Improved data interoperability within gRED by 20%."
+            description="Drug data structuring using Transformer models and rule-based matching."
           />
           <ExperienceItem
             company="Generate"
@@ -94,21 +94,9 @@ function AboutPage() {
             tags={["Go", "Open Source"]}
           />
           <ProjectItem
-            title="SongGPT"
-            href="https://github.com/dooduneye/song-gpt"
-            description="Generate songs from text using GPT-4 and Spotify."
-            tags={["TypeScript", "Spotify API", "GPT-4"]}
-          />
-          <ProjectItem
             title="Jurni"
             description="NLP analysis of journal data for a mental health service. Trigger point detection, data scraping, subject clustering."
             tags={["Python", "NLP", "Machine Learning", "Huggingface"]}
-          />
-          <ProjectItem
-            title="Rate My Dorm"
-            href="https://github.com/dooduneye/rate-my-dorm-web-app"
-            description="Rate and find the best dorms on campus."
-            tags={["MongoDB", "Express", "Node.js", "React"]}
           />
           <ProjectItem
             title="davidoduneye.com"
