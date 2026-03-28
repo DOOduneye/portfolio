@@ -140,6 +140,14 @@ function AboutPage() {
           >
             LinkedIn
           </a>
+          <a
+            href="https://open.spotify.com/user/317gsn3rqunkxocwuvf7njcj5luy"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="transition-colors hover:text-accent"
+          >
+            Spotify
+          </a>
         </div>
       </section>
     </div>
