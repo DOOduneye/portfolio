@@ -32,7 +32,7 @@ function AboutPage() {
             role="Software Engineer"
             location="New York, NY"
             period="Aug 2025 — present"
-            description="AI-powered CRM. Slack integration, meeting intelligence, Temporal workflows."
+            description="Building product infrastructure for an AI-powered CRM platform."
           />
           <ExperienceItem
             company="Google"
