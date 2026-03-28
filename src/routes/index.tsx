@@ -64,12 +64,17 @@ function HomePage() {
           <ProjectLink
             href="https://github.com/DOOduneye/portfolio"
             title="davidoduneye.com"
-            description="This site. TanStack Start, Effect TS, SQLite. Server-rendered, self-hosted."
+            description="This site. TanStack Start, Effect TS, SQLite. Server-rendered, self-hosted on my own VPS."
+          />
+          <ProjectLink
+            href="https://github.com/GenerateNU/sac"
+            title="SAC"
+            description="Platform for university organizations — app, website, and admin dashboards. Led a team building event management, applications, and member tools. Redis, TypeScript, React Native, Docker."
           />
           <ProjectLink
             href="https://github.com/DOOduneye/flow"
             title="Flow"
-            description="Rule-based investment automation. Connects bank and portfolio accounts for recurring deposits."
+            description="Rule-based investment automation. Connects bank and portfolio accounts to streamline recurring deposits and financial management."
           />
         </div>
       </section>

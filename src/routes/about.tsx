@@ -59,6 +59,48 @@ function AboutPage() {
 
       <section>
         <h2 className="mb-6 text-sm font-medium uppercase tracking-wider text-text-muted">
+          Projects
+        </h2>
+        <div className="space-y-6">
+          <ProjectItem
+            title="SAC"
+            href="https://github.com/GenerateNU/sac"
+            description="Led a team building a platform for university organizations — app, website, and admin dashboards. Event management, applications, member tools."
+            tags={["TypeScript", "React Native", "Redis", "Docker", "Nginx"]}
+          />
+          <ProjectItem
+            title="Flow"
+            href="https://github.com/DOOduneye/flow"
+            description="Rule-based investment automation that connects bank and portfolio accounts for recurring deposits and financial management."
+            tags={["Go", "TypeScript", "AWS", "React Native"]}
+          />
+          <ProjectItem
+            title="Passover"
+            description="Real-time chat application with file sharing, messaging, and code exchange built on git-style interactions. No third-party platforms."
+            tags={["Rust", "AWS", "Redis", "Postgres", "Vite"]}
+          />
+          <ProjectItem
+            title="davidoduneye.com"
+            href="https://github.com/DOOduneye/portfolio"
+            description="This site. Server-rendered, self-hosted, own my primitives."
+            tags={["TanStack Start", "Effect TS", "SQLite", "Docker"]}
+          />
+          <ProjectItem
+            title="Rate My Dorm"
+            href="https://github.com/dooduneye/rate-my-dorm-web-app"
+            description="Web app for students to rate and find the best dorms on campus."
+            tags={["MongoDB", "Express", "Node.js", "React"]}
+          />
+          <ProjectItem
+            title="Freelance Projects"
+            href="https://github.com/Polaris-Freelance"
+            description="Freelance web development work across multiple clients."
+          />
+        </div>
+      </section>
+
+      <section>
+        <h2 className="mb-6 text-sm font-medium uppercase tracking-wider text-text-muted">
           Engineering philosophy
         </h2>
         <ul className="space-y-3 text-text-secondary">
@@ -113,6 +155,44 @@ function AboutPage() {
         </div>
       </section>
     </div>
+  );
+}
+
+function ProjectItem({
+  title,
+  href,
+  description,
+  tags,
+}: {
+  title: string;
+  href?: string;
+  description: string;
+  tags?: string[];
+}) {
+  const Wrapper = href ? "a" : "div";
+  const linkProps = href
+    ? { href, target: "_blank" as const, rel: "noopener noreferrer" }
+    : {};
+
+  return (
+    <Wrapper {...linkProps} className={href ? "group block" : "block"}>
+      <h3 className={`font-medium text-text-primary ${href ? "transition-colors group-hover:text-accent" : ""}`}>
+        {title}
+      </h3>
+      <p className="mt-1 text-sm text-text-secondary">{description}</p>
+      {tags && tags.length > 0 && (
+        <div className="mt-2 flex flex-wrap gap-2">
+          {tags.map((tag) => (
+            <span
+              key={tag}
+              className="rounded-md bg-bg-subtle px-2 py-0.5 text-xs text-text-muted"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+      )}
+    </Wrapper>
   );
 }
 
