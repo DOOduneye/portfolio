@@ -1,19 +1,32 @@
-### Running Locally
+# davidoduneye.com
 
-Make sure you have [Node.js](http://nodejs.org/) installed.
+Personal website for David Oduneye — software engineer. Static site built with
+[Astro](https://astro.build), deployed to GitHub Pages.
 
-```sh
-$ git clone
-$ cd dooduneye.github.io
-$ npm install
-$ npm run dev
+Typography does the work: near-monochrome, one accent color, dark by default
+(light follows the system preference), no client-side JavaScript.
+
+## Structure
+
+```
+src/
+  content/writing/   # posts (markdown + frontmatter)
+  layouts/           # base HTML shell
+  pages/             # routes: /, /writing, /writing/[slug], /about, 404, rss.xml
+  styles/            # design tokens + global styles
 ```
 
-The app should now be running on [localhost:3000](http://localhost:3000/).
+## Development
 
+```bash
+npm install
+npm run dev       # dev server
+npm run build     # static build to dist/
+npm run preview   # serve the build locally
+```
 
+## Deploying
 
-Copyright (c) - 2022
-You may not copy, distribute, or modify this project without the express written consent of the author.
-If you would like to use this project as a template for your own website, please contact me at oduneye.d@northeastern.edu.
-
+Pushes to the `v1` branch build and deploy to the `gh-pages` branch via
+GitHub Actions. To publish a post, add a markdown file to
+`src/content/writing/` and push.

@@ -1,0 +1,40 @@
+---
+import { getCollection } from "astro:content";
+import Base from "../../layouts/Base.astro";
+
+const posts = (await getCollection("writing")).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+
+const formatDate = (date: Date) =>
+  date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+---
+
+<Base
+  title="Writing — David Oduneye"
+  description="Essays and notes on software, systems, and whatever else earns a page."
+>
+  <section>
+    <h1>Writing</h1>
+  </section>
+
+  <section>
+    <ul class="entry-list">
+      {
+        posts.map((post) => (
+          <li class="entry">
+            <h3>
+              <a href={`/writing/${post.id}/`}>{post.data.title}</a>
+            </h3>
+            <span class="meta">{formatDate(post.data.pubDate)}</span>
+            <p>{post.data.description}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</Base>

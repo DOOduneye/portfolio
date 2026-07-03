@@ -1,0 +1,73 @@
+---
+import Base from "../layouts/Base.astro";
+---
+
+<Base title="About — David Oduneye">
+  <section>
+    <h1>About</h1>
+    <div class="prose" style="margin-top: 1.5rem;">
+      <p>
+        I'm David Oduneye, a software engineer focused on building thoughtful,
+        well-crafted software. I care about clean architecture, type safety,
+        and systems that are simple enough to reason about but robust enough to
+        rely on.
+      </p>
+      <p>
+        I think the best software is built with strong opinions, loosely held.
+        I gravitate toward tools that make the right thing easy and the wrong
+        thing hard — TypeScript with strict mode, Effect for composable error
+        handling, SQLite for data that doesn't need a distributed database.
+      </p>
+      <p>
+        Away from the keyboard, I'm usually in the gym — I compete as a
+        <a
+          href="https://www.openpowerlifting.org/u/davidoduneye"
+          target="_blank"
+          rel="noopener noreferrer">powerlifter</a
+        > — or out with a camera. I also read about systems design, think about
+        developer experience, and write about what I've learned.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section-label">Engineering philosophy</h2>
+    <ul class="entry-list prose">
+      <li>
+        <strong>Parse, don't validate.</strong> Data gets typed at the
+        boundary. After that, the types do the work.
+      </li>
+      <li>
+        <strong>Composition over configuration.</strong> Small pieces that fit
+        together beat large pieces with many knobs.
+      </li>
+      <li>
+        <strong>Server-first, client when needed.</strong> Ship HTML. Hydrate
+        only what moves.
+      </li>
+      <li>
+        <strong>Layers don't leak.</strong> Routes handle HTTP. Services handle
+        logic. Data handles storage. They don't reach into each other.
+      </li>
+    </ul>
+  </section>
+
+  <section>
+    <h2 class="section-label">Links</h2>
+    <div class="prose">
+      <p>
+        <a
+          href="https://github.com/DOOduneye"
+          target="_blank"
+          rel="noopener noreferrer">GitHub</a
+        >
+        ·
+        <a
+          href="https://linkedin.com/in/davidoduneye"
+          target="_blank"
+          rel="noopener noreferrer">LinkedIn</a
+        >
+      </p>
+    </div>
+  </section>
+</Base>

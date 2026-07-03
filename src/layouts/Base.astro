@@ -1,0 +1,72 @@
+---
+import "../styles/global.css";
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = "David Oduneye — software engineer." } =
+  Astro.props;
+const currentPath = Astro.url.pathname;
+
+const isActive = (path: string) =>
+  path === "/" ? currentPath === "/" : currentPath.startsWith(path);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="David Oduneye — writing"
+      href={new URL("rss.xml", Astro.site)}
+    />
+  </head>
+  <body>
+    <div class="container">
+      <header class="site-header">
+        <nav>
+          <a href="/" class="name">David Oduneye</a>
+          <div class="links">
+            <a
+              href="/writing"
+              aria-current={isActive("/writing") ? "page" : undefined}
+              >Writing</a
+            >
+            <a href="/about" aria-current={isActive("/about") ? "page" : undefined}
+              >About</a
+            >
+          </div>
+        </nav>
+      </header>
+
+      <main>
+        <slot />
+      </main>
+
+      <footer class="site-footer">
+        <span>© {new Date().getFullYear()} David Oduneye</span>
+        <span class="links">
+          <a
+            href="https://github.com/DOOduneye"
+            target="_blank"
+            rel="noopener noreferrer">GitHub</a
+          >
+          <a
+            href="https://linkedin.com/in/davidoduneye"
+            target="_blank"
+            rel="noopener noreferrer">LinkedIn</a
+          >
+          <a href="/rss.xml">RSS</a>
+        </span>
+      </footer>
+    </div>
+  </body>
+</html>
