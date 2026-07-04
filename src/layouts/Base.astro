@@ -6,8 +6,10 @@ interface Props {
   description?: string;
 }
 
-const { title, description = "David Oduneye — software engineer." } =
-  Astro.props;
+const {
+  title,
+  description = "The personal site of David Oduneye — software engineer, powerlifter, photographer.",
+} = Astro.props;
 const currentPath = Astro.url.pathname;
 
 const isActive = (path: string) =>

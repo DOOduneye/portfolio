@@ -41,16 +41,27 @@ const projects = [
 ---
 
 <Base title="David Oduneye">
-  <section>
-    <h1>David Oduneye</h1>
-    <p style="margin-top: 0.75rem; color: var(--color-text-secondary);">
-      Software engineer. I think about types, systems, and building software
-      that's safe to change.
+  <section class="prose">
+    <h1>I'm David.</h1>
+    <p style="margin-top: 1rem;">
+      I'm a software engineer in Boston. I build software that's safe to
+      change, compete as a
+      <a
+        href="https://www.openpowerlifting.org/u/davidoduneye"
+        target="_blank"
+        rel="noopener noreferrer">powerlifter</a
+      >, and carry a camera more places than I strictly need to.
+    </p>
+    <p>
+      This site is where I keep the things I make and think about — essays on
+      building software, projects I care about, and whatever else earns a
+      page. If you want the fuller story, start with the
+      <a href="/about">about page</a>.
     </p>
   </section>
 
   <section>
-    <h2 class="section-label">Latest writing</h2>
+    <h2 class="section-label">What I've been writing</h2>
     <ul class="entry-list">
       {
         posts.map((post) => (
@@ -67,7 +78,7 @@ const projects = [
   </section>
 
   <section>
-    <h2 class="section-label">Selected projects</h2>
+    <h2 class="section-label">What I've been building</h2>
     <ul class="entry-list">
       {
         projects.map((project) => (

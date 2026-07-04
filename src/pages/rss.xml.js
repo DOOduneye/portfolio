@@ -9,7 +9,7 @@ export async function GET(context) {
   return rss({
     title: "David Oduneye — writing",
     description:
-      "Essays and notes on software, systems, and whatever else earns a page.",
+      "Essays and notes on software, strength, and whatever else earns a page.",
     site: context.site,
     items: posts.map((post) => ({
       title: post.data.title,
