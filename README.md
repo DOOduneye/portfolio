@@ -10,9 +10,8 @@ Typography does the work: near-monochrome, one accent color, dark by default
 
 ```
 src/
-  content/writing/   # posts (markdown + frontmatter)
   layouts/           # base HTML shell
-  pages/             # routes: /, /writing, /writing/[slug], /about, 404, rss.xml
+  pages/             # routes: / (experience + projects), 404
   styles/            # design tokens + global styles
 ```
 

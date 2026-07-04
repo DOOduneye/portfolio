@@ -1,17 +1,32 @@
 ---
-import { getCollection } from "astro:content";
 import Base from "../layouts/Base.astro";
 
-const posts = (await getCollection("writing"))
-  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
-  .slice(0, 3);
-
-const formatDate = (date: Date) =>
-  date.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
+const experience = [
+  {
+    role: "Technical lead",
+    org: "Generate",
+    orgUrl: "https://generatenu.com",
+    dates: "July 2023 – 2024",
+    description:
+      "Led a team of six building a cross-platform mobile app in React Native and Go that personalizes end-of-life planning.",
+  },
+  {
+    role: "Software engineering intern, machine learning",
+    org: "Genentech",
+    orgUrl: "https://www.gene.com",
+    dates: "January – June 2023",
+    description:
+      "Built a drug-data structuring system with transformer models and rule-based matching to normalize unstructured text across gRED, hitting 93% accuracy.",
+  },
+  {
+    role: "Teaching assistant",
+    org: "Khoury College of Computer Sciences",
+    orgUrl: "https://www.khoury.northeastern.edu",
+    dates: "Fall 2022",
+    description:
+      "Ran 4+ hours of weekly office hours and assisted faculty with grading and feedback.",
+  },
+];
 
 const projects = [
   {
@@ -32,6 +47,18 @@ const projects = [
     description: "A token-based authentication utility for Go.",
   },
   {
+    name: "Jurni",
+    url: null,
+    description:
+      "NLP over 50,000+ journal entries for a mental health service — sentiment analysis and topic modeling to surface trigger points for clinicians.",
+  },
+  {
+    name: "RateMyDorm",
+    url: "https://github.com/DOOduneye/rmd",
+    description:
+      "A full-stack Next.js app where students rate and compare campus dorms, backed by the College Scorecard API.",
+  },
+  {
     name: "davidoduneye.com",
     url: "https://github.com/DOOduneye/portfolio",
     description:
@@ -42,35 +69,27 @@ const projects = [
 
 <Base title="David Oduneye">
   <section class="prose">
-    <h1>I'm David.</h1>
-    <p style="margin-top: 1rem;">
-      I'm a software engineer in Boston. I build software that's safe to
-      change, compete as a
-      <a
-        href="https://www.openpowerlifting.org/u/davidoduneye"
-        target="_blank"
-        rel="noopener noreferrer">powerlifter</a
-      >, and carry a camera more places than I strictly need to.
-    </p>
-    <p>
-      This site is where I keep the things I make and think about — essays on
-      building software, projects I care about, and whatever else earns a
-      page. If you want the fuller story, start with the
-      <a href="/about">about page</a>.
+    <h1>David Oduneye</h1>
+    <p style="margin-top: 0.75rem;">
+      Software engineer out of Boston — computer science at Northeastern
+      University. This is what I've built and where I've worked.
     </p>
   </section>
 
   <section>
-    <h2 class="section-label">What I've been writing</h2>
+    <h2 class="section-label">Experience</h2>
     <ul class="entry-list">
       {
-        posts.map((post) => (
+        experience.map((job) => (
           <li class="entry">
             <h3>
-              <a href={`/writing/${post.id}/`}>{post.data.title}</a>
+              {job.role} ·{" "}
+              <a href={job.orgUrl} target="_blank" rel="noopener noreferrer">
+                {job.org}
+              </a>
             </h3>
-            <span class="meta">{formatDate(post.data.pubDate)}</span>
-            <p>{post.data.description}</p>
+            <span class="meta">{job.dates}</span>
+            <p>{job.description}</p>
           </li>
         ))
       }
@@ -78,15 +97,19 @@ const projects = [
   </section>
 
   <section>
-    <h2 class="section-label">What I've been building</h2>
+    <h2 class="section-label">Projects</h2>
     <ul class="entry-list">
       {
         projects.map((project) => (
           <li class="entry">
             <h3>
-              <a href={project.url} target="_blank" rel="noopener noreferrer">
-                {project.name}
-              </a>
+              {project.url ? (
+                <a href={project.url} target="_blank" rel="noopener noreferrer">
+                  {project.name}
+                </a>
+              ) : (
+                project.name
+              )}
             </h3>
             <p>{project.description}</p>
           </li>

@@ -8,12 +8,8 @@ interface Props {
 
 const {
   title,
-  description = "The personal site of David Oduneye — software engineer, powerlifter, photographer.",
+  description = "David Oduneye — software engineer. Experience and projects.",
 } = Astro.props;
-const currentPath = Astro.url.pathname;
-
-const isActive = (path: string) =>
-  path === "/" ? currentPath === "/" : currentPath.startsWith(path);
 ---
 
 <!doctype html>
@@ -24,12 +20,6 @@ const isActive = (path: string) =>
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="icon" href="/favicon.ico" sizes="any" />
-    <link
-      rel="alternate"
-      type="application/rss+xml"
-      title="David Oduneye — writing"
-      href={new URL("rss.xml", Astro.site)}
-    />
   </head>
   <body>
     <div class="container">
@@ -38,12 +28,14 @@ const isActive = (path: string) =>
           <a href="/" class="name">David Oduneye</a>
           <div class="links">
             <a
-              href="/writing"
-              aria-current={isActive("/writing") ? "page" : undefined}
-              >Writing</a
+              href="https://github.com/DOOduneye"
+              target="_blank"
+              rel="noopener noreferrer">GitHub</a
             >
-            <a href="/about" aria-current={isActive("/about") ? "page" : undefined}
-              >About</a
+            <a
+              href="https://linkedin.com/in/davidoduneye"
+              target="_blank"
+              rel="noopener noreferrer">LinkedIn</a
             >
           </div>
         </nav>
@@ -66,7 +58,6 @@ const isActive = (path: string) =>
             target="_blank"
             rel="noopener noreferrer">LinkedIn</a
           >
-          <a href="/rss.xml">RSS</a>
         </span>
       </footer>
     </div>
