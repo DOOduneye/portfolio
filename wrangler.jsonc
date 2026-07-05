@@ -1,5 +1,5 @@
 {
-  "name": "portfolio-cms",
+  "name": "davidoduneye-com",
   "main": "src/worker/index.ts",
   "compatibility_date": "2026-06-01",
   "assets": {
@@ -17,5 +17,5 @@
   ]
   // Secrets (set with `wrangler secret put <name>`):
   //   ADMIN_TOKEN   — bearer token the admin UI sends
-  //   GITHUB_TOKEN  — fine-grained PAT for repository_dispatch (publish → site rebuild)
+  //   GITHUB_TOKEN  — fine-grained PAT for repository_dispatch (publish → Pages rebuild)
 }

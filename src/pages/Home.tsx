@@ -96,7 +96,7 @@ function Pill({ children }: { children: string }) {
   );
 }
 
-export function App() {
+export function Home() {
   return (
     <div className="relative min-h-screen overflow-hidden">
       {/* Ambient glow behind the hero */}

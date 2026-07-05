@@ -1,14 +1,22 @@
 import { useCallback, useEffect, useState } from "react";
 import { api, getToken, setToken } from "./api";
 import { PostEditor } from "./components/PostEditor";
+import "./styles.css";
 
 type Post = Awaited<ReturnType<typeof api.posts.list.query>>[number];
 
-export function App() {
+export function Admin() {
   const [authed, setAuthed] = useState(Boolean(getToken()));
 
-  if (!authed) return <TokenGate onDone={() => setAuthed(true)} />;
-  return <Posts onAuthError={() => setAuthed(false)} />;
+  return (
+    <div className="admin">
+      {authed ? (
+        <Posts onAuthError={() => setAuthed(false)} />
+      ) : (
+        <TokenGate onDone={() => setAuthed(true)} />
+      )}
+    </div>
+  );
 }
 
 function TokenGate({ onDone }: { onDone: () => void }) {

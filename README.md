@@ -1,32 +1,48 @@
 # davidoduneye.com
 
-Personal site for David Oduneye — software engineer. One repo, two apps:
+Personal site for David Oduneye — software engineer. One project:
+
+- `/` — public site (experience + projects)
+- `/admin` — CMS: posts managed with a TipTap v3 editor
+- `/trpc` — tRPC v11 API (posts, projects, experiences) backed by D1
+
+React 19 + Vite + Tailwind v4 on the front, a Cloudflare Worker serving the
+API and the built app. Runs on Cloudflare's free tier.
 
 ```
-site/   # public site — React + Vite + Tailwind, static build → GitHub Pages
-cms/    # admin + API — Cloudflare Workers, tRPC v11, D1, TipTap v3 editor
+src/
+  pages/Home.tsx     # public site
+  admin/             # CMS UI + TipTap editor
+  worker/            # Cloudflare Worker: tRPC routers, drizzle schema, auth
+migrations/          # D1 SQL migrations
 ```
 
-## Site
+## Development
 
 ```bash
-cd site
 npm install
-npm run dev       # dev server
-npm run build     # static build to site/dist
+npm run db:migrate:local   # once
+npm run dev:api            # worker + local D1 on :8787
+npm run dev                # app on :5173 (proxies /trpc to :8787)
 ```
 
-Pushes to the `v1` branch that touch `site/` build and deploy to the
-`gh-pages` branch via GitHub Actions. Content (experience, projects) currently
-lives in `site/src/App.tsx`; wiring it to the CMS's public tRPC procedures at
-build time is the next step.
+Admin token for local dev comes from `.dev.vars` (`ADMIN_TOKEN=dev-token`).
 
-## CMS
+## Deploy
 
-See [`cms/README.md`](cms/README.md) for setup, development, and deploy. It
-runs entirely on Cloudflare's free tier and publishes content changes by
-firing a `repository_dispatch` (`content-published`) that rebuilds the site.
+The public site deploys to GitHub Pages automatically on pushes to `v1`
+(static build; the `/admin` route needs the worker, so it only works where
+the worker serves the app).
 
-Note: GitHub only triggers `repository_dispatch` workflows from the default
-branch, so for the publish hook to work the deploy workflow needs to exist on
-`main` too (or make `v1` the default branch).
+To run the full app (site + admin + API) on Cloudflare:
+
+```bash
+npx wrangler d1 create portfolio-cms   # paste database_id into wrangler.jsonc
+npm run db:migrate
+npx wrangler secret put ADMIN_TOKEN
+npm run deploy
+```
+
+Publishing content fires a `repository_dispatch` (`content-published`) to
+rebuild the Pages site. Note GitHub only fires repository_dispatch workflows
+from the default branch — mirror deploy.yml on `main` or make `v1` default.

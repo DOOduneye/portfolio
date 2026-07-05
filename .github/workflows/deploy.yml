@@ -5,7 +5,6 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [v1]
-    paths: ["site/**", ".github/workflows/deploy.yml"]
   repository_dispatch:
     types: [content-published]
   workflow_dispatch:
@@ -16,9 +15,6 @@ permissions:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: site
 
     steps:
       - uses: actions/checkout@v4
@@ -29,7 +25,6 @@ jobs:
         with:
           node-version: 22
           cache: npm
-          cache-dependency-path: site/package-lock.json
 
       - run: npm ci
       - run: npm run build
@@ -38,4 +33,4 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
-          folder: site/dist
+          folder: dist
