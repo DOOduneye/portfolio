@@ -1,0 +1,21 @@
+{
+  "name": "portfolio-cms",
+  "main": "src/worker/index.ts",
+  "compatibility_date": "2026-06-01",
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "portfolio-cms",
+      // Replace after running: wrangler d1 create portfolio-cms
+      "database_id": "REPLACE_ME"
+    }
+  ]
+  // Secrets (set with `wrangler secret put <name>`):
+  //   ADMIN_TOKEN   — bearer token the admin UI sends
+  //   GITHUB_TOKEN  — fine-grained PAT for repository_dispatch (publish → site rebuild)
+}
