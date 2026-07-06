@@ -204,7 +204,10 @@ export function Home() {
             );
 
             return (
-              <li key={project.name} className="border-b border-line">
+              <li
+                key={project.name}
+                className="border-b border-line last:border-b-0"
+              >
                 {project.url ? (
                   <a
                     href={project.url}
@@ -224,7 +227,7 @@ export function Home() {
       </Section>
 
       {/* Footer */}
-      <footer className="mt-28 flex items-center justify-between border-t border-line pt-8 font-mono text-xs text-subtle">
+      <footer className="mt-16 flex items-center justify-between border-t border-line pt-8 font-mono text-xs text-subtle">
         <span>© {new Date().getFullYear()} David Oduneye</span>
         <div className="flex gap-5">
           {links.map((link) => (
