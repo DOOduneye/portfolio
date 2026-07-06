@@ -1,8 +1,34 @@
 @import "tailwindcss";
 
+/*
+ * Design tokens — the single source of truth for site + admin.
+ *
+ * Neutrals are a blue-tinted ink ramp (hue 265); the lone accent is a warm
+ * amber (hue 78) — complementary, used only for interaction and emphasis.
+ * Every color in the app comes from this scale. No raw palette values in
+ * components.
+ */
 @theme {
-  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    sans-serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo,
+    monospace;
+
+  /* surfaces */
+  --color-page: oklch(0.17 0.008 265);
+  --color-surface: oklch(0.2 0.009 265);
+  --color-raised: oklch(0.24 0.01 265);
+  --color-line: oklch(0.29 0.01 265);
+
+  /* text */
+  --color-fg: oklch(0.94 0.004 265);
+  --color-muted: oklch(0.73 0.01 265);
+  --color-subtle: oklch(0.54 0.012 265);
+
+  /* accent + status */
+  --color-accent: oklch(0.8 0.125 78);
+  --color-accent-strong: oklch(0.87 0.13 80);
+  --color-ok: oklch(0.78 0.13 165);
+  --color-danger: oklch(0.7 0.18 25);
 }
 
 html {
@@ -10,9 +36,11 @@ html {
 }
 
 body {
-  @apply bg-zinc-950 font-sans text-zinc-300 antialiased;
+  @apply bg-page font-sans text-muted antialiased;
+  font-feature-settings: "cv11";
 }
 
 ::selection {
-  @apply bg-blue-500/30 text-white;
+  background: color-mix(in oklch, var(--color-accent) 30%, transparent);
+  color: var(--color-fg);
 }

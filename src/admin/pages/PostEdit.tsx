@@ -80,7 +80,7 @@ export function PostEdit({ onAuthError }: { onAuthError: () => void }) {
     });
 
   if (!post && !error) {
-    return <p className="text-sm text-zinc-600">Loading…</p>;
+    return <p className="text-sm text-subtle">Loading…</p>;
   }
 
   return (
@@ -88,13 +88,13 @@ export function PostEdit({ onAuthError }: { onAuthError: () => void }) {
       <header className="flex items-center justify-between gap-4">
         <Link
           to="/admin/posts"
-          className="text-sm text-zinc-500 transition-colors hover:text-zinc-300"
+          className="text-sm text-subtle transition-colors hover:text-muted"
         >
           ← Posts
         </Link>
         <div className="flex items-center gap-2.5">
           {savedAt && !saving && (
-            <span className="text-xs text-zinc-600">Saved</span>
+            <span className="text-xs text-subtle">Saved</span>
           )}
           {post && <StatusBadge status={post.status} />}
           <button onClick={toggleStatus} disabled={saving} className={ghostButton}>
@@ -107,7 +107,7 @@ export function PostEdit({ onAuthError }: { onAuthError: () => void }) {
       </header>
 
       {error && (
-        <p className="mt-5 rounded-lg border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-400">
+        <p className="mt-5 rounded-lg border border-danger/20 bg-danger/10 px-4 py-3 text-sm text-danger">
           {error}
         </p>
       )}
@@ -118,9 +118,9 @@ export function PostEdit({ onAuthError }: { onAuthError: () => void }) {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Post title"
-            className="w-full border-none bg-transparent text-3xl font-bold tracking-tight text-white placeholder-zinc-700 outline-none"
+            className="w-full border-none bg-transparent text-3xl font-bold tracking-tight text-fg placeholder-subtle outline-none"
           />
-          <p className="-mt-4 text-xs text-zinc-600">/{slug}</p>
+          <p className="-mt-4 text-xs text-subtle">/{slug}</p>
 
           <Field label="Excerpt">
             <textarea
@@ -134,7 +134,7 @@ export function PostEdit({ onAuthError }: { onAuthError: () => void }) {
 
           <PostEditor initialContent={post.content} onChange={setContent} />
 
-          <div className="border-t border-zinc-900 pt-4">
+          <div className="border-t border-line pt-4">
             <button onClick={remove} disabled={saving} className={dangerButton}>
               Delete post
             </button>

@@ -19,16 +19,16 @@ export function Admin() {
   const navClass = ({ isActive }: { isActive: boolean }) =>
     `rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
       isActive
-        ? "bg-zinc-900 text-white"
-        : "text-zinc-400 hover:bg-zinc-900/60 hover:text-zinc-200"
+        ? "bg-raised text-fg"
+        : "text-muted hover:bg-surface hover:text-fg"
     }`;
 
   return (
     <div className="flex min-h-screen">
-      <aside className="flex w-52 shrink-0 flex-col gap-8 border-r border-zinc-900 p-5">
+      <aside className="flex w-52 shrink-0 flex-col gap-8 border-r border-line p-5">
         <div>
-          <div className="font-semibold text-white">David Oduneye</div>
-          <div className="text-xs text-zinc-500">Content admin</div>
+          <div className="font-semibold text-fg">David Oduneye</div>
+          <div className="text-xs text-subtle">Content admin</div>
         </div>
         <nav className="flex flex-col gap-1">
           <NavLink to="/admin/posts" className={navClass}>
@@ -42,12 +42,12 @@ export function Admin() {
           </NavLink>
         </nav>
         <div className="mt-auto flex flex-col gap-2 text-sm">
-          <a href="/" className="text-zinc-500 transition-colors hover:text-zinc-300">
+          <a href="/" className="text-subtle transition-colors hover:text-muted">
             ← View site
           </a>
           <button
             onClick={signOut}
-            className="text-left text-zinc-500 transition-colors hover:text-zinc-300"
+            className="text-left text-subtle transition-colors hover:text-muted"
           >
             Sign out
           </button>
@@ -107,10 +107,10 @@ function TokenGate({ onDone }: { onDone: () => void }) {
     <div className="flex min-h-screen items-center justify-center px-6">
       <form
         onSubmit={submit}
-        className="w-full max-w-sm rounded-2xl border border-zinc-900 bg-zinc-900/40 p-8"
+        className="w-full max-w-sm rounded-2xl border border-line bg-surface p-8"
       >
-        <h1 className="text-lg font-semibold text-white">Content admin</h1>
-        <p className="mt-1 text-sm text-zinc-500">
+        <h1 className="text-lg font-semibold text-fg">Content admin</h1>
+        <p className="mt-1 text-sm text-subtle">
           Enter the admin token to continue.
         </p>
         <input
@@ -119,13 +119,13 @@ function TokenGate({ onDone }: { onDone: () => void }) {
           placeholder="Admin token"
           value={value}
           onChange={(e) => setValue(e.target.value)}
-          className="mt-5 w-full rounded-lg border border-zinc-800 bg-zinc-950 px-3.5 py-2 text-sm text-white placeholder-zinc-600 outline-none transition-colors focus:border-blue-500"
+          className="mt-5 w-full rounded-lg border border-line bg-page px-3.5 py-2 text-sm text-fg placeholder-subtle outline-none transition-colors focus:border-accent"
         />
-        {error && <p className="mt-3 text-sm text-red-400">{error}</p>}
+        {error && <p className="mt-3 text-sm text-danger">{error}</p>}
         <button
           type="submit"
           disabled={checking || !value.trim()}
-          className="mt-5 w-full rounded-lg bg-blue-600 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-500 disabled:opacity-50"
+          className="mt-5 w-full rounded-lg bg-accent py-2 text-sm font-medium text-page transition-colors hover:bg-accent-strong disabled:opacity-50"
         >
           {checking ? "Checking…" : "Sign in"}
         </button>

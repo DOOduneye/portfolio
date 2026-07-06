@@ -65,8 +65,8 @@ export function PostEditor({ initialContent, onChange }: Props) {
   ];
 
   return (
-    <div className="overflow-hidden rounded-xl border border-zinc-800 transition-colors focus-within:border-zinc-700">
-      <div className="flex flex-wrap gap-1 border-b border-zinc-800 bg-zinc-900/60 p-1.5">
+    <div className="overflow-hidden rounded-xl border border-line transition-colors focus-within:border-subtle">
+      <div className="flex flex-wrap gap-1 border-b border-line bg-surface p-1.5">
         {buttons.map((button) => (
           <button
             key={button.label}
@@ -74,8 +74,8 @@ export function PostEditor({ initialContent, onChange }: Props) {
             onClick={button.run}
             className={`rounded-md px-2.5 py-1 text-xs font-medium transition-colors ${
               button.active
-                ? "bg-blue-500/15 text-blue-400"
-                : "text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200"
+                ? "bg-accent/15 text-accent"
+                : "text-muted hover:bg-raised hover:text-fg"
             }`}
           >
             {button.label}

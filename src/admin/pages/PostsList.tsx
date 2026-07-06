@@ -35,28 +35,28 @@ export function PostsList({ onAuthError }: { onAuthError: () => void }) {
   return (
     <div>
       <header className="flex items-center justify-between">
-        <h1 className="text-xl font-semibold text-white">Posts</h1>
+        <h1 className="text-xl font-semibold text-fg">Posts</h1>
         <button
           onClick={createPost}
-          className="rounded-lg bg-blue-600 px-3.5 py-1.5 text-sm font-medium text-white transition-colors hover:bg-blue-500"
+          className="rounded-lg bg-accent px-3.5 py-1.5 text-sm font-medium text-page transition-colors hover:bg-accent-strong"
         >
           New post
         </button>
       </header>
 
       {error && (
-        <p className="mt-6 rounded-lg border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-400">
+        <p className="mt-6 rounded-lg border border-danger/20 bg-danger/10 px-4 py-3 text-sm text-danger">
           {error}
         </p>
       )}
 
       {posts && posts.length === 0 && (
-        <p className="mt-10 text-sm text-zinc-500">
+        <p className="mt-10 text-sm text-subtle">
           Nothing here yet. Write the first one.
         </p>
       )}
 
-      <ul className="mt-6 divide-y divide-zinc-900">
+      <ul className="mt-6 divide-y divide-line">
         {posts?.map((post) => (
           <li key={post.slug}>
             <Link
@@ -64,14 +64,14 @@ export function PostsList({ onAuthError }: { onAuthError: () => void }) {
               className="group flex items-center justify-between gap-4 py-3.5"
             >
               <div className="min-w-0">
-                <span className="block truncate font-medium text-zinc-200 transition-colors group-hover:text-white">
+                <span className="block truncate font-medium text-fg transition-colors group-hover:text-accent">
                   {post.title}
                 </span>
-                <span className="text-xs text-zinc-600">/{post.slug}</span>
+                <span className="text-xs text-subtle">/{post.slug}</span>
               </div>
               <div className="flex shrink-0 items-center gap-3">
                 <StatusBadge status={post.status} />
-                <span className="text-xs tabular-nums text-zinc-600">
+                <span className="text-xs tabular-nums text-subtle">
                   {new Date(post.updatedAt).toLocaleDateString("en-US", {
                     month: "short",
                     day: "numeric",

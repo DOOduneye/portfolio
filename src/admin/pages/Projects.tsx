@@ -84,20 +84,20 @@ export function Projects({ onAuthError }: { onAuthError: () => void }) {
   return (
     <div>
       <header className="flex items-center justify-between">
-        <h1 className="text-xl font-semibold text-white">Projects</h1>
+        <h1 className="text-xl font-semibold text-fg">Projects</h1>
         <button onClick={() => setDraft(empty)} className={primaryButton}>
           New project
         </button>
       </header>
 
       {error && (
-        <p className="mt-6 rounded-lg border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-400">
+        <p className="mt-6 rounded-lg border border-danger/20 bg-danger/10 px-4 py-3 text-sm text-danger">
           {error}
         </p>
       )}
 
       {draft && (
-        <div className="mt-6 space-y-4 rounded-xl border border-zinc-800 bg-zinc-900/40 p-5">
+        <div className="mt-6 space-y-4 rounded-xl border border-line bg-surface p-5">
           <Field label="Name">
             <input
               value={draft.name}
@@ -135,19 +135,19 @@ export function Projects({ onAuthError }: { onAuthError: () => void }) {
                 className={`${inputClass} w-24`}
               />
             </Field>
-            <label className="flex items-center gap-2 pt-5 text-sm text-zinc-300">
+            <label className="flex items-center gap-2 pt-5 text-sm text-muted">
               <input
                 type="checkbox"
                 checked={draft.visible}
                 onChange={(e) =>
                   setDraft({ ...draft, visible: e.target.checked })
                 }
-                className="accent-blue-600"
+                className="accent-accent"
               />
               Visible on site
             </label>
           </div>
-          <div className="flex gap-2 border-t border-zinc-800 pt-4">
+          <div className="flex gap-2 border-t border-line pt-4">
             <button
               onClick={save}
               disabled={saving || !draft.name.trim()}
@@ -163,23 +163,23 @@ export function Projects({ onAuthError }: { onAuthError: () => void }) {
       )}
 
       {items && items.length === 0 && !draft && (
-        <p className="mt-10 text-sm text-zinc-500">No projects yet.</p>
+        <p className="mt-10 text-sm text-subtle">No projects yet.</p>
       )}
 
-      <ul className="mt-6 divide-y divide-zinc-900">
+      <ul className="mt-6 divide-y divide-line">
         {items?.map((item) => (
           <li
             key={item.id}
             className="flex items-center justify-between gap-4 py-3.5"
           >
             <div className="min-w-0">
-              <span className="font-medium text-zinc-200">
+              <span className="font-medium text-fg">
                 {item.name}
                 {!item.visible && (
-                  <span className="ml-2 text-xs text-zinc-600">(hidden)</span>
+                  <span className="ml-2 text-xs text-subtle">(hidden)</span>
                 )}
               </span>
-              <p className="truncate text-sm text-zinc-500">
+              <p className="truncate text-sm text-subtle">
                 {item.description}
               </p>
             </div>
