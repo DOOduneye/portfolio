@@ -1,13 +1,10 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
+import { cloudflare } from "@cloudflare/vite-plugin";
 
+// The cloudflare plugin runs the Worker (tRPC + local D1) inside `vite dev`
+// and builds it alongside the client — one command for the whole app.
 export default defineConfig({
-  plugins: [react(), tailwindcss()],
-  server: {
-    proxy: {
-      // `npm run dev:api` serves the worker (tRPC + D1) on 8787
-      "/trpc": "http://localhost:8787",
-    },
-  },
+  plugins: [react(), tailwindcss(), cloudflare()],
 });

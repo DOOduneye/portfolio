@@ -1,150 +1,135 @@
-import { useCallback, useEffect, useState } from "react";
-import { api, getToken, setToken } from "./api";
-import { PostEditor } from "./components/PostEditor";
-import "./styles.css";
-
-type Post = Awaited<ReturnType<typeof api.posts.list.query>>[number];
+import { useState } from "react";
+import { Navigate, NavLink, Route, Routes } from "react-router-dom";
+import { api, clearToken, errorMessage, getToken, setToken } from "./api";
+import { PostsList } from "./pages/PostsList";
+import { PostEdit } from "./pages/PostEdit";
+import { Projects } from "./pages/Projects";
+import { Experiences } from "./pages/Experiences";
 
 export function Admin() {
   const [authed, setAuthed] = useState(Boolean(getToken()));
 
+  if (!authed) return <TokenGate onDone={() => setAuthed(true)} />;
+
+  const signOut = () => {
+    clearToken();
+    setAuthed(false);
+  };
+
+  const navClass = ({ isActive }: { isActive: boolean }) =>
+    `rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
+      isActive
+        ? "bg-zinc-900 text-white"
+        : "text-zinc-400 hover:bg-zinc-900/60 hover:text-zinc-200"
+    }`;
+
   return (
-    <div className="admin">
-      {authed ? (
-        <Posts onAuthError={() => setAuthed(false)} />
-      ) : (
-        <TokenGate onDone={() => setAuthed(true)} />
-      )}
+    <div className="flex min-h-screen">
+      <aside className="flex w-52 shrink-0 flex-col gap-8 border-r border-zinc-900 p-5">
+        <div>
+          <div className="font-semibold text-white">David Oduneye</div>
+          <div className="text-xs text-zinc-500">Content admin</div>
+        </div>
+        <nav className="flex flex-col gap-1">
+          <NavLink to="/admin/posts" className={navClass}>
+            Posts
+          </NavLink>
+          <NavLink to="/admin/projects" className={navClass}>
+            Projects
+          </NavLink>
+          <NavLink to="/admin/experiences" className={navClass}>
+            Experiences
+          </NavLink>
+        </nav>
+        <div className="mt-auto flex flex-col gap-2 text-sm">
+          <a href="/" className="text-zinc-500 transition-colors hover:text-zinc-300">
+            ← View site
+          </a>
+          <button
+            onClick={signOut}
+            className="text-left text-zinc-500 transition-colors hover:text-zinc-300"
+          >
+            Sign out
+          </button>
+        </div>
+      </aside>
+
+      <main className="min-w-0 flex-1 px-8 py-10">
+        <div className="mx-auto max-w-3xl">
+          <Routes>
+            <Route index element={<Navigate to="posts" replace />} />
+            <Route path="posts" element={<PostsList onAuthError={signOut} />} />
+            <Route
+              path="posts/:slug"
+              element={<PostEdit onAuthError={signOut} />}
+            />
+            <Route
+              path="projects"
+              element={<Projects onAuthError={signOut} />}
+            />
+            <Route
+              path="experiences"
+              element={<Experiences onAuthError={signOut} />}
+            />
+          </Routes>
+        </div>
+      </main>
     </div>
   );
 }
 
 function TokenGate({ onDone }: { onDone: () => void }) {
   const [value, setValue] = useState("");
-  return (
-    <main className="gate">
-      <h1>Admin</h1>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          setToken(value.trim());
-          onDone();
-        }}
-      >
-        <input
-          type="password"
-          placeholder="Admin token"
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-        />
-        <button type="submit">Enter</button>
-      </form>
-    </main>
-  );
-}
-
-function Posts({ onAuthError }: { onAuthError: () => void }) {
-  const [posts, setPosts] = useState<Post[]>([]);
-  const [editing, setEditing] = useState<Post | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [checking, setChecking] = useState(false);
 
-  const refresh = useCallback(() => {
-    api.posts.list
-      .query()
-      .then(setPosts)
-      .catch((err) => {
-        if (err?.data?.code === "UNAUTHORIZED") onAuthError();
-        else setError(String(err.message ?? err));
-      });
-  }, [onAuthError]);
-
-  useEffect(refresh, [refresh]);
-
-  const createPost = async () => {
-    const title = prompt("Post title?");
-    if (!title) return;
-    const slug = title
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-|-$/g, "");
-    await api.posts.create.mutate({ title, slug, content: "" });
-    refresh();
-  };
-
-  if (editing) {
-    return (
-      <Editor
-        post={editing}
-        onBack={() => {
-          setEditing(null);
-          refresh();
-        }}
-      />
-    );
-  }
-
-  return (
-    <main>
-      <header className="row">
-        <h1>Posts</h1>
-        <button onClick={createPost}>New post</button>
-      </header>
-      {error && <p className="error">{error}</p>}
-      <ul className="posts">
-        {posts.map((post) => (
-          <li key={post.slug} className="row">
-            <button className="link" onClick={() => setEditing(post)}>
-              {post.title}
-            </button>
-            <span className="meta">
-              {post.status}
-              <button
-                onClick={async () => {
-                  await api.posts.setStatus.mutate({
-                    slug: post.slug,
-                    status: post.status === "published" ? "draft" : "published",
-                  });
-                  refresh();
-                }}
-              >
-                {post.status === "published" ? "Unpublish" : "Publish"}
-              </button>
-            </span>
-          </li>
-        ))}
-      </ul>
-    </main>
-  );
-}
-
-function Editor({ post, onBack }: { post: Post; onBack: () => void }) {
-  const [title, setTitle] = useState(post.title);
-  const [content, setContent] = useState(post.content);
-  const [saving, setSaving] = useState(false);
-
-  const save = async () => {
-    setSaving(true);
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setChecking(true);
+    setError(null);
+    setToken(value.trim());
     try {
-      await api.posts.update.mutate({ slug: post.slug, title, content });
+      await api.posts.list.query();
+      onDone();
+    } catch (err) {
+      clearToken();
+      setError(
+        (err as { data?: { code?: string } })?.data?.code === "UNAUTHORIZED"
+          ? "Invalid token."
+          : errorMessage(err)
+      );
     } finally {
-      setSaving(false);
+      setChecking(false);
     }
   };
 
   return (
-    <main>
-      <header className="row">
-        <button onClick={onBack}>← Posts</button>
-        <button onClick={save} disabled={saving}>
-          {saving ? "Saving…" : "Save"}
+    <div className="flex min-h-screen items-center justify-center px-6">
+      <form
+        onSubmit={submit}
+        className="w-full max-w-sm rounded-2xl border border-zinc-900 bg-zinc-900/40 p-8"
+      >
+        <h1 className="text-lg font-semibold text-white">Content admin</h1>
+        <p className="mt-1 text-sm text-zinc-500">
+          Enter the admin token to continue.
+        </p>
+        <input
+          type="password"
+          autoFocus
+          placeholder="Admin token"
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          className="mt-5 w-full rounded-lg border border-zinc-800 bg-zinc-950 px-3.5 py-2 text-sm text-white placeholder-zinc-600 outline-none transition-colors focus:border-blue-500"
+        />
+        {error && <p className="mt-3 text-sm text-red-400">{error}</p>}
+        <button
+          type="submit"
+          disabled={checking || !value.trim()}
+          className="mt-5 w-full rounded-lg bg-blue-600 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-500 disabled:opacity-50"
+        >
+          {checking ? "Checking…" : "Sign in"}
         </button>
-      </header>
-      <input
-        className="title"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-      />
-      <PostEditor initialContent={content} onChange={setContent} />
-    </main>
+      </form>
+    </div>
   );
 }

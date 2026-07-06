@@ -1,13 +1,12 @@
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
+import "./editor.css";
 
 interface Props {
   initialContent: string;
   onChange: (html: string) => void;
 }
 
-// One editor, one stack: TipTap v3 on ProseMirror. StarterKit covers
-// headings, lists, code blocks, links, bold/italic, blockquotes.
 export function PostEditor({ initialContent, onChange }: Props) {
   const editor = useEditor({
     extensions: [StarterKit],
@@ -17,55 +16,71 @@ export function PostEditor({ initialContent, onChange }: Props) {
 
   if (!editor) return null;
 
-  const toggle = (action: () => boolean) => () => action();
+  const buttons = [
+    {
+      label: "H2",
+      active: editor.isActive("heading", { level: 2 }),
+      run: () => editor.chain().focus().toggleHeading({ level: 2 }).run(),
+    },
+    {
+      label: "H3",
+      active: editor.isActive("heading", { level: 3 }),
+      run: () => editor.chain().focus().toggleHeading({ level: 3 }).run(),
+    },
+    {
+      label: "Bold",
+      active: editor.isActive("bold"),
+      run: () => editor.chain().focus().toggleBold().run(),
+    },
+    {
+      label: "Italic",
+      active: editor.isActive("italic"),
+      run: () => editor.chain().focus().toggleItalic().run(),
+    },
+    {
+      label: "Code",
+      active: editor.isActive("code"),
+      run: () => editor.chain().focus().toggleCode().run(),
+    },
+    {
+      label: "List",
+      active: editor.isActive("bulletList"),
+      run: () => editor.chain().focus().toggleBulletList().run(),
+    },
+    {
+      label: "1. List",
+      active: editor.isActive("orderedList"),
+      run: () => editor.chain().focus().toggleOrderedList().run(),
+    },
+    {
+      label: "Quote",
+      active: editor.isActive("blockquote"),
+      run: () => editor.chain().focus().toggleBlockquote().run(),
+    },
+    {
+      label: "Code block",
+      active: editor.isActive("codeBlock"),
+      run: () => editor.chain().focus().toggleCodeBlock().run(),
+    },
+  ];
 
   return (
-    <div className="editor">
-      <div className="editor-toolbar">
-        <button
-          type="button"
-          data-active={editor.isActive("heading", { level: 2 })}
-          onClick={toggle(() =>
-            editor.chain().focus().toggleHeading({ level: 2 }).run()
-          )}
-        >
-          H2
-        </button>
-        <button
-          type="button"
-          data-active={editor.isActive("bold")}
-          onClick={toggle(() => editor.chain().focus().toggleBold().run())}
-        >
-          Bold
-        </button>
-        <button
-          type="button"
-          data-active={editor.isActive("italic")}
-          onClick={toggle(() => editor.chain().focus().toggleItalic().run())}
-        >
-          Italic
-        </button>
-        <button
-          type="button"
-          data-active={editor.isActive("codeBlock")}
-          onClick={toggle(() => editor.chain().focus().toggleCodeBlock().run())}
-        >
-          Code block
-        </button>
-        <button
-          type="button"
-          data-active={editor.isActive("bulletList")}
-          onClick={toggle(() => editor.chain().focus().toggleBulletList().run())}
-        >
-          List
-        </button>
-        <button
-          type="button"
-          data-active={editor.isActive("blockquote")}
-          onClick={toggle(() => editor.chain().focus().toggleBlockquote().run())}
-        >
-          Quote
-        </button>
+    <div className="overflow-hidden rounded-xl border border-zinc-800 transition-colors focus-within:border-zinc-700">
+      <div className="flex flex-wrap gap-1 border-b border-zinc-800 bg-zinc-900/60 p-1.5">
+        {buttons.map((button) => (
+          <button
+            key={button.label}
+            type="button"
+            onClick={button.run}
+            className={`rounded-md px-2.5 py-1 text-xs font-medium transition-colors ${
+              button.active
+                ? "bg-blue-500/15 text-blue-400"
+                : "text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200"
+            }`}
+          >
+            {button.label}
+          </button>
+        ))}
       </div>
       <EditorContent editor={editor} />
     </div>
