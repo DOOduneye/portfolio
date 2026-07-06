@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+
 const experience = [
   {
     role: "Member of Technical Staff",
@@ -78,6 +80,46 @@ const links = [
   },
 ];
 
+interface TopTrack {
+  name: string;
+  artist: string;
+  url: string;
+}
+
+// The song David played most over the last few weeks, from the API. Renders
+// nothing if the API is unavailable (like on the static GitHub Pages build).
+function OnRepeat() {
+  const [track, setTrack] = useState<TopTrack | null>(null);
+
+  useEffect(() => {
+    fetch("/trpc/music.topTrack")
+      .then((response) =>
+        response.ok
+          ? (response.json() as Promise<{ result?: { data?: TopTrack | null } }>)
+          : null
+      )
+      .then((body) => setTrack(body?.result?.data ?? null))
+      .catch(() => setTrack(null));
+  }, []);
+
+  if (!track) return null;
+
+  return (
+    <p className="mb-6">
+      on repeat:{" "}
+      <a
+        href={track.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-muted transition-colors hover:text-accent"
+      >
+        {track.name}
+      </a>{" "}
+      · {track.artist}
+    </p>
+  );
+}
+
 function Section({
   index,
   title,
@@ -147,9 +189,9 @@ export function Home() {
           {experience.map((job) => (
             <li
               key={job.org + job.role}
-              className="grid gap-1.5 sm:grid-cols-[8.5rem_1fr] sm:gap-8"
+              className="grid gap-1.5 sm:grid-cols-[10rem_1fr] sm:gap-6"
             >
-              <span className="pt-0.5 font-mono text-xs leading-6 text-subtle">
+              <span className="whitespace-nowrap pt-0.5 font-mono text-xs leading-6 text-subtle">
                 {job.dates}
               </span>
               <div>
@@ -227,20 +269,23 @@ export function Home() {
       </Section>
 
       {/* Footer */}
-      <footer className="mt-16 flex items-center justify-between border-t border-line pt-8 font-mono text-xs text-subtle">
-        <span>© {new Date().getFullYear()} David Oduneye</span>
-        <div className="flex gap-5">
-          {links.map((link) => (
-            <a
-              key={link.label}
-              href={link.url}
-              target={link.url.startsWith("http") ? "_blank" : undefined}
-              rel="noopener noreferrer"
-              className="transition-colors hover:text-accent"
-            >
-              {link.label}
-            </a>
-          ))}
+      <footer className="mt-16 border-t border-line pt-8 font-mono text-xs text-subtle">
+        <OnRepeat />
+        <div className="flex items-center justify-between">
+          <span>© {new Date().getFullYear()} David Oduneye</span>
+          <div className="flex gap-5">
+            {links.map((link) => (
+              <a
+                key={link.label}
+                href={link.url}
+                target={link.url.startsWith("http") ? "_blank" : undefined}
+                rel="noopener noreferrer"
+                className="transition-colors hover:text-accent"
+              >
+                {link.label}
+              </a>
+            ))}
+          </div>
         </div>
       </footer>
     </div>

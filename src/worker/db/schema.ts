@@ -1,5 +1,11 @@
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
+export const kvCache = sqliteTable("kv_cache", {
+  key: text("key").primaryKey(),
+  value: text("value").notNull(),
+  updatedAt: text("updated_at").notNull(),
+});
+
 export const posts = sqliteTable("posts", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   slug: text("slug").notNull().unique(),
