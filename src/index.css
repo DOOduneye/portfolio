@@ -1,10 +1,10 @@
 @import "tailwindcss";
 
 /*
- * Design tokens — the single source of truth for site + admin.
+ * Design tokens: the single source of truth for site + admin.
  *
  * Neutrals are a blue-tinted ink ramp (hue 265); the lone accent is a warm
- * amber (hue 78) — complementary, used only for interaction and emphasis.
+ * amber (hue 78), complementary, used only for interaction and emphasis.
  * Every color in the app comes from this scale. No raw palette values in
  * components.
  */

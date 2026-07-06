@@ -31,7 +31,7 @@ export function isUnauthorized(err: unknown): boolean {
 export function errorMessage(err: unknown): string {
   const message = err instanceof Error ? err.message : String(err);
   if (/json|fetch|network|load failed/i.test(message)) {
-    return "Can't reach the API — is the dev server running?";
+    return "Can't reach the API. Is the dev server running?";
   }
   return message;
 }

@@ -1,34 +1,34 @@
 const experience = [
   {
     role: "Member of Technical Staff",
-    org: "Stealth Startup",
-    orgUrl: null,
-    dates: "Jan 2025 —",
-    description: "Early team, zero to one. Details when they're public.",
+    org: "Agency",
+    orgUrl: "https://www.agency.inc",
+    dates: "Jan 2025 - Present",
+    description: "Early engineer building the core product.",
   },
   {
     role: "Software Engineering Intern",
     org: "Google",
     orgUrl: "https://about.google",
-    dates: "Aug — Nov 2024",
+    dates: "Aug - Nov 2024",
     description:
-      "Built multi-architecture test visibility (ARM and x86) into Google's CI tooling for the onArm initiative — surfaced to thousands of internal developers.",
+      "Worked on Google's CI tooling for the onArm initiative, adding multi-architecture (ARM and x86) test visibility for internal developers.",
   },
   {
     role: "Software Engineering Intern",
     org: "Microsoft",
     orgUrl: "https://www.microsoft.com",
-    dates: "May — Aug 2024",
+    dates: "May - Aug 2024",
     description:
-      "Made a synthetic-data generator multithreaded and cloud-hosted, added tests-in-production for pipeline validation, and shipped a dashboard tracing test runs across every production region.",
+      "Improved a synthetic data generator with multithreading and a move to cloud VMs, added tests in production for pipeline validation, and built a dashboard for monitoring test runs across production regions.",
   },
   {
     role: "Technical Lead",
     org: "Generate",
     orgUrl: "https://generatenu.com",
-    dates: "Jul 2023 — Jun 2024",
+    dates: "Jul 2023 - Jun 2024",
     description:
-      "Led a team of 5–10 engineers shipping four full-stack applications for student clubs and events.",
+      "Led a team of 5 to 10 engineers building four full-stack applications for student clubs and events.",
   },
 ];
 
@@ -37,14 +37,14 @@ const projects = [
     name: "Student Activity Calendar",
     url: null,
     description:
-      "A campus events platform serving 15,000+ students — Go backend, web and native apps, admin dashboards, and a development CLI.",
+      "A campus events platform serving 15,000+ students, with a Go backend, web and mobile apps, admin dashboards, and a development CLI.",
     stack: "Go · React · React Native · Redis · AWS · Postgres",
   },
   {
     name: "brain-kit",
     url: "https://github.com/DOOduneye/brain-kit",
     description:
-      "A knowledge-base workflow for Claude Code — CLI, vault skeleton, and skills for developing out of a personal knowledge base.",
+      "A CLI, vault skeleton, and set of skills for developing out of a personal knowledge base with Claude Code.",
     stack: "TypeScript · Claude Code",
   },
   {
@@ -64,7 +64,7 @@ const projects = [
     name: "davidoduneye.com",
     url: "https://github.com/DOOduneye/portfolio",
     description:
-      "This site — a React SPA with its own embedded CMS: tRPC API on Cloudflare Workers, D1, TipTap editor.",
+      "This site. A React app with a built-in CMS, using tRPC on Cloudflare Workers, D1, and a TipTap editor.",
     stack: "React · tRPC · Cloudflare · TipTap",
   },
 ];
@@ -72,7 +72,10 @@ const projects = [
 const links = [
   { label: "GitHub", url: "https://github.com/DOOduneye" },
   { label: "LinkedIn", url: "https://linkedin.com/in/dooduneye" },
-  { label: "Email", url: "mailto:davidoduneye1@gmail.com" },
+  {
+    label: "Spotify",
+    url: "https://open.spotify.com/user/317gsn3rqunkxocwuvf7njcj5luy",
+  },
 ];
 
 function Section({
@@ -104,14 +107,22 @@ export function Home() {
       {/* Header */}
       <header>
         <p className="font-mono text-xs tracking-wide text-subtle">
-          Boston, MA
+          New York, NY
         </p>
         <h1 className="mt-3 text-4xl font-semibold tracking-tight text-fg">
           David Oduneye
         </h1>
         <p className="mt-5 max-w-lg leading-relaxed">
-          Software engineer — member of technical staff at a stealth startup.
-          Computer science at{" "}
+          Software engineer, member of technical staff at{" "}
+          <a
+            href="https://www.agency.inc"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-fg transition-colors hover:text-accent"
+          >
+            Agency
+          </a>
+          . Computer science at{" "}
           <span className="text-fg">Northeastern University</span>, class of
           2025.
         </p>
@@ -193,10 +204,7 @@ export function Home() {
             );
 
             return (
-              <li
-                key={project.name}
-                className="border-b border-line first:border-t"
-              >
+              <li key={project.name} className="border-b border-line">
                 {project.url ? (
                   <a
                     href={project.url}

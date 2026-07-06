@@ -135,7 +135,7 @@ export function Experiences({ onAuthError }: { onAuthError: () => void }) {
               <input
                 value={draft.dates}
                 onChange={(e) => setDraft({ ...draft, dates: e.target.value })}
-                placeholder="Jan 2025 — Present"
+                placeholder="Jan 2025 - Present"
                 className={inputClass}
               />
             </Field>
