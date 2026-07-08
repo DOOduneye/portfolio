@@ -11,7 +11,7 @@ import {
   StatusBadge,
 } from "../components/ui";
 
-type Post = Awaited<ReturnType<typeof api.posts.bySlug.query>>;
+type Post = Awaited<ReturnType<typeof api.admin.posts.bySlug.query>>;
 
 export function PostEdit({ onAuthError }: { onAuthError: () => void }) {
   const { slug = "" } = useParams();
@@ -25,7 +25,7 @@ export function PostEdit({ onAuthError }: { onAuthError: () => void }) {
   const [savedAt, setSavedAt] = useState<number | null>(null);
 
   useEffect(() => {
-    api.posts.bySlug
+    api.admin.posts.bySlug
       .query({ slug })
       .then((p) => {
         setPost(p);
@@ -54,7 +54,7 @@ export function PostEdit({ onAuthError }: { onAuthError: () => void }) {
 
   const save = () =>
     run(async () => {
-      await api.posts.update.mutate({
+      await api.admin.posts.update.mutate({
         slug,
         title,
         excerpt: excerpt.trim() || null,
@@ -65,7 +65,7 @@ export function PostEdit({ onAuthError }: { onAuthError: () => void }) {
 
   const toggleStatus = () =>
     run(async () => {
-      const updated = await api.posts.setStatus.mutate({
+      const updated = await api.admin.posts.setStatus.mutate({
         slug,
         status: post?.status === "published" ? "draft" : "published",
       });
@@ -75,7 +75,7 @@ export function PostEdit({ onAuthError }: { onAuthError: () => void }) {
   const remove = () =>
     run(async () => {
       if (!confirm(`Delete "${title}"?`)) return;
-      await api.posts.remove.mutate({ slug });
+      await api.admin.posts.remove.mutate({ slug });
       navigate("/admin/posts");
     });
 

@@ -4,7 +4,8 @@ Personal site for David Oduneye — software engineer. One project:
 
 - `/` — public site (experience + projects)
 - `/admin` — CMS: posts managed with a TipTap v3 editor
-- `/trpc` — tRPC v11 API (posts, projects, experiences) backed by D1
+- `/trpc/public.*` — public tRPC v11 API for display data
+- `/trpc/admin.*` — admin tRPC v11 API for CMS writes/private reads
 
 React 19 + Vite + Tailwind v4 on the front, a Cloudflare Worker serving the
 API and the built app. Runs on Cloudflare's free tier.
@@ -33,7 +34,8 @@ The full site is meant to run as a Cloudflare Worker app:
 
 - `/` serves the built React site.
 - `/admin` serves the CMS UI.
-- `/trpc` serves the API, including `music.topTrack` for the Spotify footer.
+- `/trpc/public.*` serves public display data, including Spotify.
+- `/trpc/admin.*` serves authenticated CMS reads and writes.
 - D1 stores CMS content and the Spotify cache.
 
 ```bash

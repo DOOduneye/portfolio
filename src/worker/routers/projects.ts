@@ -12,7 +12,7 @@ const projectInput = z.object({
   visible: z.number().int().min(0).max(1).default(1),
 });
 
-export const projectsRouter = router({
+export const publicProjectsRouter = router({
   visible: publicProcedure.query(({ ctx }) =>
     ctx.db
       .select()
@@ -20,7 +20,9 @@ export const projectsRouter = router({
       .where(and(eq(projects.visible, 1), isNull(projects.deletedAt)))
       .orderBy(asc(projects.sortOrder))
   ),
+});
 
+export const adminProjectsRouter = router({
   list: protectedProcedure.query(({ ctx }) =>
     ctx.db
       .select()

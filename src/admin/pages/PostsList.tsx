@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { api, errorMessage, isUnauthorized } from "../api";
 import { StatusBadge } from "../components/ui";
 
-type Post = Awaited<ReturnType<typeof api.posts.list.query>>[number];
+type Post = Awaited<ReturnType<typeof api.admin.posts.list.query>>[number];
 
 export function PostsList({ onAuthError }: { onAuthError: () => void }) {
   const [posts, setPosts] = useState<Post[] | null>(null);
@@ -11,7 +11,7 @@ export function PostsList({ onAuthError }: { onAuthError: () => void }) {
   const navigate = useNavigate();
 
   const refresh = useCallback(() => {
-    api.posts.list
+    api.admin.posts.list
       .query()
       .then(setPosts)
       .catch((err) => {
@@ -25,7 +25,11 @@ export function PostsList({ onAuthError }: { onAuthError: () => void }) {
   const createPost = async () => {
     const slug = `untitled-${Date.now().toString(36)}`;
     try {
-      await api.posts.create.mutate({ slug, title: "Untitled", content: "" });
+      await api.admin.posts.create.mutate({
+        slug,
+        title: "Untitled",
+        content: "",
+      });
       navigate(`/admin/posts/${slug}`);
     } catch (err) {
       setError(errorMessage(err));

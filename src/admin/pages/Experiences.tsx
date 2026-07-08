@@ -9,7 +9,7 @@ import {
 } from "../components/ui";
 
 type Experience = Awaited<
-  ReturnType<typeof api.experiences.list.query>
+  ReturnType<typeof api.admin.experiences.list.query>
 >[number];
 
 interface Draft {
@@ -41,7 +41,7 @@ export function Experiences({ onAuthError }: { onAuthError: () => void }) {
   const [saving, setSaving] = useState(false);
 
   const refresh = useCallback(() => {
-    api.experiences.list
+    api.admin.experiences.list
       .query()
       .then(setItems)
       .catch((err) => {
@@ -66,8 +66,9 @@ export function Experiences({ onAuthError }: { onAuthError: () => void }) {
       visible: draft.visible ? 1 : 0,
     };
     try {
-      if (draft.id === null) await api.experiences.create.mutate(payload);
-      else await api.experiences.update.mutate({ id: draft.id, ...payload });
+      if (draft.id === null) await api.admin.experiences.create.mutate(payload);
+      else
+        await api.admin.experiences.update.mutate({ id: draft.id, ...payload });
       setDraft(null);
       refresh();
     } catch (err) {
@@ -81,7 +82,7 @@ export function Experiences({ onAuthError }: { onAuthError: () => void }) {
   const remove = async (item: Experience) => {
     if (!confirm(`Delete "${item.role} · ${item.org}"?`)) return;
     try {
-      await api.experiences.remove.mutate({ id: item.id });
+      await api.admin.experiences.remove.mutate({ id: item.id });
       refresh();
     } catch (err) {
       if (isUnauthorized(err)) onAuthError();

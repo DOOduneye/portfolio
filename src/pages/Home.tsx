@@ -92,7 +92,7 @@ function OnRepeat() {
   const [track, setTrack] = useState<TopTrack | null>(null);
 
   useEffect(() => {
-    fetch("/trpc/music.topTrack")
+    fetch("/trpc/public.music.topTrack")
       .then((response) =>
         response.ok
           ? (response.json() as Promise<{ result?: { data?: TopTrack | null } }>)

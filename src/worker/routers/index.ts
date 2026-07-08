@@ -1,14 +1,24 @@
 import { router } from "../trpc";
-import { postsRouter } from "./posts";
-import { projectsRouter } from "./projects";
-import { experiencesRouter } from "./experiences";
+import { adminPostsRouter, publicPostsRouter } from "./posts";
+import { adminProjectsRouter, publicProjectsRouter } from "./projects";
+import {
+  adminExperiencesRouter,
+  publicExperiencesRouter,
+} from "./experiences";
 import { musicRouter } from "./music";
 
 export const appRouter = router({
-  posts: postsRouter,
-  projects: projectsRouter,
-  experiences: experiencesRouter,
-  music: musicRouter,
+  public: router({
+    posts: publicPostsRouter,
+    projects: publicProjectsRouter,
+    experiences: publicExperiencesRouter,
+    music: musicRouter,
+  }),
+  admin: router({
+    posts: adminPostsRouter,
+    projects: adminProjectsRouter,
+    experiences: adminExperiencesRouter,
+  }),
 });
 
 export type AppRouter = typeof appRouter;

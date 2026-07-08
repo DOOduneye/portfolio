@@ -8,7 +8,7 @@ import {
   primaryButton,
 } from "../components/ui";
 
-type Project = Awaited<ReturnType<typeof api.projects.list.query>>[number];
+type Project = Awaited<ReturnType<typeof api.admin.projects.list.query>>[number];
 
 interface Draft {
   id: number | null;
@@ -35,7 +35,7 @@ export function Projects({ onAuthError }: { onAuthError: () => void }) {
   const [saving, setSaving] = useState(false);
 
   const refresh = useCallback(() => {
-    api.projects.list
+    api.admin.projects.list
       .query()
       .then(setItems)
       .catch((err) => {
@@ -58,8 +58,8 @@ export function Projects({ onAuthError }: { onAuthError: () => void }) {
       visible: draft.visible ? 1 : 0,
     };
     try {
-      if (draft.id === null) await api.projects.create.mutate(payload);
-      else await api.projects.update.mutate({ id: draft.id, ...payload });
+      if (draft.id === null) await api.admin.projects.create.mutate(payload);
+      else await api.admin.projects.update.mutate({ id: draft.id, ...payload });
       setDraft(null);
       refresh();
     } catch (err) {
@@ -73,7 +73,7 @@ export function Projects({ onAuthError }: { onAuthError: () => void }) {
   const remove = async (item: Project) => {
     if (!confirm(`Delete "${item.name}"?`)) return;
     try {
-      await api.projects.remove.mutate({ id: item.id });
+      await api.admin.projects.remove.mutate({ id: item.id });
       refresh();
     } catch (err) {
       if (isUnauthorized(err)) onAuthError();

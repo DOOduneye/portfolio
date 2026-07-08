@@ -89,7 +89,7 @@ function TokenGate({ onDone }: { onDone: () => void }) {
     setError(null);
     setToken(value.trim());
     try {
-      await api.posts.list.query();
+      await api.admin.posts.list.query();
       onDone();
     } catch (err) {
       clearToken();

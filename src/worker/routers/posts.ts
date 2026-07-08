@@ -18,7 +18,7 @@ const postInput = z.object({
   excerpt: z.string().max(512).nullish(),
 });
 
-export const postsRouter = router({
+export const publicPostsRouter = router({
   // Public: what the static site consumes at build time.
   published: publicProcedure.query(({ ctx }) =>
     ctx.db
@@ -27,7 +27,9 @@ export const postsRouter = router({
       .where(and(eq(posts.status, "published"), isNull(posts.deletedAt)))
       .orderBy(desc(posts.publishedAt))
   ),
+});
 
+export const adminPostsRouter = router({
   list: protectedProcedure.query(({ ctx }) =>
     ctx.db
       .select()
@@ -97,5 +99,5 @@ export const postsRouter = router({
       if (!updated) throw new TRPCError({ code: "NOT_FOUND" });
       await triggerSiteRebuild(ctx.env);
       return updated;
-    }),
+  }),
 });

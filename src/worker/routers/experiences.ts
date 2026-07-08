@@ -14,7 +14,7 @@ const experienceInput = z.object({
   visible: z.number().int().min(0).max(1).default(1),
 });
 
-export const experiencesRouter = router({
+export const publicExperiencesRouter = router({
   visible: publicProcedure.query(({ ctx }) =>
     ctx.db
       .select()
@@ -22,7 +22,9 @@ export const experiencesRouter = router({
       .where(and(eq(experiences.visible, 1), isNull(experiences.deletedAt)))
       .orderBy(asc(experiences.sortOrder))
   ),
+});
 
+export const adminExperiencesRouter = router({
   list: protectedProcedure.query(({ ctx }) =>
     ctx.db
       .select()
