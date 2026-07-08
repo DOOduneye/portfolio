@@ -1,6 +1,7 @@
 # davidoduneye.com
 
-Personal site for David Oduneye — software engineer. One project:
+Personal site for David Oduneye. It is a small React app with a built-in CMS
+and a Cloudflare Worker API behind it.
 
 - `/` — public site (experience + projects)
 - `/admin` — CMS: posts managed with a TipTap v3 editor
@@ -62,5 +63,5 @@ this redirect URI exactly:
 http://127.0.0.1:8888/callback
 ```
 
-GitHub Pages is still available as a static fallback on pushes to `v1`, but the
-CMS and Spotify API only work on the Cloudflare Worker deployment.
+The live site runs on Cloudflare Workers so the public site, admin UI, CMS API,
+D1, and Spotify footer all share one deployment.
