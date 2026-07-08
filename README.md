@@ -20,29 +20,45 @@ migrations/          # D1 SQL migrations
 ## Development
 
 ```bash
-npm install
-npm run db:migrate:local   # once
-npm run dev:api            # worker + local D1 on :8787
-npm run dev                # app on :5173 (proxies /trpc to :8787)
+pnpm install
+pnpm run db:migrate:local   # once
+pnpm dev                    # app + Worker + local D1 on :5173
 ```
 
 Admin token for local dev comes from `.dev.vars` (`ADMIN_TOKEN=dev-token`).
 
 ## Deploy
 
-The public site deploys to GitHub Pages automatically on pushes to `v1`
-(static build; the `/admin` route needs the worker, so it only works where
-the worker serves the app).
+The full site is meant to run as a Cloudflare Worker app:
 
-To run the full app (site + admin + API) on Cloudflare:
+- `/` serves the built React site.
+- `/admin` serves the CMS UI.
+- `/trpc` serves the API, including `music.topTrack` for the Spotify footer.
+- D1 stores CMS content and the Spotify cache.
 
 ```bash
-npx wrangler d1 create portfolio-cms   # paste database_id into wrangler.jsonc
-npm run db:migrate
-npx wrangler secret put ADMIN_TOKEN
-npm run deploy
+pnpm exec wrangler login
+pnpm exec wrangler d1 create portfolio-cms   # paste database_id into wrangler.jsonc
+pnpm run db:migrate
+pnpm exec wrangler secret put ADMIN_TOKEN
+pnpm exec wrangler secret put SPOTIFY_CLIENT_ID
+pnpm exec wrangler secret put SPOTIFY_CLIENT_SECRET
+pnpm exec wrangler secret put SPOTIFY_REFRESH_TOKEN
+pnpm run deploy
 ```
 
-Publishing content fires a `repository_dispatch` (`content-published`) to
-rebuild the Pages site. Note GitHub only fires repository_dispatch workflows
-from the default branch — mirror deploy.yml on `main` or make `v1` default.
+To get the Spotify refresh token:
+
+```bash
+node scripts/spotify-auth.mjs <client_id> <client_secret>
+```
+
+Create the Spotify app at <https://developer.spotify.com/dashboard> and add
+this redirect URI exactly:
+
+```text
+http://127.0.0.1:8888/callback
+```
+
+GitHub Pages is still available as a static fallback on pushes to `v1`, but the
+CMS and Spotify API only work on the Cloudflare Worker deployment.

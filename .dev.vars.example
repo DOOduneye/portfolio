@@ -1,0 +1,7 @@
+ADMIN_TOKEN=dev-token
+SPOTIFY_CLIENT_ID=
+SPOTIFY_CLIENT_SECRET=
+SPOTIFY_REFRESH_TOKEN=
+
+# Optional: used by CMS publish actions to trigger a GitHub Pages rebuild.
+GITHUB_TOKEN=

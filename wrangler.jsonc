@@ -2,6 +2,11 @@
   "name": "davidoduneye-com",
   "main": "src/worker/index.ts",
   "compatibility_date": "2026-06-01",
+  "workers_dev": false,
+  "routes": [
+    { "pattern": "davidoduneye.com/*", "zone_name": "davidoduneye.com" },
+    { "pattern": "www.davidoduneye.com/*", "zone_name": "davidoduneye.com" }
+  ],
   "assets": {
     "directory": "./dist/client",
     "binding": "ASSETS",
@@ -12,11 +17,13 @@
     {
       "binding": "DB",
       "database_name": "portfolio-cms",
-      // Replace after running: wrangler d1 create portfolio-cms
-      "database_id": "REPLACE_ME"
+      "database_id": "5b894ca3-c901-4105-9a0d-7aeb02a141c3"
     }
   ]
   // Secrets (set with `wrangler secret put <name>`):
-  //   ADMIN_TOKEN   — bearer token the admin UI sends
-  //   GITHUB_TOKEN  — fine-grained PAT for repository_dispatch (publish → Pages rebuild)
+  //   ADMIN_TOKEN             — bearer token the admin UI sends
+  //   SPOTIFY_CLIENT_ID       — Spotify app client id
+  //   SPOTIFY_CLIENT_SECRET   — Spotify app client secret
+  //   SPOTIFY_REFRESH_TOKEN   — one-time OAuth refresh token from scripts/spotify-auth.mjs
+  //   GITHUB_TOKEN            — optional; fine-grained PAT for repository_dispatch
 }
