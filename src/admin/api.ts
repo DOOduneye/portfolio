@@ -1,31 +1,27 @@
 import { createTRPCClient, httpBatchLink } from "@trpc/client";
 import type { AppRouter } from "../worker/routers";
 
-const TOKEN_KEY = "cms-admin-token";
-
-export function getToken(): string {
-  return localStorage.getItem(TOKEN_KEY) ?? "";
-}
-
-export function setToken(token: string): void {
-  localStorage.setItem(TOKEN_KEY, token);
-}
-
-export function clearToken(): void {
-  localStorage.removeItem(TOKEN_KEY);
-}
-
 export const api = createTRPCClient<AppRouter>({
-  links: [
-    httpBatchLink({
-      url: "/trpc",
-      headers: () => ({ authorization: `Bearer ${getToken()}` }),
-    }),
-  ],
+  links: [httpBatchLink({ url: "/trpc" })],
 });
 
 export function isUnauthorized(err: unknown): boolean {
   return (err as { data?: { code?: string } })?.data?.code === "UNAUTHORIZED";
+}
+
+export function reauthenticate(): void {
+  window.location.reload();
+}
+
+const ACCESS_TEAM_DOMAIN = "oduneye.cloudflareaccess.com";
+
+// Access keeps two tokens: one per application on this domain, and a global
+// SSO session on the team domain. Clearing only the first lets the next
+// request mint a fresh one silently, so both have to go.
+export async function signOut(): Promise<void> {
+  await fetch("/cdn-cgi/access/logout").catch(() => {});
+  const returnTo = encodeURIComponent(`${window.location.origin}/`);
+  window.location.href = `https://${ACCESS_TEAM_DOMAIN}/cdn-cgi/access/logout?returnTo=${returnTo}`;
 }
 
 export function errorMessage(err: unknown): string {

@@ -7,11 +7,16 @@
     { "pattern": "davidoduneye.com/*", "zone_name": "davidoduneye.com" },
     { "pattern": "www.davidoduneye.com/*", "zone_name": "davidoduneye.com" }
   ],
+  "vars": {
+    "ENVIRONMENT": "production",
+    "CF_ACCESS_TEAM_DOMAIN": "oduneye.cloudflareaccess.com",
+    "CF_ACCESS_AUD": "6442c01f258745ee5c4c2282705b256468c83d52378bd289ed0b85d3f7407c1f"
+  },
   "assets": {
     "directory": "./dist/client",
     "binding": "ASSETS",
     "not_found_handling": "single-page-application",
-    "run_worker_first": ["/trpc/*"]
+    "run_worker_first": true
   },
   "d1_databases": [
     {
@@ -21,7 +26,7 @@
     }
   ]
   // Secrets (set with `wrangler secret put <name>`):
-  //   ADMIN_TOKEN             — bearer token the admin UI sends
+  //   ALLOWED_EMAIL           — the address allowed through Cloudflare Access
   //   SPOTIFY_CLIENT_ID       — Spotify app client id
   //   SPOTIFY_CLIENT_SECRET   — Spotify app client secret
   //   SPOTIFY_REFRESH_TOKEN   — one-time OAuth refresh token from scripts/spotify-auth.mjs
