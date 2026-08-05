@@ -61,20 +61,19 @@ Vitest with the Workers pool for tests. Everything fits Cloudflare's free tier.
 
 ## Rules that prevent real mistakes
 
-Each of these cost real debugging time. The skill for the area explains why.
-
-- `src/worker/db/schema.ts` is the only source of truth for the database. Never
-  hand-write a file in `migrations/` — run `pnpm run db:generate`. CI fails if
-  `schema.ts` changed without a generated migration.
-- Never answer a `/trpc/*` request with a hand-rolled error body. It is not a
-  tRPC envelope and the client cannot parse it.
-- The Worker does not decide which email may enter. The Access policy does.
-- The dev bypass matches `ENVIRONMENT === "development"` positively. Never
-  rewrite it as `!== "production"`, which fails open when the value is missing.
+- `src/worker/db/schema.ts` is the only source of truth for the database. Change
+  it, then run `pnpm run db:generate`. Never hand-write a file in `migrations/`,
+  and never run `drizzle-kit push` or `drizzle-kit migrate`.
+- Only tRPC envelopes on `/trpc/*`. A hand-rolled error body is unparseable by
+  the client.
+- The Access policy decides who may enter. The Worker only proves the token is
+  genuine.
+- Match the dev bypass positively (`=== "development"`). Negative checks fail
+  open when the variable is unset.
+- Admin mutations use `protectedProcedure`, which is what writes the audit row.
+- Use the design tokens in `src/index.css`, never a literal Tailwind colour.
 - Comment only what the code cannot express. Prefer a clearer name or a smaller
-  function. Do not narrate what the next line does.
-- A new admin procedure uses `protectedProcedure`, which both refuses an
-  unauthenticated caller and writes the mutation to `audit_log`.
+  function.
 - Fix code smells you encounter as you work.
 
 ## Standards

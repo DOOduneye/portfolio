@@ -1,99 +1,166 @@
 ---
 name: worker
-description: Read before touching src/worker/index.ts, trpc.ts, access.ts or routers/. Covers how a route gets added, how auth actually works here, and the two mistakes that have taken the CMS down.
+description: Cloudflare Worker patterns for this repo. Covers adding public and admin tRPC procedures, the audit trail, Cloudflare Access verification, hostname and path routing, and debugging a rejected request. Trigger on worker, trpc, router, procedure, endpoint, api, auth, access, jwt, route, audit.
 ---
 
 # Worker
 
-The vendored `trpc-router` skill covers router composition and input validation.
-This covers what is specific to this Worker: the public/admin split, Cloudflare
-Access, and the error shape the client depends on.
+## Purpose
 
-## Adding a procedure
+Guide for adding routes to the Worker and for how requests are authenticated
+before they reach one.
 
-Every router exports two: a public one and an admin one. Which you extend
-decides whether the world can call it.
+## When to Use
+
+- Adding or modifying a tRPC procedure
+- Adding a path that should be public or gated
+- Changing how identity is verified
+- Debugging a request the Worker refused
+
+## Architecture
+
+- **Entry**: `src/worker/index.ts` — canonical host redirect, path routing, Access gate
+- **tRPC setup**: `src/worker/trpc.ts` — context, `publicProcedure`, `protectedProcedure`
+- **Identity**: `src/worker/access.ts` — Access JWT verification
+- **Audit**: `src/worker/audit.ts` — writes to `audit_log`
+- **Routers**: `src/worker/routers/*.ts`, composed in `routers/index.ts`
+
+Every request reaches the Worker first (`run_worker_first` is `true`); anything
+it does not handle is passed to `env.ASSETS.fetch`.
+
+```
+/trpc/public.*     no identity   →  publicProcedure
+/trpc/admin.*      Access        →  protectedProcedure  →  audit_log
+/admin, /admin/*   Access        →  assets
+everything else                  →  assets
+```
+
+## Adding a Procedure
+
+Each router file exports a public router and an admin router. Which one you
+extend is the security boundary, not a naming preference — `index.ts` decides
+whether to require an identity by matching `/trpc/admin.` on the path.
+
+### Public read
 
 ```ts
-// Public read — anyone, no identity
 export const publicProjectsRouter = router({
   visible: publicProcedure.query(({ ctx }) =>
-    ctx.db.select().from(projects).where(eq(projects.visible, 1))
+    ctx.db
+      .select()
+      .from(projects)
+      .where(and(eq(projects.visible, 1), isNull(projects.deletedAt)))
+      .orderBy(asc(projects.sortOrder))
   ),
 });
+```
 
-// Admin write — requires a verified Access identity, and is audited
+### Admin write
+
+```ts
 export const adminProjectsRouter = router({
-  remove: protectedProcedure
-    .input(z.object({ id: z.number().int() }))
-    .mutation(async ({ ctx, input }) => { ... }),
+  update: protectedProcedure
+    .input(projectInput.partial().extend({ id: z.number().int() }))
+    .mutation(async ({ ctx, input }) => {
+      const { id, ...changes } = input;
+      const [updated] = await ctx.db
+        .update(projects)
+        .set({ ...changes, updatedAt: now() })
+        .where(and(eq(projects.id, id), isNull(projects.deletedAt)))
+        .returning();
+      if (!updated) throw new TRPCError({ code: "NOT_FOUND" });
+      return updated;
+    }),
 });
 ```
 
-`protectedProcedure` does two things, and the second is easy to forget: it
-refuses an unauthenticated caller, and it writes every mutation to `audit_log`.
-Never hand-roll an auth check on a procedure — you get the refusal without the
-audit trail.
+`protectedProcedure` does two things: refuses a caller without a verified
+identity, and writes every mutation to `audit_log` with the actor, the path, and
+the input minus any `content` field. Hand-rolling an auth check on a procedure
+gives you the refusal without the audit trail.
 
-Register it under the right key in `routers/index.ts`. `public.*` and `admin.*`
-are not naming convention, they are the security boundary: `src/worker/index.ts`
-decides whether to require an identity by matching `/trpc/admin.` on the path.
+Register it under the matching key in `routers/index.ts`. Validate input with
+Zod on every procedure that takes one, and throw `TRPCError` for expected
+failures so the client receives a typed code.
 
-## Never hand-roll an error on a /trpc route
+## Error Shape on /trpc Routes
+
+Responses on `/trpc/*` must be tRPC envelopes. A hand-rolled body is
+unparseable by the client, which throws a transform error instead of a typed one
+and cannot tell an auth failure from a network failure.
 
 ```ts
-// Wrong — not a tRPC envelope. The client throws "unable to transform response
-// from server" and the reload-to-reauthenticate path never fires.
+// Wrong
 return Response.json({ error: { code: "FORBIDDEN" } }, { status: 403 });
 
-// Correct — pass a null identity through and let protectedProcedure raise it
-const identity = await resolveIdentity(request, env, url.pathname);
-return fetchRequestHandler({ ..., createContext: () => createContext({ identity, ... }) });
+// Correct — pass a null identity and let protectedProcedure raise UNAUTHORIZED
+return fetchRequestHandler({
+  endpoint: "/trpc",
+  req: request,
+  router: appRouter,
+  createContext: () => createContext({ req: request, env, executionCtx, identity }),
+});
 ```
 
-This shipped and broke the CMS. The client reads `error.data.code` to decide it
-must reauthenticate; a bare JSON body gives it nothing to read.
+## Identity
 
-## Access decides who, the Worker decides whether the token is real
+`access.ts` verifies that a token is genuine: signature against the team's
+cached JWKS, plus issuer, audience and expiry. It does not decide *who* is
+allowed — the Access policy does that, and the audience check already confines
+the Worker to tokens minted for this application. Do not add an allowlist in
+application config; two places to keep in sync will drift.
 
-`access.ts` verifies signature, issuer, audience and expiry against a cached
-JWKS. It does **not** check which email is allowed.
-
-Do not add an allowlist here. One existed, disagreed with the Access policy, and
-locked the CMS out with `Email is not allowed` on a token that was otherwise
-valid. Membership belongs to the policy; the audience check already confines the
-Worker to tokens minted for this application.
+The development bypass matches positively, so a missing or misspelled value
+fails closed:
 
 ```ts
-// Correct — fails closed when the value is missing or misspelled
+// Correct
 if (env.ENVIRONMENT !== "development") return null;
 
-// Wrong — fails OPEN in production if ENVIRONMENT is unset or mistyped
+// Wrong — fails open in production when the variable is unset
 if (env.ENVIRONMENT !== "production") return devIdentity();
 ```
 
-## Routing facts that are not obvious
+## Adding a Gated Path
 
-`run_worker_first` is `true`, so the Worker sees every request and hands anything
-it does not handle to `env.ASSETS.fetch`. That is what makes the `www` to apex
-redirect unbypassable.
+Access application paths match exactly, not by prefix, and policies are per
+hostname. `/admin` does not cover `/admin/posts`; `trpc/admin` does not cover
+`trpc/admin.posts.list`.
 
-Access application paths match **exactly**, not by prefix. `/admin` does not
-cover `/admin/posts`; `trpc/admin` does not cover `trpc/admin.posts.list`. Adding
-a new admin path prefix means adding a destination to the Access application, or
-the Worker will refuse every request to it for lack of a token.
+Adding a new gated path prefix means adding a destination to the Access
+application, or every request to it arrives without a token and the Worker
+refuses. Serve one hostname so each rule is written once.
 
-Policies are per hostname, which is why `www` redirects rather than getting its
-own set of rules.
+## Debugging a Rejected Request
 
-## Debugging a refusal
-
-The Worker logs why it refused, and the reason is the whole diagnosis:
+The 403 body deliberately carries no detail, so the log is the only source. The
+reason names the fault:
 
 ```bash
 pnpm exec wrangler tail davidoduneye-com --format pretty
 ```
 
-`Missing Cloudflare Access token` means Access did not gate that path or
-hostname. `Invalid` means audience or issuer. The 403 body deliberately says
-nothing, so the log is the only source.
+| Reason | Meaning |
+|---|---|
+| `Missing Cloudflare Access token` | Access did not gate that hostname or path |
+| `Invalid Cloudflare Access token` | Audience, issuer, or signature mismatch |
+| `Cloudflare Access is not configured` | `CF_ACCESS_TEAM_DOMAIN` or `CF_ACCESS_AUD` unset |
+
+## Commands Reference
+
+| Command | What it does |
+|---|---|
+| `pnpm dev` | Worker plus site plus local D1 on `:5173` |
+| `pnpm exec wrangler tail davidoduneye-com --format pretty` | Live production logs |
+| `pnpm test` | Vitest, including the Worker against a real local D1 |
+| `curl -sI https://davidoduneye.com/trpc/admin.posts.list` | Expect a 302 to Access |
+
+## Key Rules
+
+- **Extend the right router**: `public.*` is reachable by anyone.
+- **Admin mutations use `protectedProcedure`**: it is what produces the audit row.
+- **Only tRPC envelopes on `/trpc/*`**: never a hand-rolled error body.
+- **The Access policy owns membership**: the Worker only proves the token is real.
+- **Match the dev bypass positively**: negative checks fail open.
+- **A new gated path needs an Access destination**: paths match exactly.
+- **Read the tail before theorising**: the rejection reason is the diagnosis.
