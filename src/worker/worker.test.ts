@@ -12,7 +12,6 @@ async function call(
 ): Promise<Response> {
   const ctx = createExecutionContext();
   const response = await worker.fetch(request, { ...env, ...overrides }, ctx);
-  // Resolves the waitUntil the audit write is handed to.
   await waitOnExecutionContext(ctx);
   return response;
 }
@@ -74,9 +73,6 @@ describe("admin mutations", () => {
       ENVIRONMENT: "production",
     });
 
-    // A parseable tRPC error, not a hand-rolled body. isUnauthorized() in the
-    // admin client reads data.code to decide it must reauthenticate, so this
-    // is the shape the recovery path depends on.
     const body = (await response.json()) as [
       { error: { data: { code: string } } },
     ];

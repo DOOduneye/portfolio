@@ -86,8 +86,6 @@ interface TopTrack {
   url: string;
 }
 
-// The song David played most over the last few weeks, from the API. Renders
-// nothing if the API is unavailable (like on the static GitHub Pages build).
 function OnRepeat() {
   const [track, setTrack] = useState<TopTrack | null>(null);
 

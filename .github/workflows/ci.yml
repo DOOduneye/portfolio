@@ -1,9 +1,5 @@
 name: CI
 
-# Deploys are not run here. The repository is connected to Cloudflare Workers
-# Builds, which deploys main and uploads preview versions for other branches.
-# A deploy job here would race it.
-
 on:
   pull_request:
   push:
@@ -25,8 +21,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # No version here: it is read from packageManager in package.json.
-      # Setting both makes the action fail with ERR_PNPM_BAD_PM_VERSION.
       - uses: pnpm/action-setup@v4
 
       - uses: actions/setup-node@v4

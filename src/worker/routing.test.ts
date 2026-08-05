@@ -5,9 +5,6 @@ import {
   isAdminUiRequest,
 } from "./index";
 
-// These decide which hostnames and paths require an identity. Getting either
-// wrong is how www ended up serving the CMS ungated.
-
 it("sends www to the apex, preserving path and query", () => {
   expect(canonicalRedirect("https://www.davidoduneye.com/admin/posts?a=1")).toBe(
     "https://davidoduneye.com/admin/posts?a=1",

@@ -3,7 +3,6 @@ import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { posts } from "../db/schema";
 import { now, protectedProcedure, publicProcedure, router } from "../trpc";
-import { triggerSiteRebuild } from "../rebuild";
 
 const slugSchema = z
   .string()
@@ -19,7 +18,6 @@ const postInput = z.object({
 });
 
 export const publicPostsRouter = router({
-  // Public: what the static site consumes at build time.
   published: publicProcedure.query(({ ctx }) =>
     ctx.db
       .select()
@@ -97,7 +95,6 @@ export const adminPostsRouter = router({
         .where(and(eq(posts.slug, input.slug), isNull(posts.deletedAt)))
         .returning();
       if (!updated) throw new TRPCError({ code: "NOT_FOUND" });
-      await triggerSiteRebuild(ctx.env);
       return updated;
-  }),
+    }),
 });

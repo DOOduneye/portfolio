@@ -15,9 +15,6 @@ export function reauthenticate(): void {
 
 const ACCESS_TEAM_DOMAIN = "oduneye.cloudflareaccess.com";
 
-// Access keeps two tokens: one per application on this domain, and a global
-// SSO session on the team domain. Clearing only the first lets the next
-// request mint a fresh one silently, so both have to go.
 export async function signOut(): Promise<void> {
   await fetch("/cdn-cgi/access/logout").catch(() => {});
   const returnTo = encodeURIComponent(`${window.location.origin}/`);
@@ -27,7 +24,7 @@ export async function signOut(): Promise<void> {
 export function errorMessage(err: unknown): string {
   const message = err instanceof Error ? err.message : String(err);
   if (/json|fetch|network|load failed/i.test(message)) {
-    return "Can't reach the API. Is the dev server running?";
+    return "Can't reach the API. Try reloading.";
   }
   return message;
 }
