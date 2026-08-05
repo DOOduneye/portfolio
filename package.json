@@ -10,9 +10,9 @@
     "test": "vitest run",
     "build": "tsc --noEmit && vite build && cp dist/client/index.html dist/client/404.html",
     "preview": "vite preview",
-    "deploy": "pnpm run build && wrangler deploy",
-    "db:migrate:local": "wrangler d1 migrations apply portfolio-cms --local",
-    "db:migrate": "wrangler d1 migrations apply portfolio-cms --remote"
+    "deploy": "pnpm run build && pnpm run db:migrate && wrangler deploy",
+    "db:migrate:local": "wrangler d1 migrations apply DB --local",
+    "db:migrate": "wrangler d1 migrations apply DB --remote"
   },
   "dependencies": {
     "@tiptap/react": "^3.0.0",
