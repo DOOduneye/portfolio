@@ -79,8 +79,6 @@ it("accepts a token Cloudflare would have issued", async () => {
   });
 });
 
-// Each claim is verified by a separate option on jwtVerify, so each can
-// regress independently if one is dropped.
 describe("rejects a token that is not ours", () => {
   const cases: Array<[string, Claims]> = [
     ["expired", { expiresIn: "-1h" }],
@@ -102,7 +100,6 @@ it("rejects a request with no Access header", async () => {
   );
 });
 
-// A half-configured Worker must not serve the CMS.
 describe("fails closed when Access is not fully configured", () => {
   it.each(["CF_ACCESS_TEAM_DOMAIN", "CF_ACCESS_AUD"] as const)(
     "%s unset",
@@ -121,7 +118,6 @@ describe("development bypass", () => {
     ).toEqual({ email: "dev@localhost", subject: "dev" });
   });
 
-  // Matched positively, so a typo or missing value cannot open production.
   it.each(["production", "prod", undefined])(
     "does not fire when ENVIRONMENT is %s",
     async (environment) => {

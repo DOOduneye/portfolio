@@ -5,10 +5,6 @@ import {
   resourceTypeFromPath,
 } from "./audit";
 
-// writeAudit itself is covered end to end in worker.test.ts against a real D1.
-// Asserting that a stubbed insert() was called proves nothing about whether a
-// row lands.
-
 describe("resourceTypeFromPath", () => {
   it("takes the router segment from an admin path", () => {
     expect(resourceTypeFromPath("admin.posts.update")).toBe("posts");

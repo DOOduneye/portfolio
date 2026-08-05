@@ -12,8 +12,6 @@ export default defineConfig({
       miniflare: {
         bindings: {
           TEST_MIGRATIONS: await readD1Migrations("migrations"),
-          // wrangler.jsonc sets ENVIRONMENT=production, which disables the
-          // bypass. Tests need an identity without a real Access token.
           ENVIRONMENT: "development",
         },
       },

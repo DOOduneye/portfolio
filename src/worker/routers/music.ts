@@ -11,9 +11,6 @@ interface TopTrack {
 const CACHE_KEY = "spotify-top-track";
 const CACHE_TTL_MS = 6 * 60 * 60 * 1000;
 
-// David's most played track over roughly the last four weeks, per Spotify's
-// top-tracks endpoint. Deliberately not "now playing": it shows a favorite,
-// not a live activity feed.
 export const musicRouter = router({
   topTrack: publicProcedure.query(async ({ ctx }): Promise<TopTrack | null> => {
     const { SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, SPOTIFY_REFRESH_TOKEN } =
@@ -94,7 +91,6 @@ export const musicRouter = router({
   }),
 });
 
-// A stale cache entry beats an empty footer when Spotify has a bad moment.
 function cachedOrNull(
   cached: { value: string } | undefined
 ): TopTrack | null {
