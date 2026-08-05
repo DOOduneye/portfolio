@@ -105,12 +105,15 @@ Tailwind — they are what keeps the CMS visually coherent.
 
 ## Data Fetching
 
-The client is a plain `createTRPCClient`. There is no `@trpc/react-query` and no
-TanStack Query, so `useQuery` and `useMutation` do not exist here.
+The client is a plain `createTRPCClient`. tRPC v11's React integration is
+`@trpc/tanstack-react-query`, which is not installed here — so `useQuery` and
+`useMutation` are unavailable and each page owns its own state. Adopting it would
+remove that boilerplate; until it is, match the existing pattern rather than
+mixing two.
 
-The shape is a `useCallback` fetcher, `useEffect` to run it, and explicit state.
-`null` means loading, a value means loaded. After a mutation, call `refresh()` —
-there is no cache to invalidate.
+A `useCallback` fetcher, `useEffect` to run it, and explicit state. `null` means
+loading, a value means loaded. After a mutation, call `refresh()` — there is no
+cache to invalidate.
 
 Every `catch` branches on `isUnauthorized` before anything else. Skipping it
 turns an expired session into a message the user cannot act on.
@@ -144,7 +147,8 @@ seen the repo and cannot act on internals.
 
 - **Use design tokens**: never a literal Tailwind colour.
 - **Reuse `components/ui.tsx`**: before writing new input or button styles.
-- **No `useQuery` or `useMutation`**: the client is vanilla tRPC.
+- **Match the existing data pattern**: the client is vanilla tRPC, so there are
+  no query hooks to reach for.
 - **Branch on `isUnauthorized` first** in every catch.
 - **Never add a login screen** or store credentials client-side.
 - **Recover from auth failure with a reload**, never a retry.

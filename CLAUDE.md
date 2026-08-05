@@ -42,7 +42,7 @@ request
 
 ```
 src/
-  App.tsx            routes / to the site, /admin to a lazily loaded CMS
+  App.tsx            routes / to the site, /admin to the CMS
   pages/Home.tsx     the public site
   admin/             CMS UI, TipTap editor, tRPC client
   worker/
@@ -57,7 +57,7 @@ migrations/          generated SQL plus the drizzle snapshot in meta/
 
 React 19, Vite, Tailwind v4 and React Router on the front. tRPC v11 between
 front and Worker. Drizzle over D1 for storage. Cloudflare Access for identity.
-Vitest with the Workers pool for tests. Everything fits Cloudflare's free tier.
+Vitest with the Workers pool for tests.
 
 ## Rules that prevent real mistakes
 
@@ -66,10 +66,6 @@ Vitest with the Workers pool for tests. Everything fits Cloudflare's free tier.
   and never run `drizzle-kit push` or `drizzle-kit migrate`.
 - Only tRPC envelopes on `/trpc/*`. A hand-rolled error body is unparseable by
   the client.
-- The Access policy decides who may enter. The Worker only proves the token is
-  genuine.
-- Match the dev bypass positively (`=== "development"`). Negative checks fail
-  open when the variable is unset.
 - Admin mutations use `protectedProcedure`, which is what writes the audit row.
 - Use the design tokens in `src/index.css`, never a literal Tailwind colour.
 - Comment only what the code cannot express. Prefer a clearer name or a smaller
