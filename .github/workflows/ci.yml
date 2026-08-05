@@ -29,6 +29,14 @@ jobs:
           cache: pnpm
 
       - run: pnpm install --frozen-lockfile
+      - run: pnpm run db:generate
+      - name: schema.ts and migrations must agree
+        run: |
+          if [ -n "$(git status --porcelain migrations)" ]; then
+            echo "schema.ts changed without a generated migration. Run: pnpm run db:generate"
+            git status --porcelain migrations
+            exit 1
+          fi
       - run: pnpm run check
       - run: pnpm test
       - run: pnpm run build
