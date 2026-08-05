@@ -1,0 +1,13 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1785958081515,
+      "tag": "0004_drop_posts_status_check",
+      "breakpoints": true
+    }
+  ]
+}

@@ -15,7 +15,6 @@ concurrency:
 
 jobs:
   check:
-    name: Typecheck, test and build
     runs-on: ubuntu-latest
 
     steps:
@@ -29,6 +28,8 @@ jobs:
           cache: pnpm
 
       - run: pnpm install --frozen-lockfile
+      - run: pnpm run db:generate
+      - run: git add -N migrations && git diff --exit-code migrations
       - run: pnpm run check
       - run: pnpm test
       - run: pnpm run build
