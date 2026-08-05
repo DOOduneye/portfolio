@@ -72,8 +72,5 @@ export async function requireAccessIdentity(
     throw new UnauthorizedError("Cloudflare Access identity is incomplete");
   }
 
-  // Who may enter is the Access policy's decision. Duplicating it here meant
-  // two places to keep in sync, and the drift locked the CMS out. The audience
-  // check already confines this to tokens minted for this application.
   return { email, subject };
 }

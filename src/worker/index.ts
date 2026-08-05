@@ -10,9 +10,6 @@ import { createContext } from "./trpc";
 
 const CANONICAL_HOST = "davidoduneye.com";
 
-// Access policies are per hostname. Serving the app on both the apex and www
-// means every policy has to be duplicated, and an app caps at five
-// destinations. Collapsing to one host keeps the gated surface single.
 export function canonicalRedirect(requestUrl: string): string | null {
   const url = new URL(requestUrl);
   if (url.hostname !== `www.${CANONICAL_HOST}`) return null;
@@ -46,9 +43,6 @@ export default {
         identity = await resolveIdentity(request, env, url.pathname);
       }
 
-      // A null identity is passed through rather than short-circuited so that
-      // protectedProcedure raises a real tRPC UNAUTHORIZED. A hand-rolled JSON
-      // body is not a tRPC envelope and the client cannot parse it.
       return fetchRequestHandler({
         endpoint: "/trpc",
         req: request,
@@ -58,9 +52,6 @@ export default {
       });
     }
 
-    // Access gates the admin UI at the edge, but checking here too means a
-    // hostname or path the policy misses fails closed instead of quietly
-    // serving the CMS shell.
     if (isAdminUiRequest(url.pathname)) {
       const identity = await resolveIdentity(request, env, url.pathname);
       if (!identity) {
