@@ -64,7 +64,6 @@ The full site runs as one Cloudflare Worker:
 
 ```bash
 pnpm exec wrangler login
-pnpm run db:migrate
 pnpm exec wrangler secret put SPOTIFY_CLIENT_ID
 pnpm exec wrangler secret put SPOTIFY_CLIENT_SECRET
 pnpm exec wrangler secret put SPOTIFY_REFRESH_TOKEN
@@ -72,8 +71,11 @@ pnpm run deploy
 ```
 
 Create the Access application before deploying, or the CMS locks out.
-Deploys run from Cloudflare Workers Builds on push to `main`; the commands
-above are for the first-time setup and for deploying by hand.
+
+Deploys run from Cloudflare Workers Builds on push to `main`. Its deploy
+command must be `pnpm run deploy`, which applies migrations before uploading
+so schema changes land before the code that needs them. Running
+`wrangler deploy` directly would skip that.
 
 To get the Spotify refresh token:
 
