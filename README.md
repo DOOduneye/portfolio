@@ -30,7 +30,3 @@ node scripts/spotify-auth.mjs <client_id> <client_secret>
 
 It prints a refresh token. Put that and the client id and secret in
 `.dev.vars`.
-
-## Deploying
-
-Pushing to `main` deploys it.
