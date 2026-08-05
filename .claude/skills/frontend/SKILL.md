@@ -1,48 +1,89 @@
 ---
 name: frontend
-description: Use when changing anything under src/pages, src/admin, or the styling. Covers this repo's React conventions, why the admin bundle is split, and how the CMS handles auth without a sign-in screen.
+description: Read before touching src/pages, src/admin or styling. This repo does not use TanStack Query, Server Components, or a login form, so parts of the vendored vercel-react-best-practices skill do not apply. This overrides it.
 ---
 
-# Public site and CMS UI
+# Frontend
 
-React 19, Vite, Tailwind v4, React Router. Two surfaces in one bundle entry:
-`src/pages/Home.tsx` is public, `src/admin/` is the CMS.
+The vendored `vercel-react-best-practices` skill covers React 19 generally. Three
+of its assumptions are wrong here: there is no React Query, no RSC, and no
+authentication in the app at all.
 
-## Keep the admin bundle lazy
+## Data fetching is a vanilla tRPC client
 
-`src/App.tsx` loads `Admin` through `lazy()`, which keeps TipTap out of the
-public site. The admin chunk is roughly 450 kB against 240 kB for the site, so
-importing it eagerly nearly triples what a visitor downloads to read a page.
+`src/admin/api.ts` exports a plain `createTRPCClient`. There is no
+`@trpc/react-query` and no TanStack Query. Do not reach for `useQuery` or
+`useMutation` — they do not exist in this project.
 
-## The CMS has no sign-in screen
+The pattern is a `useCallback` fetcher, `useEffect` to run it, and explicit state:
 
-Cloudflare Access authenticates before the app renders, so if `Admin` mounts the
-visitor is already authenticated. Do not add a login form, a token field, or
-anything in `localStorage`. That is what this replaced.
+```tsx
+// Correct — matches every existing admin page
+const [posts, setPosts] = useState<Post[] | null>(null);
+const [error, setError] = useState<string | null>(null);
 
-On an auth failure, call `reauthenticate()` from `src/admin/api.ts`. It reloads
-the page, which is the only way to hand the browser back to Access — an expired
-session answers XHRs with a cross-origin redirect that `fetch` cannot follow.
+const refresh = useCallback(() => {
+  api.admin.posts.list
+    .query()
+    .then(setPosts)
+    .catch((err) => {
+      if (isUnauthorized(err)) onAuthError();
+      else setError(errorMessage(err));
+    });
+}, [onAuthError]);
 
-`signOut()` clears two tokens, the per-application one on this domain and the
-global SSO session on the team domain. Clearing only the first lets the next
-request mint a fresh one silently, which looks like logout doing nothing.
+useEffect(refresh, [refresh]);
+```
 
-## Degrade quietly on the public site
+`null` means loading, an array means loaded. After a mutation, call `refresh()` —
+there is no cache to invalidate.
 
-The public site renders nothing rather than an error when data is missing. The
-Spotify footer returns `null` when the API is unreachable or the secrets are
-unset, and `OnRepeat` renders nothing for a null track. Keep that shape for
-anything else optional: a missing integration should be invisible, not broken.
+Every catch must branch on `isUnauthorized` first. Skipping it turns an expired
+session into a generic error message the user cannot act on.
+
+## There is no login screen, and never should be
+
+Cloudflare Access authenticates before the bundle loads, so if a component
+renders the visitor is authenticated. Never add a login form, a token field, or
+anything auth-related in `localStorage`. That is precisely what was removed.
+
+Recovery from an expired session is a full page reload, via `reauthenticate()`.
+Not a retry, not a token refresh — an expired Access session answers XHRs with a
+cross-origin redirect that `fetch` cannot follow, so only a top-level navigation
+hands the browser back to Access.
+
+## Keep the admin chunk lazy
+
+`src/App.tsx` loads `Admin` through `lazy()`. The admin chunk is ~450 kB against
+~240 kB for the site, mostly TipTap. Importing it eagerly nearly triples what a
+visitor downloads to read one page. Never import from `src/admin/` outside that
+lazy boundary.
 
 ## Colours come from tokens
 
 `src/index.css` defines the palette as CSS variables grouped into surfaces, text
-and accent. Use the token names (`bg-surface`, `text-muted`, `border-line`)
-rather than literal Tailwind colours, so both surfaces stay consistent.
+and accent.
 
-## Errors the user reads
+```tsx
+// Correct
+<div className="bg-surface text-muted border-line">
 
-Messages in `errorMessage()` are shown in production. Do not write anything that
-only makes sense locally — it previously told visitors to check whether their dev
-server was running.
+// Wrong — bypasses the palette, drifts from the rest of the app
+<div className="bg-zinc-900 text-gray-400 border-gray-800">
+```
+
+## The public site degrades to nothing
+
+Anything optional renders nothing rather than an error. The Spotify footer
+returns `null` when the API is unreachable or its secrets are unset, and
+`OnRepeat` renders nothing for a null track. Keep that shape: a missing
+integration should be invisible to a visitor, never a broken state.
+
+The admin UI is the opposite — it shows errors, because you are the only one who
+sees them and you need to know.
+
+## Error strings are read in production
+
+`errorMessage()` output reaches real visitors. It once told them to check whether
+their dev server was running. Write messages that make sense to someone who has
+never seen the repo.

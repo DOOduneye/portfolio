@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "skills": {
+    "drizzle": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/typescript/data/drizzle/SKILL.md",
+      "computedHash": "1833b9288692060090de3e8ca1e772b5e3bbf928c9d44a20bb4d5b6766b019f2"
+    },
+    "drizzle-migrations": {
+      "source": "bobmatnyc/claude-mpm-skills",
+      "sourceType": "github",
+      "skillPath": "toolchains/typescript/data/drizzle-migrations/SKILL.md",
+      "computedHash": "4a71e255385519e16d9661d56f344e7275e222ea0d1c9ddcbcf330dc65595260"
+    },
+    "trpc-router": {
+      "source": "trpc/trpc",
+      "sourceType": "github",
+      "skillPath": "packages/server/skills/trpc-router/SKILL.md",
+      "computedHash": "dd22c754d042bbc48826d7289463e5cfc40725899c576e25bf9766706a4b2850"
+    },
+    "vercel-react-best-practices": {
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/react-best-practices/SKILL.md",
+      "computedHash": "ca7b0c0c6e5f2750043f7f0cd72d16ac4e2abc48f9b5500d047a4b77a2506212"
+    }
+  }
+}
