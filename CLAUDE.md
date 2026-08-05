@@ -87,6 +87,7 @@ Three skills override those where this repo differs, and the overrides win:
 | `worker/index.ts`, `trpc.ts`, `access.ts`, `routers/` | `worker` | `trpc-router` |
 | `src/pages`, `src/admin`, styling | `frontend` | `vercel-react-best-practices` |
 | a PR or a commit message | `pr` | — |
+| refactoring, reviewing, verifying before shipping | `code-quality` | — |
 
 The vendored Drizzle skills never mention D1 or wrangler and recommend
 `drizzle-kit push`, which would desync this repo. The React skill assumes
