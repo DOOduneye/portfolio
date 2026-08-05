@@ -60,7 +60,6 @@ function env(overrides: Partial<Env> = {}): Env {
     DB: {} as D1Database,
     ASSETS: {} as Fetcher,
     ENVIRONMENT: "production",
-    ALLOWED_EMAIL: EMAIL,
     CF_ACCESS_TEAM_DOMAIN: TEAM_DOMAIN,
     CF_ACCESS_AUD: AUD,
     ...overrides,
@@ -80,13 +79,6 @@ it("accepts a token Cloudflare would have issued", async () => {
   });
 });
 
-it("accepts a differently cased email", async () => {
-  const token = await sign({ email: "Admin@Example.COM" });
-  expect((await requireAccessIdentity(request(token), env())).subject).toBe(
-    SUBJECT,
-  );
-});
-
 // Each claim is verified by a separate option on jwtVerify, so each can
 // regress independently if one is dropped.
 describe("rejects a token that is not ours", () => {
@@ -94,7 +86,6 @@ describe("rejects a token that is not ours", () => {
     ["expired", { expiresIn: "-1h" }],
     ["minted for another Access application", { audience: "other-aud" }],
     ["from another issuer", { issuer: "https://evil.cloudflareaccess.com" }],
-    ["for an email outside ALLOWED_EMAIL", { email: "someone@example.com" }],
     ["carrying no email claim", { email: null }],
   ];
 
@@ -111,11 +102,9 @@ it("rejects a request with no Access header", async () => {
   );
 });
 
-// The invariant that matters most: a half-configured Worker must not serve the
-// CMS. All three are required, and ALLOWED_EMAIL is a secret, so it is the
-// easiest to forget on a fresh deploy.
+// A half-configured Worker must not serve the CMS.
 describe("fails closed when Access is not fully configured", () => {
-  it.each(["CF_ACCESS_TEAM_DOMAIN", "CF_ACCESS_AUD", "ALLOWED_EMAIL"] as const)(
+  it.each(["CF_ACCESS_TEAM_DOMAIN", "CF_ACCESS_AUD"] as const)(
     "%s unset",
     async (key) => {
       await expect(
@@ -126,10 +115,10 @@ describe("fails closed when Access is not fully configured", () => {
 });
 
 describe("development bypass", () => {
-  it("signs in as ALLOWED_EMAIL with no token", async () => {
+  it("signs in as a local identity with no token", async () => {
     expect(
       await requireAccessIdentity(request(), env({ ENVIRONMENT: "development" })),
-    ).toEqual({ email: EMAIL, subject: `dev:${EMAIL}` });
+    ).toEqual({ email: "dev@localhost", subject: "dev" });
   });
 
   // Matched positively, so a typo or missing value cannot open production.

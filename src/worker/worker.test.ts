@@ -58,7 +58,7 @@ describe("admin mutations", () => {
     }>();
     expect(audit.results).toEqual([
       {
-        actor_email: "admin@example.com",
+        actor_email: "dev@localhost",
         action: "admin.projects.create",
         resource_type: "projects",
         metadata_json: JSON.stringify({

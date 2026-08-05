@@ -26,7 +26,6 @@
     }
   ]
   // Secrets (set with `wrangler secret put <name>`):
-  //   ALLOWED_EMAIL           — the address allowed through Cloudflare Access
   //   SPOTIFY_CLIENT_ID       — Spotify app client id
   //   SPOTIFY_CLIENT_SECRET   — Spotify app client secret
   //   SPOTIFY_REFRESH_TOKEN   — one-time OAuth refresh token from scripts/spotify-auth.mjs

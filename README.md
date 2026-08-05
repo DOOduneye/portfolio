@@ -23,9 +23,11 @@ migrations/          # D1 SQL migrations
 
 `/admin` and `/trpc/admin.*` sit behind a Cloudflare Access application, so
 there is no sign-in screen in the app. The Worker verifies the
-`Cf-Access-Jwt-Assertion` header on admin API calls and refuses them if
-`CF_ACCESS_TEAM_DOMAIN`, `CF_ACCESS_AUD`, or the `ALLOWED_EMAIL` secret is
-unset. Every admin mutation writes a row to `audit_log`.
+`Cf-Access-Jwt-Assertion` header and refuses the request if
+`CF_ACCESS_TEAM_DOMAIN` or `CF_ACCESS_AUD` is unset. Who may enter is the
+Access policy's decision; the Worker checks that the token is genuine and was
+minted for this application. Every admin mutation writes a row to
+`audit_log`.
 
 The Access application needs two public destinations — `davidoduneye.com/admin`
 and `davidoduneye.com/trpc/admin*` — plus `davidoduneye.com/admin/*` for the
@@ -41,8 +43,9 @@ pnpm dev                    # app + Worker + local D1 on :5173
 ```
 
 Access does not sit in front of localhost. Copy `.dev.vars.example` to
-`.dev.vars`; `ENVIRONMENT=development` signs you in as `ALLOWED_EMAIL` without
-Access. Values in `.dev.vars` override the `vars` block in `wrangler.jsonc`.
+`.dev.vars`; `ENVIRONMENT=development` signs you in as a local identity
+without Access. Values in `.dev.vars` override the `vars` block in
+`wrangler.jsonc`.
 
 ```bash
 pnpm test
@@ -62,7 +65,6 @@ The full site runs as one Cloudflare Worker:
 ```bash
 pnpm exec wrangler login
 pnpm run db:migrate
-pnpm exec wrangler secret put ALLOWED_EMAIL
 pnpm exec wrangler secret put SPOTIFY_CLIENT_ID
 pnpm exec wrangler secret put SPOTIFY_CLIENT_SECRET
 pnpm exec wrangler secret put SPOTIFY_REFRESH_TOKEN
@@ -70,6 +72,8 @@ pnpm run deploy
 ```
 
 Create the Access application before deploying, or the CMS locks out.
+Deploys run from Cloudflare Workers Builds on push to `main`; the commands
+above are for the first-time setup and for deploying by hand.
 
 To get the Spotify refresh token:
 

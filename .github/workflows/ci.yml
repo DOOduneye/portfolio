@@ -1,5 +1,9 @@
 name: CI
 
+# Deploys are not run here. The repository is connected to Cloudflare Workers
+# Builds, which deploys main and uploads preview versions for other branches.
+# A deploy job here would race it.
+
 on:
   pull_request:
   push:
@@ -15,15 +19,15 @@ concurrency:
 
 jobs:
   check:
-    name: Typecheck and build
+    name: Typecheck, test and build
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
 
+      # No version here: it is read from packageManager in package.json.
+      # Setting both makes the action fail with ERR_PNPM_BAD_PM_VERSION.
       - uses: pnpm/action-setup@v4
-        with:
-          version: 11
 
       - uses: actions/setup-node@v4
         with:
@@ -31,37 +35,6 @@ jobs:
           cache: pnpm
 
       - run: pnpm install --frozen-lockfile
+      - run: pnpm run check
       - run: pnpm test
       - run: pnpm run build
-
-  deploy:
-    name: Deploy
-    needs: check
-    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
-    runs-on: ubuntu-latest
-    concurrency:
-      group: deploy-production
-      cancel-in-progress: false
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 11
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: pnpm
-
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm run db:migrate
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-
-      - run: pnpm run deploy
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

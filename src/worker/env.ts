@@ -3,7 +3,6 @@ export interface Env {
   ASSETS: Fetcher;
 
   ENVIRONMENT?: string;
-  ALLOWED_EMAIL?: string;
   CF_ACCESS_TEAM_DOMAIN?: string;
   CF_ACCESS_AUD?: string;
 

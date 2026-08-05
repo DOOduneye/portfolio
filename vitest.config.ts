@@ -15,7 +15,6 @@ export default defineConfig({
           // wrangler.jsonc sets ENVIRONMENT=production, which disables the
           // bypass. Tests need an identity without a real Access token.
           ENVIRONMENT: "development",
-          ALLOWED_EMAIL: "admin@example.com",
         },
       },
     })),

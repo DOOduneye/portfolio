@@ -36,8 +36,7 @@ export function normalizeTeamDomain(value: string): string {
 
 function bypassIdentity(env: Env): AccessIdentity | null {
   if (env.ENVIRONMENT !== "development") return null;
-  if (!env.ALLOWED_EMAIL) return null;
-  return { email: env.ALLOWED_EMAIL, subject: `dev:${env.ALLOWED_EMAIL}` };
+  return { email: "dev@localhost", subject: "dev" };
 }
 
 export async function requireAccessIdentity(
@@ -47,7 +46,7 @@ export async function requireAccessIdentity(
   const bypass = bypassIdentity(env);
   if (bypass) return bypass;
 
-  if (!env.CF_ACCESS_TEAM_DOMAIN || !env.CF_ACCESS_AUD || !env.ALLOWED_EMAIL) {
+  if (!env.CF_ACCESS_TEAM_DOMAIN || !env.CF_ACCESS_AUD) {
     throw new UnauthorizedError("Cloudflare Access is not configured");
   }
 
@@ -73,9 +72,8 @@ export async function requireAccessIdentity(
     throw new UnauthorizedError("Cloudflare Access identity is incomplete");
   }
 
-  if (email.toLowerCase() !== env.ALLOWED_EMAIL.toLowerCase()) {
-    throw new UnauthorizedError("Email is not allowed");
-  }
-
+  // Who may enter is the Access policy's decision. Duplicating it here meant
+  // two places to keep in sync, and the drift locked the CMS out. The audience
+  // check already confines this to tokens minted for this application.
   return { email, subject };
 }
