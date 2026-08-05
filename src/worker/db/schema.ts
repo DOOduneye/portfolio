@@ -6,6 +6,18 @@ export const kvCache = sqliteTable("kv_cache", {
   updatedAt: text("updated_at").notNull(),
 });
 
+export const auditLog = sqliteTable("audit_log", {
+  id: text("id").primaryKey(),
+  actorEmail: text("actor_email").notNull(),
+  action: text("action").notNull(),
+  resourceType: text("resource_type").notNull(),
+  resourceId: text("resource_id"),
+  requestId: text("request_id"),
+  ipHint: text("ip_hint"),
+  metadataJson: text("metadata_json").notNull().default("{}"),
+  createdAt: text("created_at").notNull(),
+});
+
 export const posts = sqliteTable("posts", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   slug: text("slug").notNull().unique(),

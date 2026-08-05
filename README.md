@@ -19,6 +19,21 @@ src/
 migrations/          # D1 SQL migrations
 ```
 
+## Auth
+
+`/admin` and `/trpc/admin.*` sit behind a Cloudflare Access application, so
+there is no sign-in screen in the app. The Worker verifies the
+`Cf-Access-Jwt-Assertion` header and refuses the request if
+`CF_ACCESS_TEAM_DOMAIN` or `CF_ACCESS_AUD` is unset. Who may enter is the
+Access policy's decision; the Worker checks that the token is genuine and was
+minted for this application. Every admin mutation writes a row to
+`audit_log`.
+
+The Access application needs two public destinations — `davidoduneye.com/admin`
+and `davidoduneye.com/trpc/admin*` — plus `davidoduneye.com/admin/*` for the
+CMS subroutes. Access paths are exact, not prefixes, which is why the
+wildcards matter.
+
 ## Development
 
 ```bash
@@ -27,28 +42,38 @@ pnpm run db:migrate:local   # once
 pnpm dev                    # app + Worker + local D1 on :5173
 ```
 
-Admin token for local dev comes from `.dev.vars` (`ADMIN_TOKEN=dev-token`).
+Access does not sit in front of localhost. Copy `.dev.vars.example` to
+`.dev.vars`; `ENVIRONMENT=development` signs you in as a local identity
+without Access. Values in `.dev.vars` override the `vars` block in
+`wrangler.jsonc`.
+
+```bash
+pnpm test
+pnpm run check
+```
 
 ## Deploy
 
-The full site is meant to run as a Cloudflare Worker app:
+The full site runs as one Cloudflare Worker:
 
 - `/` serves the built React site.
 - `/admin` serves the CMS UI.
 - `/trpc/public.*` serves public display data, including Spotify.
 - `/trpc/admin.*` serves authenticated CMS reads and writes.
-- D1 stores CMS content and the Spotify cache.
+- D1 stores CMS content, the Spotify cache, and the audit log.
 
 ```bash
 pnpm exec wrangler login
-pnpm exec wrangler d1 create portfolio-cms   # paste database_id into wrangler.jsonc
 pnpm run db:migrate
-pnpm exec wrangler secret put ADMIN_TOKEN
 pnpm exec wrangler secret put SPOTIFY_CLIENT_ID
 pnpm exec wrangler secret put SPOTIFY_CLIENT_SECRET
 pnpm exec wrangler secret put SPOTIFY_REFRESH_TOKEN
 pnpm run deploy
 ```
+
+Create the Access application before deploying, or the CMS locks out.
+Deploys run from Cloudflare Workers Builds on push to `main`; the commands
+above are for the first-time setup and for deploying by hand.
 
 To get the Spotify refresh token:
 
@@ -62,6 +87,3 @@ this redirect URI exactly:
 ```text
 http://127.0.0.1:8888/callback
 ```
-
-The live site runs on Cloudflare Workers so the public site, admin UI, CMS API,
-D1, and Spotify footer all share one deployment.
