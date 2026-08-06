@@ -29,8 +29,6 @@ export function InsertMenu({
   const [open, setOpen] = useState(false)
   const fileInput = useRef<HTMLInputElement>(null)
 
-  // Moving to a different empty line should present a fresh plus rather than
-  // whatever state the last one was left in.
   const anchor = useTiptapState(({ editor }) => editor.state.selection.anchor)
   useEffect(() => setOpen(false), [anchor])
 

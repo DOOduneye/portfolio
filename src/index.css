@@ -85,15 +85,6 @@
   --sidebar-ring: oklch(0.65 0.13 78);
 }
 
-/*
- * The shipped theme. Neutrals are a blue-tinted ink ramp at hue 265, the lone
- * brand colour a warm amber at hue 78.
- *
- * `brand` is deliberately not shadcn's `accent`, which is a neutral hover
- * surface for menu items and list rows. Amber there would tint every hover in
- * the app. The site spends `brand` on links and hovers; the admin leaves it to
- * focus rings, so the two read as different places.
- */
 .dark {
   --background: oklch(0.17 0.008 265);
   --foreground: oklch(0.94 0.004 265);
@@ -160,8 +151,6 @@
   color: var(--foreground);
 }
 
-/* The title and summary are the page's content; a ring around them while
-   typing reads as a form field rather than as writing. */
 .editorial:focus,
 .editorial:focus-visible {
   outline: none;

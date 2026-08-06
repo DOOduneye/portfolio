@@ -177,7 +177,6 @@ function RecentWriting() {
 export function Home() {
   return (
     <div className="mx-auto max-w-2xl px-6 py-28">
-      {/* Header */}
       <header>
         <p className="font-mono text-xs tracking-wide text-subtle-foreground">New York, NY</p>
         <h1 className="mt-3 text-4xl font-semibold tracking-tight text-foreground">
@@ -211,7 +210,6 @@ export function Home() {
         </nav>
       </header>
 
-      {/* Experience */}
       <Section title="Experience">
         <ol className="space-y-12">
           {experience.map(job => (
@@ -243,7 +241,6 @@ export function Home() {
         </ol>
       </Section>
 
-      {/* Projects */}
       <Section title="Projects">
         <ul>
           {projects.map(project => {
@@ -286,7 +283,6 @@ export function Home() {
 
       <RecentWriting />
 
-      {/* Footer */}
       <footer className="mt-16 border-t border-border pt-8 font-mono text-xs text-subtle-foreground">
         <OnRepeat />
         <div className="flex items-center justify-between">

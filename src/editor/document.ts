@@ -1,6 +1,5 @@
 import type { JSONContent } from "@tiptap/core"
 
-// Posts are stored as a ProseMirror document, not HTML.
 export const EMPTY_DOCUMENT = '{"type":"doc","content":[]}'
 
 export function parseDocument(stored: string): JSONContent {
@@ -9,11 +8,7 @@ export function parseDocument(stored: string): JSONContent {
   try {
     const parsed: unknown = JSON.parse(stored)
     if (isDocument(parsed)) return parsed
-  } catch {
-    // Content predating the move to ProseMirror JSON is an HTML string. It
-    // parses as neither, so it is shown as a single paragraph rather than
-    // failing the page.
-  }
+  } catch {}
 
   return {
     type: "doc",

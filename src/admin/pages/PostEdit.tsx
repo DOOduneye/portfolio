@@ -44,7 +44,6 @@ export function PostEdit() {
   const [busy, setBusy] = useState(false)
   const [uploadingCover, setUploadingCover] = useState(false)
 
-  // A ref: comparing against it must not itself schedule a render.
   const saved = useRef("")
 
   const titleField = useRef<HTMLTextAreaElement>(null)
@@ -90,8 +89,6 @@ export function PostEdit() {
         saved.current = snapshot
         setPost(updated)
         setError(null)
-        // Anything typed while the request was in flight leaves the draft
-        // ahead of the snapshot, and the autosave effect picks it up again.
         setSaveState(current => (current === "saving" ? "clean" : current))
       } catch (err) {
         setSaveState("failed")
@@ -200,7 +197,6 @@ export function PostEdit() {
 
   return (
     <div>
-      {/* Sticky: on a long post the publish control should never scroll away. */}
       <header className="sticky top-0 z-20 flex items-center justify-between gap-4 border-b border-border bg-background/85 px-8 py-3 backdrop-blur">
         <Link
           to="/admin/posts"
@@ -237,11 +233,6 @@ export function PostEdit() {
         </div>
       </header>
 
-      {/*
-        The same measure as the published article. A wider column here would
-        reflow every line on publish, which is the one thing a writing surface
-        built on the reader's stylesheet must not do.
-      */}
       <div className="mx-auto max-w-2xl px-6 pb-32 pt-12">
         {error && (
           <div className="mb-8">
@@ -318,8 +309,6 @@ export function PostEdit() {
   )
 }
 
-// Tiptap's focus command sets the selection but does not always move DOM
-// focus out of the field that had it.
 function focusEditor(editor: Editor | null): void {
   if (!editor) return
   editor.view.dom.focus()
@@ -429,7 +418,6 @@ const AutoTextarea = forwardRef<
       placeholder={placeholder}
       onChange={event => onChange(event.target.value)}
       onKeyDown={event => {
-        // A newline here would be dropped on render, so Enter moves on instead.
         if (event.key === "Enter") {
           event.preventDefault()
           onEnter?.()

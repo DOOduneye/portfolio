@@ -10,11 +10,6 @@ const slugSchema = z
   .max(128)
   .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "kebab-case slugs only")
 
-/**
- * Content arrives as a serialised ProseMirror document. Storing a string that
- * does not parse would break the public page at render time, which is far from
- * where the bad write happened, so it is rejected here.
- */
 const documentSchema = z.string().superRefine((value, ctx) => {
   let parsed: unknown
   try {
@@ -40,7 +35,6 @@ const postInput = z.object({
   coverImage: z.string().max(512).nullish()
 })
 
-/** The index does not need post bodies, which are the largest column by far. */
 const summaryColumns = {
   slug: posts.slug,
   title: posts.title,
@@ -113,10 +107,6 @@ export const adminPostsRouter = router({
       return updated
     }),
 
-  /**
-   * The slug is the post's public URL, so it may only move while the post has
-   * never been published.
-   */
   rename: protectedProcedure
     .input(z.object({ slug: slugSchema, nextSlug: slugSchema }))
     .mutation(async ({ ctx, input }) => {
@@ -163,8 +153,6 @@ export const adminPostsRouter = router({
         .update(posts)
         .set({
           status: input.status,
-          // First publish stamps the date; unpublishing and republishing keeps
-          // it, so a post does not jump to the top of the archive.
           ...(input.status === "published"
             ? { publishedAt: sql`coalesce(${posts.publishedAt}, ${timestamp})` }
             : {}),

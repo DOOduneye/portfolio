@@ -7,7 +7,6 @@ import { now, protectedProcedure, publicProcedure, router } from "../trpc"
 
 export const FAVICON_KEY = "favicon"
 
-/** A path produced by the media upload route, not an arbitrary URL. */
 const mediaPath = z.string().regex(/^\/media\/[0-9a-f]{64}\.[a-z0-9]+$/, "not an uploaded image")
 
 export async function readSetting(

@@ -24,8 +24,6 @@ export function SelectionMenu({ editor }: { editor: Editor }) {
   return (
     <BubbleMenu
       editor={editor}
-      // A selection inside a code block is code, not prose; offering bold there
-      // would produce a command the schema rejects.
       shouldShow={({ editor, from, to }) =>
         from !== to && !editor.isActive("codeBlock") && !editor.isActive("image")
       }

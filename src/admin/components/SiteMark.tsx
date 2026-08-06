@@ -24,7 +24,6 @@ export function SiteMark({ onError }: { onError: (message: string) => void }) {
       const uploaded = await uploadImage(file)
       await api.admin.settings.setFavicon.mutate({ url: uploaded })
       setUrl(uploaded)
-      // The browser holds the old icon until the fixed path is fetched again.
       refreshTabIcon(uploaded)
     } catch (err) {
       onError(errorMessage(err))

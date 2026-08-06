@@ -63,7 +63,6 @@ export function Admin() {
         </div>
       </aside>
 
-      {/* Each page sets its own measure: a list wants width, an article does not. */}
       <main className="min-w-0 flex-1">
         {error && (
           <div className="px-8 pt-6">
