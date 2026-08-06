@@ -47,8 +47,6 @@ export function PostsList() {
     setCreating(true)
     setError(null)
     try {
-      // A placeholder slug keeps the draft addressable; the editor offers to
-      // match it to the title before the post is published.
       const slug = `untitled-${Date.now().toString(36)}`
       await api.admin.posts.create.mutate({ slug, title: "Untitled" })
       navigate(`/admin/posts/${slug}`)

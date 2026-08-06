@@ -53,15 +53,12 @@ export default {
       })
     }
 
-    // Falls through to the shipped file when no icon has been chosen.
     if (url.pathname === "/favicon.ico") {
       const chosen = await readSetting(drizzle(env.DB, { schema }), FAVICON_KEY)
       const chosenKey = chosen && mediaKeyFromPath(chosen)
       if (chosenKey) return serveMedia(env.MEDIA, chosenKey, request, FAVICON_CACHE_CONTROL)
     }
 
-    // Uploaded images are public, and are checked before the admin gate so a
-    // published post renders for readers who have no Access token.
     const mediaKey = mediaKeyFromPath(url.pathname)
     if (mediaKey) {
       if (request.method !== "GET" && request.method !== "HEAD") {

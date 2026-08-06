@@ -13,8 +13,6 @@ const reauthenticateOnExpiry: TRPCLink<AppRouter> =
       next(op).subscribe({
         next: value => observer.next(value),
         error: error => {
-          // No observer.error: the document is being replaced, and reporting the
-          // failure would flash an error over a page that is already leaving.
           if (error.data?.code === "UNAUTHORIZED") return window.location.reload()
           observer.error(error)
         },
@@ -27,8 +25,6 @@ export const api = createTRPCClient<AppRouter>({
 })
 
 export async function signOut(): Promise<void> {
-  // Two sessions exist: one for this application and one for the team domain.
-  // Clearing only the first leaves the next visit signed straight back in.
   await fetch("/cdn-cgi/access/logout").catch(() => {})
   const returnTo = encodeURIComponent(`${window.location.origin}/`)
   window.location.href = `https://${ACCESS_TEAM_DOMAIN}/cdn-cgi/access/logout?returnTo=${returnTo}`
