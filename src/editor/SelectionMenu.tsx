@@ -119,11 +119,16 @@ function LinkField({
     >
       <input
         ref={input}
+        type="url"
+        name="href"
+        aria-label="Link address"
+        autoComplete="url"
+        spellCheck={false}
         value={href}
         onChange={event => setHref(event.target.value)}
         onKeyDown={event => event.key === "Escape" && onCancel()}
-        placeholder="Paste a link"
-        className="w-56 bg-transparent px-1.5 py-1 text-sm text-foreground placeholder:text-subtle-foreground outline-none"
+        placeholder="https://…"
+        className="w-56 rounded-md bg-transparent px-1.5 py-1 text-sm text-foreground outline-none placeholder:text-subtle-foreground focus-visible:ring-2 focus-visible:ring-ring/50"
       />
       <ToolButton icon={Check} label="Apply link" onClick={() => onSubmit(href.trim())} />
       {initialHref && <ToolButton icon={Unlink} label="Remove link" onClick={() => onSubmit("")} />}

@@ -50,6 +50,9 @@ export function Writing() {
                 <img
                   src={post.coverImage}
                   alt=""
+                  width={128}
+                  height={96}
+                  loading="lazy"
                   className="h-24 w-32 shrink-0 rounded-lg border border-border object-cover"
                 />
               )}

@@ -93,7 +93,7 @@ export function PostsList() {
               <Item key={post.slug} render={<Link to={`/admin/posts/${post.slug}`} />}>
                 {post.coverImage && (
                   <ItemMedia variant="image">
-                    <img src={post.coverImage} alt="" />
+                    <img src={post.coverImage} alt="" width={64} height={44} loading="lazy" />
                   </ItemMedia>
                 )}
                 <ItemContent>
