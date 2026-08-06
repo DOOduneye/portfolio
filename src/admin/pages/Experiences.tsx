@@ -72,7 +72,7 @@ export function Experiences() {
   }
 
   return (
-    <div className="mx-auto flex max-w-4xl flex-col gap-6 px-8 py-10">
+    <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 px-8 py-10">
       <PageHeader
         title="Experiences"
         description="Roles listed on the site, in the order they appear."

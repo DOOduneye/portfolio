@@ -238,7 +238,7 @@ export function PostEdit() {
         </div>
       </header>
 
-      <div className="mx-auto max-w-2xl px-6 pb-32 pt-12">
+      <div className="mx-auto w-full max-w-2xl px-6 pb-32 pt-12">
         {error && (
           <div className="mb-8">
             <Alert variant="destructive">

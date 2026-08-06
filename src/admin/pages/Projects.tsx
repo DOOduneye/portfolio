@@ -66,7 +66,7 @@ export function Projects() {
   }
 
   return (
-    <div className="mx-auto flex max-w-4xl flex-col gap-6 px-8 py-10">
+    <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 px-8 py-10">
       <PageHeader
         title="Projects"
         description="The work listed on the site, in the order it appears."
