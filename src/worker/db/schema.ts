@@ -26,6 +26,12 @@ export const auditLog = sqliteTable(
   ]
 )
 
+export const settings = sqliteTable("settings", {
+  key: text("key").primaryKey(),
+  value: text("value").notNull(),
+  updatedAt: timestamp("updated_at")
+})
+
 export const kvCache = sqliteTable("kv_cache", {
   key: text("key").primaryKey(),
   value: text("value").notNull(),
@@ -36,7 +42,6 @@ export const posts = sqliteTable("posts", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   slug: text("slug").notNull().unique(),
   title: text("title").notNull(),
-  // A serialised ProseMirror document, not HTML. See src/editor/document.ts.
   content: text("content").notNull().default(EMPTY_DOCUMENT),
   excerpt: text("excerpt"),
   coverImage: text("cover_image"),

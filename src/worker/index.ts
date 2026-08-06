@@ -3,8 +3,15 @@ import { drizzle } from "drizzle-orm/d1"
 import { UnauthorizedError, requireAccessIdentity, type AccessIdentity } from "./access"
 import * as schema from "./db/schema"
 import type { Env } from "./env"
-import { MEDIA_UPLOAD_PATH, mediaKeyFromPath, serveMedia, uploadMedia } from "./media"
+import {
+  FAVICON_CACHE_CONTROL,
+  MEDIA_UPLOAD_PATH,
+  mediaKeyFromPath,
+  serveMedia,
+  uploadMedia
+} from "./media"
 import { appRouter } from "./routers"
+import { FAVICON_KEY, readSetting } from "./routers/settings"
 import { createContext } from "./trpc"
 
 const CANONICAL_HOST = "davidoduneye.com"
@@ -46,8 +53,12 @@ export default {
       })
     }
 
-    // Uploaded images are public, and are checked before the admin gate so a
-    // published post renders for readers who have no Access token.
+    if (url.pathname === "/favicon.ico") {
+      const chosen = await readSetting(drizzle(env.DB, { schema }), FAVICON_KEY)
+      const chosenKey = chosen && mediaKeyFromPath(chosen)
+      if (chosenKey) return serveMedia(env.MEDIA, chosenKey, request, FAVICON_CACHE_CONTROL)
+    }
+
     const mediaKey = mediaKeyFromPath(url.pathname)
     if (mediaKey) {
       if (request.method !== "GET" && request.method !== "HEAD") {

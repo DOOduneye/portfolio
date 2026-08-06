@@ -35,7 +35,7 @@ export function Post() {
         <h1 className="text-2xl font-semibold text-foreground">Not found</h1>
         <p className="mt-3 text-sm">
           That post does not exist, or it is not published.{" "}
-          <Link to="/writing" className="text-foreground hover:underline">
+          <Link to="/writing" className="text-brand hover:underline">
             See what is.
           </Link>
         </p>
@@ -76,7 +76,7 @@ export function Post() {
       <footer className="mt-20 border-t border-border pt-8">
         <Link
           to="/writing"
-          className="font-mono text-xs text-subtle-foreground transition-colors hover:text-foreground"
+          className="font-mono text-xs text-subtle-foreground transition-colors hover:text-brand"
         >
           ← All writing
         </Link>
@@ -90,7 +90,7 @@ function Shell({ children }: { children?: React.ReactNode }) {
     <div className="mx-auto max-w-2xl px-6 py-28">
       <Link
         to="/"
-        className="font-mono text-xs text-subtle-foreground transition-colors hover:text-foreground"
+        className="font-mono text-xs text-subtle-foreground transition-colors hover:text-brand"
       >
         ← David Oduneye
       </Link>

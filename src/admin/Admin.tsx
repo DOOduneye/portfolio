@@ -1,6 +1,9 @@
 import { Navigate, NavLink, Route, Routes } from "react-router-dom"
 import { ArrowUpRight, Briefcase, FileText, LogOut, Layers } from "lucide-react"
+import { useState } from "react"
 import { signOut } from "./api"
+import { SiteMark } from "./components/SiteMark"
+import { Alert, AlertTitle } from "@/components/ui/alert"
 import { PostsList } from "./pages/PostsList"
 import { PostEdit } from "./pages/PostEdit"
 import { Projects } from "./pages/Projects"
@@ -13,13 +16,13 @@ const SECTIONS = [
 ]
 
 export function Admin() {
+  const [error, setError] = useState<string | null>(null)
+
   return (
     <div className="flex min-h-screen bg-background">
       <aside className="flex w-60 shrink-0 flex-col border-r border-border bg-card">
         <div className="flex items-center gap-2.5 px-4 py-5">
-          <span className="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-sm font-semibold text-primary-foreground">
-            D
-          </span>
+          <SiteMark onError={setError} />
           <span className="text-sm font-medium text-foreground">davidoduneye.com</span>
         </div>
 
@@ -61,15 +64,20 @@ export function Admin() {
       </aside>
 
       <main className="min-w-0 flex-1">
-        <div className="mx-auto max-w-4xl px-8 py-10">
-          <Routes>
-            <Route index element={<Navigate to="posts" replace />} />
-            <Route path="posts" element={<PostsList />} />
-            <Route path="posts/:slug" element={<PostEdit />} />
-            <Route path="projects" element={<Projects />} />
-            <Route path="experiences" element={<Experiences />} />
-          </Routes>
-        </div>
+        {error && (
+          <div className="px-8 pt-6">
+            <Alert variant="destructive">
+              <AlertTitle>{error}</AlertTitle>
+            </Alert>
+          </div>
+        )}
+        <Routes>
+          <Route index element={<Navigate to="posts" replace />} />
+          <Route path="posts" element={<PostsList />} />
+          <Route path="posts/:slug" element={<PostEdit />} />
+          <Route path="projects" element={<Projects />} />
+          <Route path="experiences" element={<Experiences />} />
+        </Routes>
       </main>
     </div>
   )

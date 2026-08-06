@@ -22,15 +22,11 @@ export function PostEditor({
   initialContent: string
   onChange: (document: string) => void
   onError: (message: string) => void
-  /** Backspace at the very start of the body steps back up to the summary. */
   onLeaveStart?: () => void
-  /** Hands the instance up so the page can move focus into the body. */
   onReady?: (editor: Editor) => void
 }) {
   const [uploads, setUploads] = useState(0)
 
-  // The editor is built once, so its callbacks would otherwise close over the
-  // props from the first render.
   const handlers = useRef({ onChange, onError, onLeaveStart })
   handlers.current = { onChange, onError, onLeaveStart }
 
@@ -59,8 +55,6 @@ export function PostEditor({
       }),
       FileHandler.configure({
         allowedMimeTypes: IMAGE_TYPES,
-        // Without this both the file handler and the image extension act on a
-        // pasted screenshot, inserting it twice.
         consumePasteEvent: true,
         onDrop: (editor, files, position) => {
           files.forEach(file => void insertImage(editor, file, position))
@@ -76,8 +70,6 @@ export function PostEditor({
       handleKeyDown: (view, event) => {
         if (event.key !== "Backspace") return false
         const { empty, from } = view.state.selection
-        // Position 1 is inside the document's first block, so this is the
-        // caret sitting before the first character with nothing to delete.
         if (!empty || from !== 1) return false
         handlers.current.onLeaveStart?.()
         return true
@@ -94,11 +86,6 @@ export function PostEditor({
 
   return (
     <Tiptap editor={editor}>
-      {/*
-        ProseMirror only takes focus from a click that lands on a text block, so
-        the empty space under a short document is dead to the mouse. Clicking
-        below the last block puts the caret at the end instead of doing nothing.
-      */}
       <div
         className="min-h-96 cursor-text"
         onMouseDown={event => {

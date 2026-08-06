@@ -2,10 +2,6 @@ import type { DrizzleD1Database } from "drizzle-orm/d1"
 import { writeAudit } from "./audit"
 import type * as schema from "./db/schema"
 
-/**
- * SVG is deliberately absent. It is served from the site's own origin, so an
- * SVG carrying a script tag would run as first-party code.
- */
 const EXTENSION_BY_TYPE = new Map([
   ["image/png", "png"],
   ["image/jpeg", "jpg"],
@@ -16,7 +12,6 @@ const EXTENSION_BY_TYPE = new Map([
 
 const MAX_UPLOAD_BYTES = 10 * 1024 * 1024
 
-/** Content-addressed, so the same image uploaded twice occupies one object. */
 const KEY_PATTERN = /^[0-9a-f]{64}\.[a-z0-9]+$/
 
 export const MEDIA_PREFIX = "/media/"
@@ -28,10 +23,13 @@ export function mediaKeyFromPath(pathname: string): string | null {
   return KEY_PATTERN.test(key) ? key : null
 }
 
+export const FAVICON_CACHE_CONTROL = "public, max-age=3600"
+
 export async function serveMedia(
   bucket: R2Bucket,
   key: string,
-  request: Request
+  request: Request,
+  cacheControl = "public, max-age=31536000, immutable"
 ): Promise<Response> {
   const object = await bucket.get(key, { onlyIf: request.headers })
 
@@ -40,12 +38,10 @@ export async function serveMedia(
   const headers = new Headers()
   object.writeHttpMetadata(headers)
   headers.set("etag", object.httpEtag)
-  // The key is a hash of the bytes, so a given URL can never change.
-  headers.set("cache-control", "public, max-age=31536000, immutable")
+  headers.set("cache-control", cacheControl)
   headers.set("x-content-type-options", "nosniff")
   headers.set("content-security-policy", "default-src 'none'; sandbox")
 
-  // A conditional hit returns metadata with no body.
   if (!("body" in object)) return new Response(null, { status: 304, headers })
 
   return new Response(object.body, { headers })

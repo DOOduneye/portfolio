@@ -102,7 +102,7 @@ function OnRepeat() {
         href={track.url}
         target="_blank"
         rel="noopener noreferrer"
-        className="text-foreground underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground"
+        className="text-muted-foreground transition-colors hover:text-brand"
       >
         {track.name}
       </a>{" "}
@@ -113,14 +113,18 @@ function OnRepeat() {
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <section className="mt-20">
-      <h2 className="mb-8 text-sm font-medium text-foreground">{title}</h2>
+    <section className="mt-24">
+      <div className="mb-10 flex items-baseline gap-3">
+        <h2 className="font-mono text-xs uppercase tracking-[0.25em] text-subtle-foreground">
+          {title}
+        </h2>
+        <div className="h-px flex-1 self-center bg-border" />
+      </div>
       {children}
     </section>
   )
 }
 
-/** Renders nothing until something is published, so the page never shows an empty section. */
 function RecentWriting() {
   const [posts, setPosts] = useState<RouterOutputs["public"]["posts"]["published"]>([])
 
@@ -140,7 +144,9 @@ function RecentWriting() {
           <li key={post.slug} className="border-b border-border last:border-b-0">
             <Link to={`/writing/${post.slug}`} className="group block py-6">
               <div className="flex items-baseline justify-between gap-4">
-                <h3 className="font-medium text-foreground">{post.title}</h3>
+                <h3 className="font-medium text-foreground transition-colors group-hover:text-brand">
+                  {post.title}
+                </h3>
                 <span className="shrink-0 font-mono text-xs text-subtle-foreground">
                   {post.publishedAt &&
                     new Date(post.publishedAt).toLocaleDateString("en-US", {
@@ -159,7 +165,7 @@ function RecentWriting() {
       {posts.length > 4 && (
         <Link
           to="/writing"
-          className="mt-6 inline-block font-mono text-xs text-subtle-foreground transition-colors hover:text-foreground"
+          className="mt-6 inline-block font-mono text-xs text-subtle-foreground transition-colors hover:text-brand"
         >
           All writing →
         </Link>
@@ -171,9 +177,8 @@ function RecentWriting() {
 export function Home() {
   return (
     <div className="mx-auto max-w-2xl px-6 py-28">
-      {/* Header */}
       <header>
-        <p className="text-sm text-muted-foreground">New York, NY</p>
+        <p className="font-mono text-xs tracking-wide text-subtle-foreground">New York, NY</p>
         <h1 className="mt-3 text-4xl font-semibold tracking-tight text-foreground">
           David Oduneye
         </h1>
@@ -183,7 +188,7 @@ export function Home() {
             href="https://www.agency.inc"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-foreground underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground"
+            className="text-foreground transition-colors hover:text-brand"
           >
             Agency
           </a>
@@ -197,7 +202,7 @@ export function Home() {
               href={link.url}
               target={link.url.startsWith("http") ? "_blank" : undefined}
               rel="noopener noreferrer"
-              className="text-muted-foreground underline decoration-border underline-offset-4 transition-colors hover:text-foreground hover:decoration-foreground"
+              className="text-subtle-foreground underline decoration-border underline-offset-4 transition-colors hover:text-brand hover:decoration-brand"
             >
               {link.label}
             </a>
@@ -205,7 +210,6 @@ export function Home() {
         </nav>
       </header>
 
-      {/* Experience */}
       <Section title="Experience">
         <ol className="space-y-12">
           {experience.map(job => (
@@ -222,7 +226,7 @@ export function Home() {
                       href={job.orgUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="transition-colors hover:text-foreground"
+                      className="transition-colors hover:text-brand"
                     >
                       {job.org}
                     </a>
@@ -237,16 +241,17 @@ export function Home() {
         </ol>
       </Section>
 
-      {/* Projects */}
       <Section title="Projects">
         <ul>
           {projects.map(project => {
             const inner = (
               <>
                 <div className="flex items-baseline justify-between gap-4">
-                  <h3 className="font-medium text-foreground">{project.name}</h3>
+                  <h3 className="font-medium text-foreground transition-colors group-hover:text-brand">
+                    {project.name}
+                  </h3>
                   {project.url && (
-                    <span className="font-mono text-xs text-subtle-foreground transition-colors group-hover:text-foreground">
+                    <span className="font-mono text-xs text-subtle-foreground transition-colors group-hover:text-brand">
                       ↗
                     </span>
                   )}
@@ -278,7 +283,6 @@ export function Home() {
 
       <RecentWriting />
 
-      {/* Footer */}
       <footer className="mt-16 border-t border-border pt-8 font-mono text-xs text-subtle-foreground">
         <OnRepeat />
         <div className="flex items-center justify-between">
@@ -290,7 +294,7 @@ export function Home() {
                 href={link.url}
                 target={link.url.startsWith("http") ? "_blank" : undefined}
                 rel="noopener noreferrer"
-                className="transition-colors hover:text-foreground"
+                className="transition-colors hover:text-brand"
               >
                 {link.label}
               </a>

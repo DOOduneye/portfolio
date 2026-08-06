@@ -17,10 +17,6 @@ import {
 } from "lucide-react"
 import { floatingPanel, ToolButton } from "./controls"
 
-/**
- * The block inserter, offered only on an empty line. It starts as a single
- * plus so an empty document is not a wall of buttons.
- */
 export function InsertMenu({
   editor,
   onInsertImage,
@@ -33,8 +29,6 @@ export function InsertMenu({
   const [open, setOpen] = useState(false)
   const fileInput = useRef<HTMLInputElement>(null)
 
-  // Moving to a different empty line should present a fresh plus rather than
-  // whatever state the last one was left in.
   const anchor = useTiptapState(({ editor }) => editor.state.selection.anchor)
   useEffect(() => setOpen(false), [anchor])
 
