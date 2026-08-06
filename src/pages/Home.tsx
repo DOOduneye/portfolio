@@ -173,7 +173,7 @@ export function Home() {
     <div className="mx-auto max-w-2xl px-6 py-28">
       {/* Header */}
       <header>
-        <p className="text-sm text-muted-foreground">New York, NY</p>
+        <p className="font-mono text-xs tracking-wide text-subtle-foreground">New York, NY</p>
         <h1 className="mt-3 text-4xl font-semibold tracking-tight text-foreground">
           David Oduneye
         </h1>
