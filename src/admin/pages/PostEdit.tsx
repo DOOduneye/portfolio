@@ -209,7 +209,7 @@ export function PostEdit() {
 
         <div className="flex items-center gap-3">
           {stats && stats.words > 0 && (
-            <span className="text-xs text-muted-foreground">
+            <span className="font-mono text-xs text-subtle-foreground">
               {stats.words} words · {stats.minutes} min
             </span>
           )}
@@ -287,7 +287,7 @@ export function PostEdit() {
         </article>
 
         <footer className="mt-16 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-5">
-          <div className="min-w-0 text-xs text-muted-foreground">
+          <div className="min-w-0 font-mono text-xs text-subtle-foreground">
             /writing/{slug}
             {!post.publishedAt && slugify(draft.title) !== slug && (
               <button
@@ -337,7 +337,7 @@ function SaveIndicator({ state }: { state: SaveState }) {
   const label = { dirty: "Unsaved", saving: "Saving", failed: "Could not save" }[state]
   const tone = state === "failed" ? "text-destructive" : "text-muted-foreground"
 
-  return <span className={`text-xs ${tone}`}>{label}</span>
+  return <span className={`font-mono text-xs ${tone}`}>{label}</span>
 }
 
 function CoverImage({
@@ -382,7 +382,7 @@ function CoverImage({
         <button
           onClick={() => input.current?.click()}
           disabled={uploading}
-          className="flex items-center gap-2 text-xs text-muted-foreground transition-colors hover:text-foreground"
+          className="flex items-center gap-2 font-mono text-xs text-subtle-foreground transition-colors hover:text-foreground"
         >
           {uploading ? (
             <LoaderCircle size={14} className="animate-spin" />
