@@ -1,0 +1,160 @@
+/*
+ * Article typography, applied to both the editor surface and the published
+ * page. One stylesheet is the point: what is written is what is read.
+ */
+.prose {
+  color: var(--color-muted);
+  font-size: 1.0625rem;
+  line-height: 1.75;
+}
+
+.prose > * + * {
+  margin-top: 1.4em;
+}
+
+.prose h2,
+.prose h3 {
+  color: var(--color-fg);
+  font-weight: 600;
+  letter-spacing: -0.011em;
+  line-height: 1.3;
+}
+
+.prose h2 {
+  font-size: 1.5rem;
+  margin-top: 2.2em;
+}
+
+.prose h3 {
+  font-size: 1.1875rem;
+  margin-top: 1.8em;
+}
+
+.prose h2 + *,
+.prose h3 + * {
+  margin-top: 0.7em;
+}
+
+.prose strong {
+  color: var(--color-fg);
+  font-weight: 600;
+}
+
+.prose a {
+  color: var(--color-fg);
+  text-decoration: underline;
+  text-decoration-color: var(--color-line);
+  text-underline-offset: 3px;
+  transition: color 0.15s, text-decoration-color 0.15s;
+}
+
+.prose a:hover {
+  color: var(--color-accent);
+  text-decoration-color: var(--color-accent);
+}
+
+.prose code {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+}
+
+.prose pre {
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: 10px;
+  padding: 1rem 1.125rem;
+  overflow-x: auto;
+  line-height: 1.6;
+}
+
+.prose pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 0.8125rem;
+}
+
+.prose blockquote {
+  border-left: 2px solid var(--color-accent);
+  padding-left: 1.25rem;
+  color: var(--color-fg);
+  font-style: italic;
+}
+
+.prose ul,
+.prose ol {
+  padding-left: 1.375rem;
+}
+
+.prose ul {
+  list-style: disc;
+}
+
+.prose ol {
+  list-style: decimal;
+}
+
+.prose li::marker {
+  color: var(--color-subtle);
+}
+
+.prose li + li {
+  margin-top: 0.4em;
+}
+
+.prose li > ul,
+.prose li > ol {
+  margin-top: 0.4em;
+}
+
+.prose img {
+  border-radius: 10px;
+  border: 1px solid var(--color-line);
+  display: block;
+  width: 100%;
+}
+
+/* Three marks rather than a rule, so a section break reads as a pause. */
+.prose hr {
+  border: none;
+  margin: 2.5em 0;
+  text-align: center;
+}
+
+.prose hr::before {
+  content: "···";
+  color: var(--color-subtle);
+  font-size: 1.25rem;
+  letter-spacing: 0.6em;
+}
+
+/* Editor-only. ProseMirror renders the document into .tiptap. */
+.prose.tiptap {
+  outline: none;
+  min-height: 24rem;
+}
+
+.prose.tiptap p.is-empty:first-child::before,
+.prose.tiptap h2.is-empty::before,
+.prose.tiptap h3.is-empty::before {
+  content: attr(data-placeholder);
+  color: var(--color-subtle);
+  pointer-events: none;
+  float: left;
+  height: 0;
+}
+
+.prose.tiptap .ProseMirror-selectednode {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: 10px;
+}
+
+/* Dropping an image shows where it will land. */
+.prose.tiptap .ProseMirror-gapcursor::after {
+  border-top-color: var(--color-accent);
+}

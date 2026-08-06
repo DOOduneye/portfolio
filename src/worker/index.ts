@@ -1,6 +1,9 @@
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch"
+import { drizzle } from "drizzle-orm/d1"
 import { UnauthorizedError, requireAccessIdentity, type AccessIdentity } from "./access"
+import * as schema from "./db/schema"
 import type { Env } from "./env"
+import { MEDIA_UPLOAD_PATH, mediaKeyFromPath, serveMedia, uploadMedia } from "./media"
 import { appRouter } from "./routers"
 import { createContext } from "./trpc"
 
@@ -43,12 +46,32 @@ export default {
       })
     }
 
+    // Uploaded images are public, and are checked before the admin gate so a
+    // published post renders for readers who have no Access token.
+    const mediaKey = mediaKeyFromPath(url.pathname)
+    if (mediaKey) {
+      if (request.method !== "GET" && request.method !== "HEAD") {
+        return new Response("Method not allowed", { status: 405 })
+      }
+      return serveMedia(env.MEDIA, mediaKey, request)
+    }
+
     if (isAdminUiRequest(url.pathname)) {
       const identity = await resolveIdentity(request, env, url.pathname)
       if (!identity) {
         return new Response("Cloudflare Access authentication required.", {
           status: 403,
           headers: { "content-type": "text/plain; charset=utf-8" }
+        })
+      }
+
+      if (url.pathname === MEDIA_UPLOAD_PATH) {
+        if (request.method !== "POST") return new Response("Method not allowed", { status: 405 })
+        return uploadMedia({
+          bucket: env.MEDIA,
+          db: drizzle(env.DB, { schema }),
+          request,
+          actorEmail: identity.email
         })
       }
     }

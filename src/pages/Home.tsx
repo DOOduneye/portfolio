@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react"
+import { Link } from "react-router-dom"
+import { publicApi, type RouterOutputs } from "../api"
 
 const experience = [
   {
@@ -79,21 +81,15 @@ const links = [
   }
 ]
 
-interface TopTrack {
-  name: string
-  artist: string
-  url: string
-}
+type TopTrack = RouterOutputs["public"]["music"]["topTrack"]
 
 function OnRepeat() {
   const [track, setTrack] = useState<TopTrack | null>(null)
 
   useEffect(() => {
-    fetch("/trpc/public.music.topTrack")
-      .then(response =>
-        response.ok ? (response.json() as Promise<{ result?: { data?: TopTrack | null } }>) : null
-      )
-      .then(body => setTrack(body?.result?.data ?? null))
+    publicApi.public.music.topTrack
+      .query()
+      .then(setTrack)
       .catch(() => setTrack(null))
   }, [])
 
@@ -133,6 +129,56 @@ function Section({
       </div>
       {children}
     </section>
+  )
+}
+
+/** Renders nothing until something is published, so the page never shows an empty section. */
+function RecentWriting() {
+  const [posts, setPosts] = useState<RouterOutputs["public"]["posts"]["published"]>([])
+
+  useEffect(() => {
+    publicApi.public.posts.published
+      .query()
+      .then(setPosts)
+      .catch(() => setPosts([]))
+  }, [])
+
+  if (posts.length === 0) return null
+
+  return (
+    <Section index="03" title="Writing">
+      <ul>
+        {posts.slice(0, 4).map(post => (
+          <li key={post.slug} className="border-b border-line last:border-b-0">
+            <Link to={`/writing/${post.slug}`} className="group block py-6">
+              <div className="flex items-baseline justify-between gap-4">
+                <h3 className="font-medium text-fg transition-colors group-hover:text-accent">
+                  {post.title}
+                </h3>
+                <span className="shrink-0 font-mono text-xs text-subtle">
+                  {post.publishedAt &&
+                    new Date(post.publishedAt).toLocaleDateString("en-US", {
+                      month: "short",
+                      year: "numeric"
+                    })}
+                </span>
+              </div>
+              {post.excerpt && (
+                <p className="mt-1.5 max-w-xl text-sm leading-relaxed">{post.excerpt}</p>
+              )}
+            </Link>
+          </li>
+        ))}
+      </ul>
+      {posts.length > 4 && (
+        <Link
+          to="/writing"
+          className="mt-6 inline-block font-mono text-xs text-subtle transition-colors hover:text-accent"
+        >
+          All writing →
+        </Link>
+      )}
+    </Section>
   )
 }
 
@@ -243,6 +289,8 @@ export function Home() {
           })}
         </ul>
       </Section>
+
+      <RecentWriting />
 
       {/* Footer */}
       <footer className="mt-16 border-t border-line pt-8 font-mono text-xs text-subtle">

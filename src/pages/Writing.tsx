@@ -1,0 +1,64 @@
+import { useEffect, useState } from "react"
+import { Link } from "react-router-dom"
+import { publicApi, type RouterOutputs } from "../api"
+
+type Post = RouterOutputs["public"]["posts"]["published"][number]
+
+export function Writing() {
+  const [posts, setPosts] = useState<Post[] | null>(null)
+
+  useEffect(() => {
+    let cancelled = false
+    publicApi.public.posts.published
+      .query()
+      .then(loaded => !cancelled && setPosts(loaded))
+      .catch(() => !cancelled && setPosts([]))
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  return (
+    <div className="mx-auto max-w-2xl px-6 py-28">
+      <Link to="/" className="font-mono text-xs text-subtle transition-colors hover:text-accent">
+        ← David Oduneye
+      </Link>
+
+      <h1 className="mt-6 text-4xl font-semibold tracking-tight text-fg">Writing</h1>
+
+      {posts?.length === 0 && <p className="mt-10 text-sm text-subtle">Nothing published yet.</p>}
+
+      <ul className="mt-14 divide-y divide-line">
+        {posts?.map(post => (
+          <li key={post.slug}>
+            <Link to={`/writing/${post.slug}`} className="group flex gap-6 py-8">
+              <div className="min-w-0 flex-1">
+                <h2 className="font-medium text-fg transition-colors group-hover:text-accent">
+                  {post.title}
+                </h2>
+                {post.excerpt && <p className="mt-2 text-sm leading-relaxed">{post.excerpt}</p>}
+                <p className="mt-3 font-mono text-xs text-subtle">{formatDate(post.publishedAt)}</p>
+              </div>
+              {post.coverImage && (
+                <img
+                  src={post.coverImage}
+                  alt=""
+                  className="h-24 w-32 shrink-0 rounded-lg border border-line object-cover"
+                />
+              )}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+
+export function formatDate(value: string | null): string {
+  if (!value) return ""
+  return new Date(value).toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric"
+  })
+}

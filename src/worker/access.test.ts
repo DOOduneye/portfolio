@@ -55,6 +55,7 @@ function env(overrides: Partial<Env> = {}): Env {
   return {
     DB: {} as D1Database,
     ASSETS: {} as Fetcher,
+    MEDIA: {} as R2Bucket,
     ENVIRONMENT: "production",
     CF_ACCESS_TEAM_DOMAIN: TEAM_DOMAIN,
     CF_ACCESS_AUD: AUD,

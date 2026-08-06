@@ -1,5 +1,5 @@
 import { Navigate, NavLink, Route, Routes } from "react-router-dom"
-import { reauthenticate, signOut } from "./api"
+import { signOut } from "./api"
 import { PostsList } from "./pages/PostsList"
 import { PostEdit } from "./pages/PostEdit"
 import { Projects } from "./pages/Projects"
@@ -46,10 +46,10 @@ export function Admin() {
         <div className="mx-auto max-w-3xl">
           <Routes>
             <Route index element={<Navigate to="posts" replace />} />
-            <Route path="posts" element={<PostsList onAuthError={reauthenticate} />} />
-            <Route path="posts/:slug" element={<PostEdit onAuthError={reauthenticate} />} />
-            <Route path="projects" element={<Projects onAuthError={reauthenticate} />} />
-            <Route path="experiences" element={<Experiences onAuthError={reauthenticate} />} />
+            <Route path="posts" element={<PostsList />} />
+            <Route path="posts/:slug" element={<PostEdit />} />
+            <Route path="projects" element={<Projects />} />
+            <Route path="experiences" element={<Experiences />} />
           </Routes>
         </div>
       </main>

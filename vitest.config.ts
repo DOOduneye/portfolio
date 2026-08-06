@@ -15,7 +15,7 @@ export default defineConfig({
     }))
   ],
   test: {
-    include: ["src/worker/**/*.test.ts"],
+    include: ["src/**/*.test.ts"],
     setupFiles: ["./src/worker/test-setup.ts"]
   }
 })

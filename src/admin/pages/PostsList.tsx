@@ -1,38 +1,39 @@
-import { useCallback, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
-import { api, errorMessage, isUnauthorized } from "../api"
+import { api, errorMessage, type RouterOutputs } from "../api"
 import { StatusBadge } from "../components/ui"
 
-type Post = Awaited<ReturnType<typeof api.admin.posts.list.query>>[number]
+type Post = RouterOutputs["admin"]["posts"]["list"][number]
 
-export function PostsList({ onAuthError }: { onAuthError: () => void }) {
+export function PostsList() {
   const [posts, setPosts] = useState<Post[] | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [creating, setCreating] = useState(false)
   const navigate = useNavigate()
 
-  const refresh = useCallback(() => {
+  useEffect(() => {
+    let cancelled = false
     api.admin.posts.list
       .query()
-      .then(setPosts)
-      .catch(err => {
-        if (isUnauthorized(err)) onAuthError()
-        else setError(errorMessage(err))
-      })
-  }, [onAuthError])
-
-  useEffect(refresh, [refresh])
+      .then(loaded => !cancelled && setPosts(loaded))
+      .catch(err => !cancelled && setError(errorMessage(err)))
+    return () => {
+      cancelled = true
+    }
+  }, [])
 
   const createPost = async () => {
-    const slug = `untitled-${Date.now().toString(36)}`
+    setCreating(true)
+    setError(null)
     try {
-      await api.admin.posts.create.mutate({
-        slug,
-        title: "Untitled",
-        content: ""
-      })
+      // A placeholder slug keeps the draft addressable; the editor offers to
+      // match it to the title before the post is published.
+      const slug = `untitled-${Date.now().toString(36)}`
+      await api.admin.posts.create.mutate({ slug, title: "Untitled" })
       navigate(`/admin/posts/${slug}`)
     } catch (err) {
       setError(errorMessage(err))
+      setCreating(false)
     }
   }
 
@@ -42,7 +43,8 @@ export function PostsList({ onAuthError }: { onAuthError: () => void }) {
         <h1 className="text-xl font-semibold text-fg">Posts</h1>
         <button
           onClick={createPost}
-          className="rounded-lg bg-accent px-3.5 py-1.5 text-sm font-medium text-page transition-colors hover:bg-accent-strong"
+          disabled={creating}
+          className="rounded-lg bg-accent px-3.5 py-1.5 text-sm font-medium text-page transition-colors hover:bg-accent-strong disabled:opacity-50"
         >
           New post
         </button>
@@ -54,36 +56,51 @@ export function PostsList({ onAuthError }: { onAuthError: () => void }) {
         </p>
       )}
 
-      {posts && posts.length === 0 && (
+      {posts?.length === 0 && (
         <p className="mt-10 text-sm text-subtle">Nothing here yet. Write the first one.</p>
       )}
 
-      <ul className="mt-6 divide-y divide-line">
+      <ul className="mt-4 divide-y divide-line">
         {posts?.map(post => (
           <li key={post.slug}>
-            <Link
-              to={`/admin/posts/${post.slug}`}
-              className="group flex items-center justify-between gap-4 py-3.5"
-            >
-              <div className="min-w-0">
-                <span className="block truncate font-medium text-fg transition-colors group-hover:text-accent">
-                  {post.title}
-                </span>
-                <span className="text-xs text-subtle">/{post.slug}</span>
+            <Link to={`/admin/posts/${post.slug}`} className="group flex gap-4 py-5">
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-2.5">
+                  <span className="truncate font-medium text-fg transition-colors group-hover:text-accent">
+                    {post.title}
+                  </span>
+                  <StatusBadge status={post.status} />
+                </div>
+                {post.excerpt && (
+                  <p className="mt-1.5 line-clamp-2 text-sm leading-relaxed text-muted">
+                    {post.excerpt}
+                  </p>
+                )}
+                <p className="mt-2 font-mono text-xs text-subtle">
+                  {post.publishedAt
+                    ? `published ${formatDate(post.publishedAt)}`
+                    : `edited ${formatDate(post.updatedAt)}`}
+                </p>
               </div>
-              <div className="flex shrink-0 items-center gap-3">
-                <StatusBadge status={post.status} />
-                <span className="text-xs tabular-nums text-subtle">
-                  {new Date(post.updatedAt).toLocaleDateString("en-US", {
-                    month: "short",
-                    day: "numeric"
-                  })}
-                </span>
-              </div>
+              {post.coverImage && (
+                <img
+                  src={post.coverImage}
+                  alt=""
+                  className="h-20 w-32 shrink-0 rounded-lg border border-line object-cover"
+                />
+              )}
             </Link>
           </li>
         ))}
       </ul>
     </div>
   )
+}
+
+function formatDate(value: string): string {
+  return new Date(value).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric"
+  })
 }

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react"
-import { api, errorMessage, isUnauthorized } from "../api"
+import { api, errorMessage } from "../api"
 import { dangerButton, Field, ghostButton, inputClass, primaryButton } from "../components/ui"
 
 type Project = Awaited<ReturnType<typeof api.admin.projects.list.query>>[number]
@@ -22,7 +22,7 @@ const empty: Draft = {
   visible: true
 }
 
-export function Projects({ onAuthError }: { onAuthError: () => void }) {
+export function Projects() {
   const [items, setItems] = useState<Project[] | null>(null)
   const [draft, setDraft] = useState<Draft | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -32,11 +32,8 @@ export function Projects({ onAuthError }: { onAuthError: () => void }) {
     api.admin.projects.list
       .query()
       .then(setItems)
-      .catch(err => {
-        if (isUnauthorized(err)) onAuthError()
-        else setError(errorMessage(err))
-      })
-  }, [onAuthError])
+      .catch(err => setError(errorMessage(err)))
+  }, [])
 
   useEffect(refresh, [refresh])
 
@@ -57,8 +54,7 @@ export function Projects({ onAuthError }: { onAuthError: () => void }) {
       setDraft(null)
       refresh()
     } catch (err) {
-      if (isUnauthorized(err)) onAuthError()
-      else setError(errorMessage(err))
+      setError(errorMessage(err))
     } finally {
       setSaving(false)
     }
@@ -70,8 +66,7 @@ export function Projects({ onAuthError }: { onAuthError: () => void }) {
       await api.admin.projects.remove.mutate({ id: item.id })
       refresh()
     } catch (err) {
-      if (isUnauthorized(err)) onAuthError()
-      else setError(errorMessage(err))
+      setError(errorMessage(err))
     }
   }
 

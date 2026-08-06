@@ -1,14 +1,26 @@
 import { lazy, Suspense } from "react"
 import { BrowserRouter, Route, Routes } from "react-router-dom"
 import { Home } from "./pages/Home"
+import { Writing } from "./pages/Writing"
 
 const Admin = lazy(() => import("./admin/Admin").then(m => ({ default: m.Admin })))
+// The renderer and its extensions are only needed once a post is opened.
+const Post = lazy(() => import("./pages/Post").then(m => ({ default: m.Post })))
 
 export function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/writing" element={<Writing />} />
+        <Route
+          path="/writing/:slug"
+          element={
+            <Suspense fallback={null}>
+              <Post />
+            </Suspense>
+          }
+        />
         <Route
           path="/admin/*"
           element={
