@@ -77,9 +77,8 @@ Vitest with the Workers pool for tests.
 Generic guidance for the stack is vendored in `.claude/skills/` and pinned in
 `skills-lock.json`: `drizzle`, `drizzle-migrations`, `trpc-router`,
 `vercel-react-best-practices`, `vercel-composition-patterns`, `tdd`,
-`frontend-design`, `find-skills`, `ci-cd-and-automation`,
-`git-workflow-and-versioning`, `debugging-and-error-recovery`, and the
-Cloudflare set. Restore them with
+`frontend-design`, `find-skills`, `ci-cd-and-automation`, and the Cloudflare
+set. Restore them with
 `npx skills experimental_install`.
 
 Three skills override those where this repo differs, and the overrides win:
