@@ -1,4 +1,13 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState
+} from "react"
+import type { Editor } from "@tiptap/react"
 import { Link, useNavigate, useParams } from "react-router-dom"
 import { ArrowLeft, ArrowUpRight, Image as ImageIcon, LoaderCircle, Trash2 } from "lucide-react"
 import { api, errorMessage, uploadImage, type RouterOutputs } from "../api"
@@ -33,6 +42,12 @@ export function PostEdit() {
   // What the server currently holds. A ref because comparing against it must
   // not itself schedule a render.
   const saved = useRef("")
+
+  // Title, summary and body read as one column, so the keyboard moves through
+  // them as one: Enter goes forward, Backspace at the start comes back.
+  const titleField = useRef<HTMLTextAreaElement>(null)
+  const summaryField = useRef<HTMLTextAreaElement>(null)
+  const body = useRef<Editor | null>(null)
 
   useEffect(() => {
     let cancelled = false
@@ -118,6 +133,8 @@ export function PostEdit() {
     return { words: wordCount(document), minutes: readingMinutes(document) }
   }, [draft])
 
+  const focusBody = () => focusEditor(body.current)
+
   const change = (patch: Partial<Draft>) => setDraft(current => current && { ...current, ...patch })
 
   const run = async (fn: () => Promise<unknown>) => {
@@ -190,12 +207,12 @@ export function PostEdit() {
         </Link>
 
         <div className="flex items-center gap-3">
-          <SaveIndicator state={titleMissing && dirty ? "needsTitle" : saveState} />
           {stats && stats.words > 0 && (
             <span className="text-xs text-muted-foreground">
-              {stats.words} words · {stats.minutes} min read
+              {stats.words} words · {stats.minutes} min
             </span>
           )}
+          <SaveIndicator state={saveState} />
           <Status status={post.status} />
           {published && (
             <LinkButton
@@ -207,15 +224,24 @@ export function PostEdit() {
               View
             </LinkButton>
           )}
-          <Button variant="primary" onClick={togglePublished} disabled={busy}>
+          <Button
+            variant="primary"
+            onClick={togglePublished}
+            disabled={busy || (!published && titleMissing)}
+            title={!published && titleMissing ? "Give the post a title first" : undefined}
+          >
             {published ? "Unpublish" : "Publish"}
           </Button>
         </div>
       </header>
 
-      {error && <Alert message={error} />}
+      {error && (
+        <div className="mt-5">
+          <Alert message={error} />
+        </div>
+      )}
 
-      <article className="mt-10">
+      <article className="mt-12">
         <CoverImage
           src={draft.coverImage}
           uploading={uploadingCover}
@@ -224,68 +250,84 @@ export function PostEdit() {
         />
 
         <AutoTextarea
+          ref={titleField}
           value={draft.title}
           onChange={title => change({ title })}
+          onEnter={() => summaryField.current?.focus()}
           placeholder="Title"
           className="editorial w-full resize-none bg-transparent text-4xl font-semibold leading-tight tracking-tight text-foreground outline-none placeholder:text-subtle-foreground"
         />
 
         <AutoTextarea
+          ref={summaryField}
           value={draft.excerpt}
           onChange={excerpt => change({ excerpt })}
-          placeholder="Add a standfirst"
-          className="editorial mt-3 w-full resize-none bg-transparent text-lg leading-relaxed text-muted-foreground outline-none placeholder:text-subtle-foreground"
+          onEnter={focusBody}
+          onBackspaceAtStart={() => focusEnd(titleField.current)}
+          placeholder="Add a summary"
+          className="editorial mt-4 w-full resize-none bg-transparent text-lg leading-relaxed text-muted-foreground outline-none placeholder:text-subtle-foreground"
         />
 
-        <div className="mt-8">
+        <div className="mt-10">
           <PostEditor
+            onReady={editor => (body.current = editor)}
             initialContent={post.content}
             onChange={content => change({ content })}
             onError={setError}
+            onLeaveStart={() => focusEnd(summaryField.current)}
           />
         </div>
       </article>
 
-      <footer className="mt-16 space-y-4 border-t border-border pt-6">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="min-w-0 text-xs text-muted-foreground">
-            <span className="text-muted-foreground">/writing/{slug}</span>
-            {!post.publishedAt && slugify(draft.title) !== slug && (
-              <button
-                onClick={rename}
-                disabled={busy}
-                className="ml-3 text-foreground transition-opacity hover:opacity-80"
-              >
-                match to title
-              </button>
-            )}
-          </div>
-          <ConfirmButton
-            label="Delete post"
-            confirmLabel="Delete for good"
-            onConfirm={remove}
-            disabled={busy}
-          />
+      <footer className="mt-12 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-5">
+        <div className="min-w-0 text-xs text-muted-foreground">
+          /writing/{slug}
+          {!post.publishedAt && slugify(draft.title) !== slug && (
+            <button
+              onClick={rename}
+              disabled={busy}
+              className="ml-3 text-foreground underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground"
+            >
+              Use the title
+            </button>
+          )}
+          {post.publishedAt && <span className="ml-3">Fixed once published</span>}
         </div>
-        {post.publishedAt && (
-          <p className="text-xs text-muted-foreground">Published posts keep their URL.</p>
-        )}
+        <ConfirmButton
+          label="Delete"
+          confirmLabel="Delete permanently"
+          icon={Trash2}
+          onConfirm={remove}
+          disabled={busy}
+        />
       </footer>
     </div>
   )
 }
 
-function SaveIndicator({ state }: { state: SaveState | "needsTitle" }) {
-  const label = {
-    clean: "Saved",
-    dirty: "Unsaved",
-    saving: "Saving…",
-    failed: "Not saved",
-    needsTitle: "Needs a title"
-  }[state]
+/**
+ * Tiptap's focus command places the caret but does not always move DOM focus
+ * out of the field that had it, so the element is focused first and the
+ * command only positions the caret.
+ */
+function focusEditor(editor: Editor | null): void {
+  if (!editor) return
+  editor.view.dom.focus()
+  editor.commands.focus("start")
+}
 
-  const tone =
-    state === "failed" || state === "needsTitle" ? "text-destructive" : "text-subtle-foreground"
+/** Puts the caret after the last character, so stepping back up resumes writing. */
+function focusEnd(field: HTMLTextAreaElement | null): void {
+  if (!field) return
+  field.focus()
+  field.setSelectionRange(field.value.length, field.value.length)
+}
+
+function SaveIndicator({ state }: { state: SaveState }) {
+  if (state === "clean") return null
+
+  const label = { dirty: "Unsaved", saving: "Saving", failed: "Could not save" }[state]
+  const tone = state === "failed" ? "text-destructive" : "text-muted-foreground"
 
   return <span className={`text-xs ${tone}`}>{label}</span>
 }
@@ -347,21 +389,25 @@ function CoverImage({
 }
 
 /** Grows with its content so a long title wraps instead of scrolling sideways. */
-function AutoTextarea({
-  value,
-  onChange,
-  placeholder,
-  className
-}: {
-  value: string
-  onChange: (value: string) => void
-  placeholder: string
-  className: string
-}) {
-  const ref = useRef<HTMLTextAreaElement>(null)
+const AutoTextarea = forwardRef<
+  HTMLTextAreaElement,
+  {
+    value: string
+    onChange: (value: string) => void
+    onEnter?: () => void
+    onBackspaceAtStart?: () => void
+    placeholder: string
+    className: string
+  }
+>(function AutoTextarea(
+  { value, onChange, onEnter, onBackspaceAtStart, placeholder, className },
+  ref
+) {
+  const inner = useRef<HTMLTextAreaElement>(null)
+  useImperativeHandle(ref, () => inner.current as HTMLTextAreaElement, [])
 
   useEffect(() => {
-    const element = ref.current
+    const element = inner.current
     if (!element) return
     element.style.height = "auto"
     element.style.height = `${element.scrollHeight}px`
@@ -369,14 +415,26 @@ function AutoTextarea({
 
   return (
     <textarea
-      ref={ref}
+      ref={inner}
       rows={1}
       value={value}
       placeholder={placeholder}
       onChange={event => onChange(event.target.value)}
-      // A newline in a title or standfirst would be dropped on render anyway.
-      onKeyDown={event => event.key === "Enter" && event.preventDefault()}
+      onKeyDown={event => {
+        // A newline here would be dropped on render, so Enter moves on instead.
+        if (event.key === "Enter") {
+          event.preventDefault()
+          onEnter?.()
+          return
+        }
+        const field = event.currentTarget
+        const atStart = field.selectionStart === 0 && field.selectionEnd === 0
+        if (event.key === "Backspace" && atStart && onBackspaceAtStart) {
+          event.preventDefault()
+          onBackspaceAtStart()
+        }
+      }}
       className={className}
     />
   )
-}
+})

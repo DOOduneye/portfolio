@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import type { Editor } from "@tiptap/react"
 import { Tiptap, useEditor } from "@tiptap/react"
 import FileHandler from "@tiptap/extension-file-handler"
@@ -15,18 +15,27 @@ const IMAGE_TYPES = ["image/png", "image/jpeg", "image/gif", "image/webp", "imag
 export function PostEditor({
   initialContent,
   onChange,
-  onError
+  onError,
+  onLeaveStart,
+  onReady
 }: {
   initialContent: string
   onChange: (document: string) => void
   onError: (message: string) => void
+  /** Backspace at the very start of the body steps back up to the summary. */
+  onLeaveStart?: () => void
+  /** Hands the instance up so the page can move focus into the body. */
+  onReady?: (editor: Editor) => void
 }) {
   const [uploads, setUploads] = useState(0)
 
   // The editor is built once, so its callbacks would otherwise close over the
   // props from the first render.
-  const handlers = useRef({ onChange, onError })
-  handlers.current = { onChange, onError }
+  const handlers = useRef({ onChange, onError, onLeaveStart })
+  handlers.current = { onChange, onError, onLeaveStart }
+
+  const onReadyRef = useRef(onReady)
+  onReadyRef.current = onReady
 
   const insertImage = useCallback(async (editor: Editor, file: File, position?: number) => {
     setUploads(count => count + 1)
@@ -46,7 +55,7 @@ export function PostEditor({
       ...contentExtensions,
       Placeholder.configure({
         placeholder: ({ node }) =>
-          node.type.name === "heading" ? "Heading" : "Write, or press + to add something"
+          node.type.name === "heading" ? "Heading" : "Start writing, or press + to insert"
       }),
       FileHandler.configure({
         allowedMimeTypes: IMAGE_TYPES,
@@ -62,9 +71,24 @@ export function PostEditor({
       })
     ],
     content: parseDocument(initialContent),
-    editorProps: { attributes: { class: "prose tiptap" } },
+    editorProps: {
+      attributes: { class: "prose tiptap" },
+      handleKeyDown: (view, event) => {
+        if (event.key !== "Backspace") return false
+        const { empty, from } = view.state.selection
+        // Position 1 is inside the document's first block, so this is the
+        // caret sitting before the first character with nothing to delete.
+        if (!empty || from !== 1) return false
+        handlers.current.onLeaveStart?.()
+        return true
+      }
+    },
     onUpdate: ({ editor }) => handlers.current.onChange(JSON.stringify(editor.getJSON()))
   })
+
+  useEffect(() => {
+    if (editor) onReadyRef.current?.(editor)
+  }, [editor])
 
   if (!editor) return null
 
