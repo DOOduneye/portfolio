@@ -1,0 +1,27 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "endOfLine": "lf",
+  "semi": false,
+  "trailingComma": "none",
+  "arrowParens": "avoid",
+  "singleQuote": false,
+  "tabWidth": 2,
+  "printWidth": 100,
+  "proseWrap": "never",
+  "quoteProps": "as-needed",
+  "useTabs": false,
+  "bracketSpacing": true,
+  "jsxSingleQuote": false,
+  "ignorePatterns": [
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/.wrangler/**",
+    "**/migrations/**",
+    "**/*.md",
+    "**/*.json",
+    "**/*.jsonc",
+    "**/*.css",
+    "**/*.html",
+    "**/*.yml"
+  ]
+}

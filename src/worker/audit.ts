@@ -13,8 +13,8 @@ export interface AuditInput {
 }
 
 export function resourceTypeFromPath(path: string): string {
-  const segments = path.split(".");
-  return segments.length > 1 ? segments[segments.length - 2]! : path;
+  const [, resource] = path.split(".").reverse();
+  return resource ?? path;
 }
 
 export function resourceIdFromInput(input: unknown): string | null {
