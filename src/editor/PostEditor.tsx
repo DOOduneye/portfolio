@@ -6,8 +6,10 @@ import { Placeholder } from "@tiptap/extensions"
 import { uploadImage } from "../admin/api"
 import { parseDocument } from "./document"
 import { contentExtensions } from "./extensions"
+import { createSlashExtension, type SlashState } from "./slash"
 import { InsertMenu } from "./InsertMenu"
 import { SelectionMenu } from "./SelectionMenu"
+import { REQUEST_IMAGE, SlashMenu } from "./SlashMenu"
 import "./prose.css"
 
 const IMAGE_TYPES = ["image/png", "image/jpeg", "image/gif", "image/webp", "image/avif"]
@@ -46,9 +48,21 @@ export function PostEditor({
     }
   }, [])
 
+  const fileInput = useRef<HTMLInputElement>(null)
+  const [slash, setSlash] = useState<SlashState | null>(null)
+  const slashKeys = useRef<((event: KeyboardEvent) => boolean) | null>(null)
+  const slashBridge = useRef({ onChange: setSlash, keyHandler: slashKeys })
+
+  useEffect(() => {
+    const open = () => fileInput.current?.click()
+    window.addEventListener(REQUEST_IMAGE, open)
+    return () => window.removeEventListener(REQUEST_IMAGE, open)
+  }, [])
+
   const editor = useEditor({
     extensions: [
       ...contentExtensions,
+      createSlashExtension(slashBridge.current),
       Placeholder.configure({
         placeholder: ({ node }) =>
           node.type.name === "heading" ? "Heading" : "Start writing, or press + to insert"
@@ -86,6 +100,17 @@ export function PostEditor({
 
   return (
     <Tiptap editor={editor}>
+      <input
+        ref={fileInput}
+        type="file"
+        accept={IMAGE_TYPES.join(",")}
+        className="hidden"
+        onChange={event => {
+          const file = event.target.files?.[0]
+          if (file) void insertImage(editor, file)
+          event.target.value = ""
+        }}
+      />
       <div
         className="min-h-96 cursor-text"
         onMouseDown={event => {
@@ -96,6 +121,7 @@ export function PostEditor({
       >
         <Tiptap.Content />
       </div>
+      <SlashMenu state={slash} keyHandler={slashKeys} />
       <SelectionMenu editor={editor} />
       <InsertMenu
         editor={editor}
