@@ -74,12 +74,15 @@ Vitest with the Workers pool for tests.
 
 ## Standards
 
-Generic guidance for the stack is vendored in `.claude/skills/` and pinned in
+Skills live in `.agents/skills/`, which is where the `skills` CLI installs and
+what every other agent tool reads. `.claude/skills` is a symlink to it, so
+there is one directory rather than two copies to keep in step.
+
+Generic guidance for the stack is vendored there and pinned in
 `skills-lock.json`: `drizzle`, `drizzle-migrations`, `trpc-router`,
 `vercel-react-best-practices`, `vercel-composition-patterns`, `tdd`,
-`frontend-design`, `find-skills`, `ci-cd-and-automation`, and the Cloudflare
-set. Restore them with
-`npx skills experimental_install`.
+`frontend-design`, `find-skills`, `ci-cd-and-automation`, `tiptap`, and the
+Cloudflare set. Restore them with `npx skills experimental_install`.
 
 Three skills override those where this repo differs, and the overrides win:
 
