@@ -1,8 +1,10 @@
 import { createTRPCClient, httpBatchLink, type TRPCLink } from "@trpc/client"
 import { observable } from "@trpc/server/observable"
+import { createTRPCOptionsProxy } from "@trpc/tanstack-react-query"
+import { isUnauthorized, queryClient } from "../api"
 import type { AppRouter } from "../worker/routers"
 
-export { errorMessage, type RouterOutputs } from "../api"
+export { errorMessage, isUnauthorized, queryClient, type RouterOutputs } from "../api"
 
 const ACCESS_TEAM_DOMAIN = "oduneye.cloudflareaccess.com"
 
@@ -13,15 +15,20 @@ const reauthenticateOnExpiry: TRPCLink<AppRouter> =
       next(op).subscribe({
         next: value => observer.next(value),
         error: error => {
-          if (error.data?.code === "UNAUTHORIZED") return window.location.reload()
+          if (isUnauthorized(error)) return window.location.reload()
           observer.error(error)
         },
         complete: () => observer.complete()
       })
     )
 
-export const api = createTRPCClient<AppRouter>({
+const adminClient = createTRPCClient<AppRouter>({
   links: [reauthenticateOnExpiry, httpBatchLink({ url: "/trpc" })]
+})
+
+export const api = createTRPCOptionsProxy<AppRouter>({
+  client: adminClient,
+  queryClient
 })
 
 export async function signOut(): Promise<void> {

@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useState } from "react"
-import { api, errorMessage } from "../api"
+import { useState } from "react"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { api, errorMessage, type RouterOutputs } from "../api"
 import { PageHeader } from "../components/PageHeader"
 import { Alert, AlertTitle } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
@@ -8,7 +9,7 @@ import { Field, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 
-type Project = Awaited<ReturnType<typeof api.admin.projects.list.query>>[number]
+type Project = RouterOutputs["admin"]["projects"]["list"][number]
 
 interface Draft {
   id: number | null
@@ -29,24 +30,24 @@ const empty: Draft = {
 }
 
 export function Projects() {
-  const [items, setItems] = useState<Project[] | null>(null)
   const [draft, setDraft] = useState<Draft | null>(null)
-  const [error, setError] = useState<string | null>(null)
-  const [saving, setSaving] = useState(false)
+  const queryClient = useQueryClient()
 
-  const refresh = useCallback(() => {
-    api.admin.projects.list
-      .query()
-      .then(setItems)
-      .catch(err => setError(errorMessage(err)))
-  }, [])
+  const list = useQuery(api.admin.projects.list.queryOptions())
 
-  useEffect(refresh, [refresh])
+  const settled = {
+    onSuccess: () => queryClient.invalidateQueries(api.admin.projects.list.queryFilter())
+  }
+  const create = useMutation(api.admin.projects.create.mutationOptions(settled))
+  const update = useMutation(api.admin.projects.update.mutationOptions(settled))
+  const destroy = useMutation(api.admin.projects.remove.mutationOptions(settled))
+
+  const items = list.data
+  const saving = create.isPending || update.isPending
+  const error = list.error ?? create.error ?? update.error ?? destroy.error
 
   const save = async () => {
     if (!draft) return
-    setSaving(true)
-    setError(null)
     const payload = {
       name: draft.name,
       url: draft.url.trim() || null,
@@ -54,26 +55,14 @@ export function Projects() {
       sortOrder: draft.sortOrder,
       visible: draft.visible ? 1 : 0
     }
-    try {
-      if (draft.id === null) await api.admin.projects.create.mutate(payload)
-      else await api.admin.projects.update.mutate({ id: draft.id, ...payload })
-      setDraft(null)
-      refresh()
-    } catch (err) {
-      setError(errorMessage(err))
-    } finally {
-      setSaving(false)
-    }
+    if (draft.id === null) await create.mutateAsync(payload)
+    else await update.mutateAsync({ id: draft.id, ...payload })
+    setDraft(null)
   }
 
-  const remove = async (item: Project) => {
+  const remove = (item: Project) => {
     if (!confirm(`Delete "${item.name}"?`)) return
-    try {
-      await api.admin.projects.remove.mutate({ id: item.id })
-      refresh()
-    } catch (err) {
-      setError(errorMessage(err))
-    }
+    destroy.mutate({ id: item.id })
   }
 
   return (
@@ -86,7 +75,7 @@ export function Projects() {
 
       {error && (
         <Alert variant="destructive">
-          <AlertTitle>{error}</AlertTitle>
+          <AlertTitle>{errorMessage(error)}</AlertTitle>
         </Alert>
       )}
 
@@ -137,7 +126,7 @@ export function Projects() {
             </label>
           </div>
           <div className="flex gap-2 border-t border-border pt-4">
-            <Button onClick={save} disabled={saving || !draft.name.trim()}>
+            <Button onClick={() => void save()} disabled={saving || !draft.name.trim()}>
               {saving ? "Saving…" : draft.id === null ? "Create" : "Save"}
             </Button>
             <Button onClick={() => setDraft(null)}>Cancel</Button>

@@ -1,35 +1,18 @@
-import { useEffect, useMemo, useState } from "react"
+import { useMemo } from "react"
+import { useQuery } from "@tanstack/react-query"
 import { Link, useParams } from "react-router-dom"
-import { publicApi, type RouterOutputs } from "../api"
+import { trpc } from "../api"
 import { parseDocument, readingMinutes } from "../editor/document"
 import { Prose } from "../editor/Prose"
 import { formatDate } from "./Writing"
 
-type PublishedPost = RouterOutputs["public"]["posts"]["bySlug"]
-
 export function Post() {
   const { slug = "" } = useParams()
-  const [post, setPost] = useState<PublishedPost | null>(null)
-  const [missing, setMissing] = useState(false)
-
-  useEffect(() => {
-    let cancelled = false
-    setPost(null)
-    setMissing(false)
-
-    publicApi.public.posts.bySlug
-      .query({ slug })
-      .then(loaded => !cancelled && setPost(loaded))
-      .catch(() => !cancelled && setMissing(true))
-
-    return () => {
-      cancelled = true
-    }
-  }, [slug])
+  const { data: post, isError } = useQuery(trpc.public.posts.bySlug.queryOptions({ slug }))
 
   const minutes = useMemo(() => (post ? readingMinutes(parseDocument(post.content)) : 0), [post])
 
-  if (missing) {
+  if (isError) {
     return (
       <Shell>
         <h1 className="text-2xl font-semibold text-foreground">Not found</h1>

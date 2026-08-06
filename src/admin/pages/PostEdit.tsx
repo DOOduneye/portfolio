@@ -7,6 +7,7 @@ import {
   useRef,
   useState
 } from "react"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import type { Editor } from "@tiptap/react"
 import { Link, useNavigate, useParams } from "react-router-dom"
 import { ArrowLeft, ArrowUpRight, Image as ImageIcon, Trash2 } from "lucide-react"
@@ -36,77 +37,118 @@ const AUTOSAVE_DELAY_MS = 1200
 export function PostEdit() {
   const { slug = "" } = useParams()
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
 
-  const [post, setPost] = useState<Post | null>(null)
   const [draft, setDraft] = useState<Draft | null>(null)
-  const [saveState, setSaveState] = useState<SaveState>("clean")
-  const [error, setError] = useState<string | null>(null)
-  const [busy, setBusy] = useState(false)
-  const [uploadingCover, setUploadingCover] = useState(false)
+  const [editorError, setEditorError] = useState<string | null>(null)
 
   const saved = useRef("")
+  const inFlight = useRef("")
 
   const titleField = useRef<HTMLTextAreaElement>(null)
   const summaryField = useRef<HTMLTextAreaElement>(null)
   const body = useRef<Editor | null>(null)
 
+  // The editor is the only writer, so a background refetch would only risk
+  // overwriting what is being typed.
+  const postQuery = useQuery({
+    ...api.admin.posts.bySlug.queryOptions({ slug }),
+    staleTime: Infinity,
+    refetchOnWindowFocus: false
+  })
+  const post = postQuery.data
+
+  const seeded = useRef<string | null>(null)
   useEffect(() => {
-    let cancelled = false
-
-    api.admin.posts.bySlug
-      .query({ slug })
-      .then(loaded => {
-        if (cancelled) return
-        const next: Draft = {
-          title: loaded.title,
-          excerpt: loaded.excerpt ?? "",
-          content: loaded.content,
-          coverImage: loaded.coverImage
-        }
-        saved.current = JSON.stringify(next)
-        setPost(loaded)
-        setDraft(next)
-      })
-      .catch(err => !cancelled && setError(errorMessage(err)))
-
-    return () => {
-      cancelled = true
+    if (!post || seeded.current === post.slug) return
+    const next: Draft = {
+      title: post.title,
+      excerpt: post.excerpt ?? "",
+      content: post.content,
+      coverImage: post.coverImage
     }
-  }, [slug])
+    saved.current = JSON.stringify(next)
+    seeded.current = post.slug
+    setDraft(next)
+  }, [post])
 
-  const save = useCallback(
-    async (next: Draft) => {
-      const snapshot = JSON.stringify(next)
-      setSaveState("saving")
-      try {
-        const updated = await api.admin.posts.update.mutate({
-          slug,
-          title: next.title.trim(),
-          excerpt: next.excerpt.trim() || null,
-          content: next.content,
-          coverImage: next.coverImage
-        })
-        saved.current = snapshot
-        setPost(updated)
-        setError(null)
-        setSaveState(current => (current === "saving" ? "clean" : current))
-      } catch (err) {
-        setSaveState("failed")
-        setError(errorMessage(err))
+  const afterWrite = (updated: Post) => {
+    queryClient.setQueryData(api.admin.posts.bySlug.queryKey({ slug: updated.slug }), updated)
+    void queryClient.invalidateQueries(api.admin.posts.list.queryFilter())
+  }
+
+  const update = useMutation(
+    api.admin.posts.update.mutationOptions({
+      onSuccess: updated => {
+        saved.current = inFlight.current
+        afterWrite(updated)
       }
-    },
-    [slug]
+    })
   )
+  const setStatus = useMutation(
+    api.admin.posts.setStatus.mutationOptions({ onSuccess: afterWrite })
+  )
+  const rename = useMutation(
+    api.admin.posts.rename.mutationOptions({
+      onSuccess: renamed => {
+        void queryClient.invalidateQueries(api.admin.posts.list.queryFilter())
+        if (renamed) navigate(`/admin/posts/${renamed.slug}`, { replace: true })
+      }
+    })
+  )
+  const remove = useMutation(
+    api.admin.posts.remove.mutationOptions({
+      onSuccess: () => {
+        void queryClient.invalidateQueries(api.admin.posts.list.queryFilter())
+        navigate("/admin/posts")
+      }
+    })
+  )
+  const uploadCover = useMutation({
+    mutationFn: uploadImage,
+    onSuccess: url => change({ coverImage: url })
+  })
 
   const dirty = Boolean(draft) && JSON.stringify(draft) !== saved.current
   const titleMissing = !draft?.title.trim()
+  const busy = setStatus.isPending || rename.isPending || remove.isPending
+
+  const saveState: SaveState = update.isError
+    ? "failed"
+    : update.isPending
+      ? "saving"
+      : dirty
+        ? "dirty"
+        : "clean"
+
+  const error =
+    editorError ??
+    postQuery.error ??
+    update.error ??
+    setStatus.error ??
+    rename.error ??
+    remove.error ??
+    uploadCover.error
+
+  const persist = useCallback(
+    (next: Draft) => {
+      inFlight.current = JSON.stringify(next)
+      update.mutate({
+        slug,
+        title: next.title.trim(),
+        excerpt: next.excerpt.trim() || null,
+        content: next.content,
+        coverImage: next.coverImage
+      })
+    },
+    [slug, update]
+  )
 
   useEffect(() => {
     if (!draft || !dirty || titleMissing) return
-    setSaveState("dirty")
-    const timer = setTimeout(() => void save(draft), AUTOSAVE_DELAY_MS)
+    const timer = setTimeout(() => persist(draft), AUTOSAVE_DELAY_MS)
     return () => clearTimeout(timer)
-  }, [draft, dirty, titleMissing, save])
+  }, [draft, dirty, titleMissing, persist])
 
   useEffect(() => {
     if (!dirty) return
@@ -119,11 +161,11 @@ export function PostEdit() {
     const onKeyDown = (event: KeyboardEvent) => {
       if (!(event.metaKey || event.ctrlKey) || event.key !== "s") return
       event.preventDefault()
-      if (draft && dirty && !titleMissing) void save(draft)
+      if (draft && dirty && !titleMissing) persist(draft)
     }
     window.addEventListener("keydown", onKeyDown)
     return () => window.removeEventListener("keydown", onKeyDown)
-  }, [draft, dirty, titleMissing, save])
+  }, [draft, dirty, titleMissing, persist])
 
   const stats = useMemo(() => {
     if (!draft) return null
@@ -135,58 +177,21 @@ export function PostEdit() {
 
   const change = (patch: Partial<Draft>) => setDraft(current => current && { ...current, ...patch })
 
-  const run = async (fn: () => Promise<unknown>) => {
-    setBusy(true)
-    setError(null)
-    try {
-      await fn()
-    } catch (err) {
-      setError(errorMessage(err))
-    } finally {
-      setBusy(false)
-    }
+  const togglePublished = () => {
+    if (draft && dirty && !titleMissing) persist(draft)
+    setStatus.mutate({ slug, status: post?.status === "published" ? "draft" : "published" })
   }
 
-  const togglePublished = () =>
-    run(async () => {
-      if (draft && dirty && !titleMissing) await save(draft)
-      const updated = await api.admin.posts.setStatus.mutate({
-        slug,
-        status: post?.status === "published" ? "draft" : "published"
-      })
-      setPost(updated)
-    })
-
-  const rename = () =>
-    run(async () => {
-      const nextSlug = slugify(draft?.title ?? "")
-      if (!nextSlug || nextSlug === slug) return
-      await api.admin.posts.rename.mutate({ slug, nextSlug })
-      navigate(`/admin/posts/${nextSlug}`, { replace: true })
-    })
-
-  const remove = () =>
-    run(async () => {
-      await api.admin.posts.remove.mutate({ slug })
-      navigate("/admin/posts")
-    })
-
-  const pickCover = (file: File) =>
-    void (async () => {
-      setUploadingCover(true)
-      try {
-        change({ coverImage: await uploadImage(file) })
-      } catch (err) {
-        setError(errorMessage(err))
-      } finally {
-        setUploadingCover(false)
-      }
-    })()
+  const renameToTitle = () => {
+    const nextSlug = slugify(draft?.title ?? "")
+    if (!nextSlug || nextSlug === slug) return
+    rename.mutate({ slug, nextSlug })
+  }
 
   if (!post || !draft) {
     return error ? (
       <Alert variant="destructive">
-        <AlertTitle>{error}</AlertTitle>
+        <AlertTitle>{errorMessage(error)}</AlertTitle>
       </Alert>
     ) : (
       <p className="text-sm text-subtle-foreground">Loading…</p>
@@ -237,7 +242,7 @@ export function PostEdit() {
         {error && (
           <div className="mb-8">
             <Alert variant="destructive">
-              <AlertTitle>{error}</AlertTitle>
+              <AlertTitle>{errorMessage(error)}</AlertTitle>
             </Alert>
           </div>
         )}
@@ -245,8 +250,8 @@ export function PostEdit() {
         <article>
           <CoverImage
             src={draft.coverImage}
-            uploading={uploadingCover}
-            onPick={pickCover}
+            uploading={uploadCover.isPending}
+            onPick={file => uploadCover.mutate(file)}
             onRemove={() => change({ coverImage: null })}
           />
 
@@ -274,7 +279,7 @@ export function PostEdit() {
               onReady={editor => (body.current = editor)}
               initialContent={post.content}
               onChange={content => change({ content })}
-              onError={setError}
+              onError={setEditorError}
               onLeaveStart={() => focusEnd(summaryField.current)}
             />
           </div>
@@ -287,7 +292,7 @@ export function PostEdit() {
             /writing/{slug}
             {!post.publishedAt && slugify(draft.title) !== slug && (
               <button
-                onClick={rename}
+                onClick={renameToTitle}
                 disabled={busy}
                 className="ml-3 text-foreground underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground"
               >
@@ -300,7 +305,7 @@ export function PostEdit() {
             label="Delete"
             confirmLabel="Delete permanently"
             icon={Trash2}
-            onConfirm={remove}
+            onConfirm={() => remove.mutate({ slug })}
             disabled={busy}
           />
         </footer>
