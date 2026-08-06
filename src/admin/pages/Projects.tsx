@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react"
 import { api, errorMessage } from "../api"
-import { Alert, Button, Card, Field, inputClass, PageHeader } from "../components/ui"
+import { Alert, Button, Card, Field, inputClass, Page, PageHeader } from "../components/ui"
 
 type Project = Awaited<ReturnType<typeof api.admin.projects.list.query>>[number]
 
@@ -71,7 +71,7 @@ export function Projects() {
   }
 
   return (
-    <div className="space-y-6">
+    <Page>
       <PageHeader
         title="Projects"
         description="The work listed on the site, in the order it appears."
@@ -176,6 +176,6 @@ export function Projects() {
           </li>
         ))}
       </ul>
-    </div>
+    </Page>
   )
 }

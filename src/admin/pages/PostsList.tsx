@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { PenLine, Plus } from "lucide-react"
 import { api, errorMessage, type RouterOutputs } from "../api"
-import { Alert, Button, Card, EmptyState, PageHeader, Status } from "../components/ui"
+import { Alert, Button, Card, EmptyState, Page, PageHeader, Status } from "../components/ui"
 
 type Post = RouterOutputs["admin"]["posts"]["list"][number]
 
@@ -45,7 +45,7 @@ export function PostsList() {
   )
 
   return (
-    <div className="space-y-6">
+    <Page>
       <PageHeader title="Posts" description={summarise(posts)} action={newPost} />
 
       {error && <Alert message={error} />}
@@ -95,7 +95,7 @@ export function PostsList() {
           ))}
         </Card>
       )}
-    </div>
+    </Page>
   )
 }
 

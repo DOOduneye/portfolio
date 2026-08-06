@@ -196,8 +196,9 @@ export function PostEdit() {
   const published = post.status === "published"
 
   return (
-    <div className="pb-24">
-      <header className="flex items-center justify-between gap-4">
+    <div>
+      {/* Sticky: on a long post the publish control should never scroll away. */}
+      <header className="sticky top-0 z-20 flex items-center justify-between gap-4 border-b border-border bg-background/85 px-8 py-3 backdrop-blur">
         <Link
           to="/admin/posts"
           className="-ml-2.5 inline-flex h-9 items-center gap-1.5 rounded-md px-2.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
@@ -235,72 +236,79 @@ export function PostEdit() {
         </div>
       </header>
 
-      {error && (
-        <div className="mt-5">
-          <Alert message={error} />
-        </div>
-      )}
+      {/*
+        The same measure as the published article. A wider column here would
+        reflow every line on publish, which is the one thing a writing surface
+        built on the reader's stylesheet must not do.
+      */}
+      <div className="mx-auto max-w-2xl px-6 pb-32 pt-12">
+        {error && (
+          <div className="mb-8">
+            <Alert message={error} />
+          </div>
+        )}
 
-      <article className="mt-12">
-        <CoverImage
-          src={draft.coverImage}
-          uploading={uploadingCover}
-          onPick={pickCover}
-          onRemove={() => change({ coverImage: null })}
-        />
-
-        <AutoTextarea
-          ref={titleField}
-          value={draft.title}
-          onChange={title => change({ title })}
-          onEnter={() => summaryField.current?.focus()}
-          placeholder="Title"
-          className="editorial w-full resize-none bg-transparent text-4xl font-semibold leading-tight tracking-tight text-foreground outline-none placeholder:text-subtle-foreground"
-        />
-
-        <AutoTextarea
-          ref={summaryField}
-          value={draft.excerpt}
-          onChange={excerpt => change({ excerpt })}
-          onEnter={focusBody}
-          onBackspaceAtStart={() => focusEnd(titleField.current)}
-          placeholder="Add a summary"
-          className="editorial mt-4 w-full resize-none bg-transparent text-lg leading-relaxed text-muted-foreground outline-none placeholder:text-subtle-foreground"
-        />
-
-        <div className="mt-10">
-          <PostEditor
-            onReady={editor => (body.current = editor)}
-            initialContent={post.content}
-            onChange={content => change({ content })}
-            onError={setError}
-            onLeaveStart={() => focusEnd(summaryField.current)}
+        <article>
+          <CoverImage
+            src={draft.coverImage}
+            uploading={uploadingCover}
+            onPick={pickCover}
+            onRemove={() => change({ coverImage: null })}
           />
-        </div>
-      </article>
 
-      <footer className="mt-12 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-5">
-        <div className="min-w-0 text-xs text-muted-foreground">
-          /writing/{slug}
-          {!post.publishedAt && slugify(draft.title) !== slug && (
-            <button
-              onClick={rename}
-              disabled={busy}
-              className="ml-3 text-foreground underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground"
-            >
-              Use the title
-            </button>
-          )}
-          {post.publishedAt && <span className="ml-3">Fixed once published</span>}
-        </div>
-        <ConfirmButton
-          label="Delete"
-          confirmLabel="Delete permanently"
-          icon={Trash2}
-          onConfirm={remove}
-          disabled={busy}
-        />
-      </footer>
+          <AutoTextarea
+            ref={titleField}
+            value={draft.title}
+            onChange={title => change({ title })}
+            onEnter={() => summaryField.current?.focus()}
+            placeholder="Title"
+            className="editorial w-full resize-none bg-transparent text-4xl font-semibold leading-tight tracking-tight text-foreground outline-none placeholder:text-subtle-foreground"
+          />
+
+          <AutoTextarea
+            ref={summaryField}
+            value={draft.excerpt}
+            onChange={excerpt => change({ excerpt })}
+            onEnter={focusBody}
+            onBackspaceAtStart={() => focusEnd(titleField.current)}
+            placeholder="Add a summary"
+            className="editorial mt-4 w-full resize-none bg-transparent text-lg leading-relaxed text-muted-foreground outline-none placeholder:text-subtle-foreground"
+          />
+
+          <div className="mt-10">
+            <PostEditor
+              onReady={editor => (body.current = editor)}
+              initialContent={post.content}
+              onChange={content => change({ content })}
+              onError={setError}
+              onLeaveStart={() => focusEnd(summaryField.current)}
+            />
+          </div>
+        </article>
+
+        <footer className="mt-16 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-5">
+          <div className="min-w-0 text-xs text-muted-foreground">
+            /writing/{slug}
+            {!post.publishedAt && slugify(draft.title) !== slug && (
+              <button
+                onClick={rename}
+                disabled={busy}
+                className="ml-3 text-foreground underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground"
+              >
+                Use the title
+              </button>
+            )}
+            {post.publishedAt && <span className="ml-3">Fixed once published</span>}
+          </div>
+          <ConfirmButton
+            label="Delete"
+            confirmLabel="Delete permanently"
+            icon={Trash2}
+            onConfirm={remove}
+            disabled={busy}
+          />
+        </footer>
+      </div>
     </div>
   )
 }
