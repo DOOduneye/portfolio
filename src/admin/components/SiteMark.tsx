@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { LoaderCircle } from "lucide-react"
 import { api, errorMessage, uploadImage } from "../api"
 
-export function SiteMark({ onError }: { onError: (message: string) => void }) {
+export function SiteMark({ onError }: { onError?: (message: string) => void } = {}) {
   const input = useRef<HTMLInputElement>(null)
   const queryClient = useQueryClient()
   const { data: url } = useQuery(api.admin.settings.favicon.queryOptions())
@@ -14,14 +14,14 @@ export function SiteMark({ onError }: { onError: (message: string) => void }) {
         void queryClient.invalidateQueries(api.admin.settings.favicon.queryFilter())
         if (saved.url) refreshTabIcon(saved.url)
       },
-      onError: err => onError(errorMessage(err))
+      onError: err => onError?.(errorMessage(err))
     })
   )
 
   const upload = useMutation({
     mutationFn: uploadImage,
     onSuccess: uploaded => save.mutate({ url: uploaded }),
-    onError: err => onError(errorMessage(err))
+    onError: err => onError?.(errorMessage(err))
   })
 
   const busy = upload.isPending || save.isPending
