@@ -335,10 +335,14 @@ function focusEnd(field: HTMLTextAreaElement | null): void {
 function SaveIndicator({ state }: { state: SaveState }) {
   if (state === "clean") return null
 
-  const label = { dirty: "Unsaved", saving: "Saving", failed: "Could not save" }[state]
+  const label = { dirty: "Unsaved", saving: "Saving…", failed: "Could not save" }[state]
   const tone = state === "failed" ? "text-destructive" : "text-muted-foreground"
 
-  return <span className={`font-mono text-xs ${tone}`}>{label}</span>
+  return (
+    <span aria-live="polite" className={`font-mono text-xs ${tone}`}>
+      {label}
+    </span>
+  )
 }
 
 function CoverImage({
