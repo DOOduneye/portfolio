@@ -22,7 +22,7 @@ export function Writing() {
     <div className="mx-auto max-w-2xl px-6 py-28">
       <Link
         to="/"
-        className="font-mono text-xs text-subtle-foreground transition-colors hover:text-foreground"
+        className="font-mono text-xs text-subtle-foreground transition-colors hover:text-accent"
       >
         ← David Oduneye
       </Link>
@@ -38,7 +38,7 @@ export function Writing() {
           <li key={post.slug}>
             <Link to={`/writing/${post.slug}`} className="group flex gap-6 py-8">
               <div className="min-w-0 flex-1">
-                <h2 className="font-medium text-foreground transition-colors group-hover:text-foreground">
+                <h2 className="font-medium text-foreground transition-colors group-hover:text-accent">
                   {post.title}
                 </h2>
                 {post.excerpt && <p className="mt-2 text-sm leading-relaxed">{post.excerpt}</p>}
