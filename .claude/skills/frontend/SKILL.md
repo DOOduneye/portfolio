@@ -246,6 +246,12 @@ for a null value. A visitor should never see a broken integration.
 
 ## Adding an Admin Page
 
+This recipe matches the four pages that exist. Note the `catch` shape: it is
+duplicated in nine handlers and `code-quality` names that as an anti-pattern.
+Copy it to stay consistent if you are adding a page today, but if you are
+already touching this area, move the handling into `api.ts` instead of writing
+a tenth copy.
+
 ### 1. Create the page
 
 ```tsx

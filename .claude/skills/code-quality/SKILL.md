@@ -72,7 +72,8 @@ second.
 Commit as `type: what changed`, with a body explaining *why*. Open the PR with a
 title of two to five plain words and a one-line body — see the `pr` skill.
 
-CI runs the schema drift guard, then check, test, and build.
+CI runs the schema drift guard, then lint, format, check, test, and build. The
+`deploy` skill covers what each failure means and how production is reached.
 
 ### 5. Deploy
 
