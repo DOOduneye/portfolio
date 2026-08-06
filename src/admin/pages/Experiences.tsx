@@ -1,26 +1,18 @@
-import { useCallback, useEffect, useState } from "react";
-import { api, errorMessage, isUnauthorized } from "../api";
-import {
-  dangerButton,
-  Field,
-  ghostButton,
-  inputClass,
-  primaryButton,
-} from "../components/ui";
+import { useCallback, useEffect, useState } from "react"
+import { api, errorMessage, isUnauthorized } from "../api"
+import { dangerButton, Field, ghostButton, inputClass, primaryButton } from "../components/ui"
 
-type Experience = Awaited<
-  ReturnType<typeof api.admin.experiences.list.query>
->[number];
+type Experience = Awaited<ReturnType<typeof api.admin.experiences.list.query>>[number]
 
 interface Draft {
-  id: number | null;
-  role: string;
-  org: string;
-  orgUrl: string;
-  dates: string;
-  description: string;
-  sortOrder: number;
-  visible: boolean;
+  id: number | null
+  role: string
+  org: string
+  orgUrl: string
+  dates: string
+  description: string
+  sortOrder: number
+  visible: boolean
 }
 
 const empty: Draft = {
@@ -31,31 +23,31 @@ const empty: Draft = {
   dates: "",
   description: "",
   sortOrder: 0,
-  visible: true,
-};
+  visible: true
+}
 
 export function Experiences({ onAuthError }: { onAuthError: () => void }) {
-  const [items, setItems] = useState<Experience[] | null>(null);
-  const [draft, setDraft] = useState<Draft | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [saving, setSaving] = useState(false);
+  const [items, setItems] = useState<Experience[] | null>(null)
+  const [draft, setDraft] = useState<Draft | null>(null)
+  const [error, setError] = useState<string | null>(null)
+  const [saving, setSaving] = useState(false)
 
   const refresh = useCallback(() => {
     api.admin.experiences.list
       .query()
       .then(setItems)
-      .catch((err) => {
-        if (isUnauthorized(err)) onAuthError();
-        else setError(errorMessage(err));
-      });
-  }, [onAuthError]);
+      .catch(err => {
+        if (isUnauthorized(err)) onAuthError()
+        else setError(errorMessage(err))
+      })
+  }, [onAuthError])
 
-  useEffect(refresh, [refresh]);
+  useEffect(refresh, [refresh])
 
   const save = async () => {
-    if (!draft) return;
-    setSaving(true);
-    setError(null);
+    if (!draft) return
+    setSaving(true)
+    setError(null)
     const payload = {
       role: draft.role,
       org: draft.org,
@@ -63,32 +55,31 @@ export function Experiences({ onAuthError }: { onAuthError: () => void }) {
       dates: draft.dates,
       description: draft.description,
       sortOrder: draft.sortOrder,
-      visible: draft.visible ? 1 : 0,
-    };
-    try {
-      if (draft.id === null) await api.admin.experiences.create.mutate(payload);
-      else
-        await api.admin.experiences.update.mutate({ id: draft.id, ...payload });
-      setDraft(null);
-      refresh();
-    } catch (err) {
-      if (isUnauthorized(err)) onAuthError();
-      else setError(errorMessage(err));
-    } finally {
-      setSaving(false);
+      visible: draft.visible ? 1 : 0
     }
-  };
+    try {
+      if (draft.id === null) await api.admin.experiences.create.mutate(payload)
+      else await api.admin.experiences.update.mutate({ id: draft.id, ...payload })
+      setDraft(null)
+      refresh()
+    } catch (err) {
+      if (isUnauthorized(err)) onAuthError()
+      else setError(errorMessage(err))
+    } finally {
+      setSaving(false)
+    }
+  }
 
   const remove = async (item: Experience) => {
-    if (!confirm(`Delete "${item.role} · ${item.org}"?`)) return;
+    if (!confirm(`Delete "${item.role} · ${item.org}"?`)) return
     try {
-      await api.admin.experiences.remove.mutate({ id: item.id });
-      refresh();
+      await api.admin.experiences.remove.mutate({ id: item.id })
+      refresh()
     } catch (err) {
-      if (isUnauthorized(err)) onAuthError();
-      else setError(errorMessage(err));
+      if (isUnauthorized(err)) onAuthError()
+      else setError(errorMessage(err))
     }
-  };
+  }
 
   return (
     <div>
@@ -111,7 +102,7 @@ export function Experiences({ onAuthError }: { onAuthError: () => void }) {
             <Field label="Role">
               <input
                 value={draft.role}
-                onChange={(e) => setDraft({ ...draft, role: e.target.value })}
+                onChange={e => setDraft({ ...draft, role: e.target.value })}
                 placeholder="Software Engineer"
                 className={inputClass}
                 autoFocus
@@ -120,14 +111,14 @@ export function Experiences({ onAuthError }: { onAuthError: () => void }) {
             <Field label="Organization">
               <input
                 value={draft.org}
-                onChange={(e) => setDraft({ ...draft, org: e.target.value })}
+                onChange={e => setDraft({ ...draft, org: e.target.value })}
                 className={inputClass}
               />
             </Field>
             <Field label="Organization URL (optional)">
               <input
                 value={draft.orgUrl}
-                onChange={(e) => setDraft({ ...draft, orgUrl: e.target.value })}
+                onChange={e => setDraft({ ...draft, orgUrl: e.target.value })}
                 placeholder="https://…"
                 className={inputClass}
               />
@@ -135,7 +126,7 @@ export function Experiences({ onAuthError }: { onAuthError: () => void }) {
             <Field label="Dates">
               <input
                 value={draft.dates}
-                onChange={(e) => setDraft({ ...draft, dates: e.target.value })}
+                onChange={e => setDraft({ ...draft, dates: e.target.value })}
                 placeholder="Jan 2025 - Present"
                 className={inputClass}
               />
@@ -144,9 +135,7 @@ export function Experiences({ onAuthError }: { onAuthError: () => void }) {
           <Field label="Description">
             <textarea
               value={draft.description}
-              onChange={(e) =>
-                setDraft({ ...draft, description: e.target.value })
-              }
+              onChange={e => setDraft({ ...draft, description: e.target.value })}
               rows={3}
               className={inputClass}
             />
@@ -156,9 +145,7 @@ export function Experiences({ onAuthError }: { onAuthError: () => void }) {
               <input
                 type="number"
                 value={draft.sortOrder}
-                onChange={(e) =>
-                  setDraft({ ...draft, sortOrder: Number(e.target.value) })
-                }
+                onChange={e => setDraft({ ...draft, sortOrder: Number(e.target.value) })}
                 className={`${inputClass} w-24`}
               />
             </Field>
@@ -166,9 +153,7 @@ export function Experiences({ onAuthError }: { onAuthError: () => void }) {
               <input
                 type="checkbox"
                 checked={draft.visible}
-                onChange={(e) =>
-                  setDraft({ ...draft, visible: e.target.checked })
-                }
+                onChange={e => setDraft({ ...draft, visible: e.target.checked })}
                 className="accent-accent"
               />
               Visible on site
@@ -194,17 +179,12 @@ export function Experiences({ onAuthError }: { onAuthError: () => void }) {
       )}
 
       <ul className="mt-6 divide-y divide-line">
-        {items?.map((item) => (
-          <li
-            key={item.id}
-            className="flex items-center justify-between gap-4 py-3.5"
-          >
+        {items?.map(item => (
+          <li key={item.id} className="flex items-center justify-between gap-4 py-3.5">
             <div className="min-w-0">
               <span className="font-medium text-fg">
                 {item.role} <span className="text-subtle">· {item.org}</span>
-                {!item.visible && (
-                  <span className="ml-2 text-xs text-subtle">(hidden)</span>
-                )}
+                {!item.visible && <span className="ml-2 text-xs text-subtle">(hidden)</span>}
               </span>
               <p className="text-sm text-subtle">{item.dates}</p>
             </div>
@@ -219,7 +199,7 @@ export function Experiences({ onAuthError }: { onAuthError: () => void }) {
                     dates: item.dates,
                     description: item.description,
                     sortOrder: item.sortOrder,
-                    visible: item.visible === 1,
+                    visible: item.visible === 1
                   })
                 }
                 className={ghostButton}
@@ -234,5 +214,5 @@ export function Experiences({ onAuthError }: { onAuthError: () => void }) {
         ))}
       </ul>
     </div>
-  );
+  )
 }

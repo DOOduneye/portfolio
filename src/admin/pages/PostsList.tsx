@@ -1,40 +1,40 @@
-import { useCallback, useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { api, errorMessage, isUnauthorized } from "../api";
-import { StatusBadge } from "../components/ui";
+import { useCallback, useEffect, useState } from "react"
+import { Link, useNavigate } from "react-router-dom"
+import { api, errorMessage, isUnauthorized } from "../api"
+import { StatusBadge } from "../components/ui"
 
-type Post = Awaited<ReturnType<typeof api.admin.posts.list.query>>[number];
+type Post = Awaited<ReturnType<typeof api.admin.posts.list.query>>[number]
 
 export function PostsList({ onAuthError }: { onAuthError: () => void }) {
-  const [posts, setPosts] = useState<Post[] | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const navigate = useNavigate();
+  const [posts, setPosts] = useState<Post[] | null>(null)
+  const [error, setError] = useState<string | null>(null)
+  const navigate = useNavigate()
 
   const refresh = useCallback(() => {
     api.admin.posts.list
       .query()
       .then(setPosts)
-      .catch((err) => {
-        if (isUnauthorized(err)) onAuthError();
-        else setError(errorMessage(err));
-      });
-  }, [onAuthError]);
+      .catch(err => {
+        if (isUnauthorized(err)) onAuthError()
+        else setError(errorMessage(err))
+      })
+  }, [onAuthError])
 
-  useEffect(refresh, [refresh]);
+  useEffect(refresh, [refresh])
 
   const createPost = async () => {
-    const slug = `untitled-${Date.now().toString(36)}`;
+    const slug = `untitled-${Date.now().toString(36)}`
     try {
       await api.admin.posts.create.mutate({
         slug,
         title: "Untitled",
-        content: "",
-      });
-      navigate(`/admin/posts/${slug}`);
+        content: ""
+      })
+      navigate(`/admin/posts/${slug}`)
     } catch (err) {
-      setError(errorMessage(err));
+      setError(errorMessage(err))
     }
-  };
+  }
 
   return (
     <div>
@@ -55,13 +55,11 @@ export function PostsList({ onAuthError }: { onAuthError: () => void }) {
       )}
 
       {posts && posts.length === 0 && (
-        <p className="mt-10 text-sm text-subtle">
-          Nothing here yet. Write the first one.
-        </p>
+        <p className="mt-10 text-sm text-subtle">Nothing here yet. Write the first one.</p>
       )}
 
       <ul className="mt-6 divide-y divide-line">
-        {posts?.map((post) => (
+        {posts?.map(post => (
           <li key={post.slug}>
             <Link
               to={`/admin/posts/${post.slug}`}
@@ -78,7 +76,7 @@ export function PostsList({ onAuthError }: { onAuthError: () => void }) {
                 <span className="text-xs tabular-nums text-subtle">
                   {new Date(post.updatedAt).toLocaleDateString("en-US", {
                     month: "short",
-                    day: "numeric",
+                    day: "numeric"
                   })}
                 </span>
               </div>
@@ -87,5 +85,5 @@ export function PostsList({ onAuthError }: { onAuthError: () => void }) {
         ))}
       </ul>
     </div>
-  );
+  )
 }

@@ -30,6 +30,8 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm run db:generate
       - run: git add -N migrations && git diff --exit-code migrations
+      - run: pnpm run lint
+      - run: pnpm run format
       - run: pnpm run check
       - run: pnpm test
       - run: pnpm run build

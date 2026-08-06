@@ -1,21 +1,21 @@
-import { and, desc, eq, isNull } from "drizzle-orm";
-import { z } from "zod";
-import { TRPCError } from "@trpc/server";
-import { posts } from "../db/schema";
-import { now, protectedProcedure, publicProcedure, router } from "../trpc";
+import { and, desc, eq, isNull } from "drizzle-orm"
+import { z } from "zod"
+import { TRPCError } from "@trpc/server"
+import { posts } from "../db/schema"
+import { now, protectedProcedure, publicProcedure, router } from "../trpc"
 
 const slugSchema = z
   .string()
   .min(1)
   .max(128)
-  .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "kebab-case slugs only");
+  .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "kebab-case slugs only")
 
 const postInput = z.object({
   slug: slugSchema,
   title: z.string().min(1).max(256),
   content: z.string().default(""),
-  excerpt: z.string().max(512).nullish(),
-});
+  excerpt: z.string().max(512).nullish()
+})
 
 export const publicPostsRouter = router({
   published: publicProcedure.query(({ ctx }) =>
@@ -24,49 +24,43 @@ export const publicPostsRouter = router({
       .from(posts)
       .where(and(eq(posts.status, "published"), isNull(posts.deletedAt)))
       .orderBy(desc(posts.publishedAt))
-  ),
-});
+  )
+})
 
 export const adminPostsRouter = router({
   list: protectedProcedure.query(({ ctx }) =>
-    ctx.db
-      .select()
-      .from(posts)
-      .where(isNull(posts.deletedAt))
-      .orderBy(desc(posts.updatedAt))
+    ctx.db.select().from(posts).where(isNull(posts.deletedAt)).orderBy(desc(posts.updatedAt))
   ),
 
-  bySlug: protectedProcedure
-    .input(z.object({ slug: slugSchema }))
-    .query(async ({ ctx, input }) => {
-      const [post] = await ctx.db
-        .select()
-        .from(posts)
-        .where(and(eq(posts.slug, input.slug), isNull(posts.deletedAt)));
-      if (!post) throw new TRPCError({ code: "NOT_FOUND" });
-      return post;
-    }),
+  bySlug: protectedProcedure.input(z.object({ slug: slugSchema })).query(async ({ ctx, input }) => {
+    const [post] = await ctx.db
+      .select()
+      .from(posts)
+      .where(and(eq(posts.slug, input.slug), isNull(posts.deletedAt)))
+    if (!post) throw new TRPCError({ code: "NOT_FOUND" })
+    return post
+  }),
 
   create: protectedProcedure.input(postInput).mutation(async ({ ctx, input }) => {
-    const timestamp = now();
+    const timestamp = now()
     const [created] = await ctx.db
       .insert(posts)
       .values({ ...input, createdAt: timestamp, updatedAt: timestamp })
-      .returning();
-    return created;
+      .returning()
+    return created
   }),
 
   update: protectedProcedure
     .input(postInput.partial().extend({ slug: slugSchema }))
     .mutation(async ({ ctx, input }) => {
-      const { slug, ...changes } = input;
+      const { slug, ...changes } = input
       const [updated] = await ctx.db
         .update(posts)
         .set({ ...changes, updatedAt: now() })
         .where(and(eq(posts.slug, slug), isNull(posts.deletedAt)))
-        .returning();
-      if (!updated) throw new TRPCError({ code: "NOT_FOUND" });
-      return updated;
+        .returning()
+      if (!updated) throw new TRPCError({ code: "NOT_FOUND" })
+      return updated
     }),
 
   remove: protectedProcedure
@@ -76,25 +70,25 @@ export const adminPostsRouter = router({
         .update(posts)
         .set({ deletedAt: now() })
         .where(and(eq(posts.slug, input.slug), isNull(posts.deletedAt)))
-        .returning();
-      if (!removed) throw new TRPCError({ code: "NOT_FOUND" });
-      return { ok: true };
+        .returning()
+      if (!removed) throw new TRPCError({ code: "NOT_FOUND" })
+      return { ok: true }
     }),
 
   setStatus: protectedProcedure
     .input(z.object({ slug: slugSchema, status: z.enum(["draft", "published"]) }))
     .mutation(async ({ ctx, input }) => {
-      const timestamp = now();
+      const timestamp = now()
       const [updated] = await ctx.db
         .update(posts)
         .set({
           status: input.status,
           publishedAt: input.status === "published" ? timestamp : null,
-          updatedAt: timestamp,
+          updatedAt: timestamp
         })
         .where(and(eq(posts.slug, input.slug), isNull(posts.deletedAt)))
-        .returning();
-      if (!updated) throw new TRPCError({ code: "NOT_FOUND" });
-      return updated;
-    }),
-});
+        .returning()
+      if (!updated) throw new TRPCError({ code: "NOT_FOUND" })
+      return updated
+    })
+})
