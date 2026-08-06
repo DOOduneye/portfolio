@@ -28,10 +28,14 @@ export function mediaKeyFromPath(pathname: string): string | null {
   return KEY_PATTERN.test(key) ? key : null
 }
 
+/** The favicon is addressed by a fixed path, so its bytes can change. */
+export const FAVICON_CACHE_CONTROL = "public, max-age=3600"
+
 export async function serveMedia(
   bucket: R2Bucket,
   key: string,
-  request: Request
+  request: Request,
+  cacheControl = "public, max-age=31536000, immutable"
 ): Promise<Response> {
   const object = await bucket.get(key, { onlyIf: request.headers })
 
@@ -40,8 +44,8 @@ export async function serveMedia(
   const headers = new Headers()
   object.writeHttpMetadata(headers)
   headers.set("etag", object.httpEtag)
-  // The key is a hash of the bytes, so a given URL can never change.
-  headers.set("cache-control", "public, max-age=31536000, immutable")
+  // The default key is a hash of the bytes, so that URL can never change.
+  headers.set("cache-control", cacheControl)
   headers.set("x-content-type-options", "nosniff")
   headers.set("content-security-policy", "default-src 'none'; sandbox")
 
