@@ -26,6 +26,13 @@ export const auditLog = sqliteTable(
   ]
 )
 
+/** Durable site configuration, unlike kv_cache which exists to be evicted. */
+export const settings = sqliteTable("settings", {
+  key: text("key").primaryKey(),
+  value: text("value").notNull(),
+  updatedAt: timestamp("updated_at")
+})
+
 export const kvCache = sqliteTable("kv_cache", {
   key: text("key").primaryKey(),
   value: text("value").notNull(),

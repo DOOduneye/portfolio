@@ -3,8 +3,15 @@ import { drizzle } from "drizzle-orm/d1"
 import { UnauthorizedError, requireAccessIdentity, type AccessIdentity } from "./access"
 import * as schema from "./db/schema"
 import type { Env } from "./env"
-import { MEDIA_UPLOAD_PATH, mediaKeyFromPath, serveMedia, uploadMedia } from "./media"
+import {
+  FAVICON_CACHE_CONTROL,
+  MEDIA_UPLOAD_PATH,
+  mediaKeyFromPath,
+  serveMedia,
+  uploadMedia
+} from "./media"
 import { appRouter } from "./routers"
+import { FAVICON_KEY, readSetting } from "./routers/settings"
 import { createContext } from "./trpc"
 
 const CANONICAL_HOST = "davidoduneye.com"
@@ -44,6 +51,15 @@ export default {
         router: appRouter,
         createContext: () => createContext({ req: request, env, executionCtx, identity })
       })
+    }
+
+    // Browsers ask for a fixed path, so the chosen icon is served from there
+    // rather than by rewriting the markup. Falls through to the shipped file
+    // when nothing has been chosen.
+    if (url.pathname === "/favicon.ico") {
+      const chosen = await readSetting(drizzle(env.DB, { schema }), FAVICON_KEY)
+      const chosenKey = chosen && mediaKeyFromPath(chosen)
+      if (chosenKey) return serveMedia(env.MEDIA, chosenKey, request, FAVICON_CACHE_CONTROL)
     }
 
     // Uploaded images are public, and are checked before the admin gate so a
