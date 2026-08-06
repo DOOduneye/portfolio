@@ -17,8 +17,6 @@ export function ToolButton({
       title={label}
       aria-label={label}
       aria-pressed={active}
-      // The editor loses focus to a mousedown on the button, which collapses
-      // the selection the command is about to act on.
       onMouseDown={event => event.preventDefault()}
       onClick={onClick}
       className={`flex h-8 w-8 items-center justify-center rounded-md transition-colors ${
@@ -36,9 +34,5 @@ export function ToolDivider() {
   return <div className="mx-1 my-1.5 w-px self-stretch bg-border" />
 }
 
-/**
- * min-w keeps the panel from resizing when the link field replaces the button
- * row, which would otherwise move the buttons out from under the pointer.
- */
 export const floatingPanel =
   "flex min-w-[19rem] items-center rounded-lg border border-border bg-card p-1 shadow-lg shadow-black/50"

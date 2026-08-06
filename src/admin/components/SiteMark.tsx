@@ -2,10 +2,6 @@ import { useEffect, useRef, useState } from "react"
 import { LoaderCircle } from "lucide-react"
 import { api, errorMessage, uploadImage } from "../api"
 
-/**
- * The site's icon, and the control that sets it. It sits in the corner where a
- * logo usually does nothing, so clicking it changes the thing it depicts.
- */
 export function SiteMark({ onError }: { onError: (message: string) => void }) {
   const [url, setUrl] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
@@ -28,7 +24,6 @@ export function SiteMark({ onError }: { onError: (message: string) => void }) {
       const uploaded = await uploadImage(file)
       await api.admin.settings.setFavicon.mutate({ url: uploaded })
       setUrl(uploaded)
-      // The browser holds the old icon until the fixed path is fetched again.
       refreshTabIcon(uploaded)
     } catch (err) {
       onError(errorMessage(err))
@@ -70,7 +65,6 @@ export function SiteMark({ onError }: { onError: (message: string) => void }) {
   )
 }
 
-/** Swaps the tab icon without a reload by pointing the tag at a fresh URL. */
 function refreshTabIcon(url: string): void {
   const link = document.querySelector<HTMLLinkElement>('link[rel="icon"]')
   if (link) link.href = `${url}?v=${Date.now()}`

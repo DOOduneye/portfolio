@@ -9,11 +9,16 @@ import {
 } from "react"
 import type { Editor } from "@tiptap/react"
 import { Link, useNavigate, useParams } from "react-router-dom"
-import { ArrowLeft, ArrowUpRight, Image as ImageIcon, LoaderCircle, Trash2 } from "lucide-react"
+import { ArrowLeft, ArrowUpRight, Image as ImageIcon, Trash2 } from "lucide-react"
 import { api, errorMessage, uploadImage, type RouterOutputs } from "../api"
 import { PostEditor } from "../../editor/PostEditor"
 import { parseDocument, readingMinutes, slugify, wordCount } from "../../editor/document"
-import { Alert, Button, ConfirmButton, LinkButton, Status } from "../components/ui"
+import { ConfirmButton } from "../components/ConfirmButton"
+import { Alert, AlertTitle } from "@/components/ui/alert"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Separator } from "@/components/ui/separator"
+import { Spinner } from "@/components/ui/spinner"
 
 type Post = RouterOutputs["admin"]["posts"]["bySlug"]
 
@@ -39,12 +44,8 @@ export function PostEdit() {
   const [busy, setBusy] = useState(false)
   const [uploadingCover, setUploadingCover] = useState(false)
 
-  // What the server currently holds. A ref because comparing against it must
-  // not itself schedule a render.
   const saved = useRef("")
 
-  // Title, summary and body read as one column, so the keyboard moves through
-  // them as one: Enter goes forward, Backspace at the start comes back.
   const titleField = useRef<HTMLTextAreaElement>(null)
   const summaryField = useRef<HTMLTextAreaElement>(null)
   const body = useRef<Editor | null>(null)
@@ -88,8 +89,6 @@ export function PostEdit() {
         saved.current = snapshot
         setPost(updated)
         setError(null)
-        // Anything typed while the request was in flight leaves the draft
-        // ahead of the snapshot, and the autosave effect picks it up again.
         setSaveState(current => (current === "saving" ? "clean" : current))
       } catch (err) {
         setSaveState("failed")
@@ -109,7 +108,6 @@ export function PostEdit() {
     return () => clearTimeout(timer)
   }, [draft, dirty, titleMissing, save])
 
-  // Closing the tab mid-sentence should not silently drop the last edit.
   useEffect(() => {
     if (!dirty) return
     const warn = (event: BeforeUnloadEvent) => event.preventDefault()
@@ -187,7 +185,9 @@ export function PostEdit() {
 
   if (!post || !draft) {
     return error ? (
-      <Alert message={error} />
+      <Alert variant="destructive">
+        <AlertTitle>{error}</AlertTitle>
+      </Alert>
     ) : (
       <p className="text-sm text-subtle-foreground">Loading…</p>
     )
@@ -197,7 +197,6 @@ export function PostEdit() {
 
   return (
     <div>
-      {/* Sticky: on a long post the publish control should never scroll away. */}
       <header className="sticky top-0 z-20 flex items-center justify-between gap-4 border-b border-border bg-background/85 px-8 py-3 backdrop-blur">
         <Link
           to="/admin/posts"
@@ -214,19 +213,17 @@ export function PostEdit() {
             </span>
           )}
           <SaveIndicator state={saveState} />
-          <Status status={post.status} />
+          {!published && <Badge variant="outline">Draft</Badge>}
           {published && (
-            <LinkButton
-              href={`/writing/${slug}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              icon={ArrowUpRight}
+            <Button
+              variant="outline"
+              render={<a href={`/writing/${slug}`} target="_blank" rel="noopener noreferrer" />}
             >
+              <ArrowUpRight data-icon="inline-start" />
               View
-            </LinkButton>
+            </Button>
           )}
           <Button
-            variant="primary"
             onClick={togglePublished}
             disabled={busy || (!published && titleMissing)}
             title={!published && titleMissing ? "Give the post a title first" : undefined}
@@ -236,15 +233,12 @@ export function PostEdit() {
         </div>
       </header>
 
-      {/*
-        The same measure as the published article. A wider column here would
-        reflow every line on publish, which is the one thing a writing surface
-        built on the reader's stylesheet must not do.
-      */}
       <div className="mx-auto max-w-2xl px-6 pb-32 pt-12">
         {error && (
           <div className="mb-8">
-            <Alert message={error} />
+            <Alert variant="destructive">
+              <AlertTitle>{error}</AlertTitle>
+            </Alert>
           </div>
         )}
 
@@ -286,7 +280,9 @@ export function PostEdit() {
           </div>
         </article>
 
-        <footer className="mt-16 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-5">
+        <Separator className="mt-16" />
+
+        <footer className="mt-5 flex flex-wrap items-center justify-between gap-3">
           <div className="min-w-0 font-mono text-xs text-subtle-foreground">
             /writing/{slug}
             {!post.publishedAt && slugify(draft.title) !== slug && (
@@ -313,18 +309,12 @@ export function PostEdit() {
   )
 }
 
-/**
- * Tiptap's focus command places the caret but does not always move DOM focus
- * out of the field that had it, so the element is focused first and the
- * command only positions the caret.
- */
 function focusEditor(editor: Editor | null): void {
   if (!editor) return
   editor.view.dom.focus()
   editor.commands.focus("start")
 }
 
-/** Puts the caret after the last character, so stepping back up resumes writing. */
 function focusEnd(field: HTMLTextAreaElement | null): void {
   if (!field) return
   field.focus()
@@ -334,10 +324,14 @@ function focusEnd(field: HTMLTextAreaElement | null): void {
 function SaveIndicator({ state }: { state: SaveState }) {
   if (state === "clean") return null
 
-  const label = { dirty: "Unsaved", saving: "Saving", failed: "Could not save" }[state]
+  const label = { dirty: "Unsaved", saving: "Saving…", failed: "Could not save" }[state]
   const tone = state === "failed" ? "text-destructive" : "text-muted-foreground"
 
-  return <span className={`font-mono text-xs ${tone}`}>{label}</span>
+  return (
+    <span aria-live="polite" className={`font-mono text-xs ${tone}`}>
+      {label}
+    </span>
+  )
 }
 
 function CoverImage({
@@ -384,11 +378,7 @@ function CoverImage({
           disabled={uploading}
           className="flex items-center gap-2 font-mono text-xs text-subtle-foreground transition-colors hover:text-foreground"
         >
-          {uploading ? (
-            <LoaderCircle size={14} className="animate-spin" />
-          ) : (
-            <ImageIcon size={14} />
-          )}
+          {uploading ? <Spinner /> : <ImageIcon size={14} />}
           {uploading ? "Uploading…" : "Add a cover image"}
         </button>
       )}
@@ -396,7 +386,6 @@ function CoverImage({
   )
 }
 
-/** Grows with its content so a long title wraps instead of scrolling sideways. */
 const AutoTextarea = forwardRef<
   HTMLTextAreaElement,
   {
@@ -429,7 +418,6 @@ const AutoTextarea = forwardRef<
       placeholder={placeholder}
       onChange={event => onChange(event.target.value)}
       onKeyDown={event => {
-        // A newline here would be dropped on render, so Enter moves on instead.
         if (event.key === "Enter") {
           event.preventDefault()
           onEnter?.()

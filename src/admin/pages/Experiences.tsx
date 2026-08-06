@@ -1,6 +1,12 @@
 import { useCallback, useEffect, useState } from "react"
 import { api, errorMessage } from "../api"
-import { Alert, Button, Card, Field, inputClass, Page, PageHeader } from "../components/ui"
+import { PageHeader } from "../components/PageHeader"
+import { Alert, AlertTitle } from "@/components/ui/alert"
+import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
+import { Field, FieldLabel } from "@/components/ui/field"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
 
 type Experience = Awaited<ReturnType<typeof api.admin.experiences.list.query>>[number]
 
@@ -77,70 +83,71 @@ export function Experiences() {
   }
 
   return (
-    <Page>
+    <div className="mx-auto flex max-w-4xl flex-col gap-6 px-8 py-10">
       <PageHeader
         title="Experiences"
         description="Roles listed on the site, in the order they appear."
-        action={
-          <Button variant="primary" onClick={() => setDraft(empty)}>
-            New experience
-          </Button>
-        }
+        action={<Button onClick={() => setDraft(empty)}>New experience</Button>}
       />
 
-      {error && <Alert message={error} />}
+      {error && (
+        <Alert variant="destructive">
+          <AlertTitle>{error}</AlertTitle>
+        </Alert>
+      )}
 
       {draft && (
-        <Card className="space-y-4 p-5">
+        <Card className="gap-4 p-5">
           <div className="grid gap-4 sm:grid-cols-2">
-            <Field label="Role">
-              <input
+            <Field>
+              <FieldLabel>Role</FieldLabel>
+              <Input
                 value={draft.role}
                 onChange={e => setDraft({ ...draft, role: e.target.value })}
                 placeholder="Software Engineer"
-                className={inputClass}
                 autoFocus
               />
             </Field>
-            <Field label="Organization">
-              <input
+            <Field>
+              <FieldLabel>Organization</FieldLabel>
+              <Input
                 value={draft.org}
                 onChange={e => setDraft({ ...draft, org: e.target.value })}
-                className={inputClass}
               />
             </Field>
-            <Field label="Organization URL (optional)">
-              <input
+            <Field>
+              <FieldLabel>Organization URL (optional)</FieldLabel>
+              <Input
                 value={draft.orgUrl}
                 onChange={e => setDraft({ ...draft, orgUrl: e.target.value })}
                 placeholder="https://…"
-                className={inputClass}
               />
             </Field>
-            <Field label="Dates">
-              <input
+            <Field>
+              <FieldLabel>Dates</FieldLabel>
+              <Input
                 value={draft.dates}
                 onChange={e => setDraft({ ...draft, dates: e.target.value })}
                 placeholder="Jan 2025 - Present"
-                className={inputClass}
               />
             </Field>
           </div>
-          <Field label="Description">
-            <textarea
+          <Field>
+            <FieldLabel>Description</FieldLabel>
+            <Textarea
               value={draft.description}
               onChange={e => setDraft({ ...draft, description: e.target.value })}
               rows={3}
-              className={inputClass}
             />
           </Field>
           <div className="flex items-center gap-6">
-            <Field label="Order">
-              <input
+            <Field>
+              <FieldLabel>Order</FieldLabel>
+              <Input
                 type="number"
                 value={draft.sortOrder}
                 onChange={e => setDraft({ ...draft, sortOrder: Number(e.target.value) })}
-                className={`${inputClass} w-24`}
+                className="w-24"
               />
             </Field>
             <label className="flex items-center gap-2 pt-5 text-sm text-muted-foreground">
@@ -148,17 +155,13 @@ export function Experiences() {
                 type="checkbox"
                 checked={draft.visible}
                 onChange={e => setDraft({ ...draft, visible: e.target.checked })}
-                className="accent-accent"
+                className="accent-brand"
               />
               Visible on site
             </label>
           </div>
           <div className="flex gap-2 border-t border-border pt-4">
-            <Button
-              variant="primary"
-              onClick={save}
-              disabled={saving || !draft.role.trim() || !draft.org.trim()}
-            >
+            <Button onClick={save} disabled={saving || !draft.role.trim() || !draft.org.trim()}>
               {saving ? "Saving…" : draft.id === null ? "Create" : "Save"}
             </Button>
             <Button onClick={() => setDraft(null)}>Cancel</Button>
@@ -206,6 +209,6 @@ export function Experiences() {
           </li>
         ))}
       </ul>
-    </Page>
+    </div>
   )
 }

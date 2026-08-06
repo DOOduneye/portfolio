@@ -5,10 +5,6 @@ import { BubbleMenu } from "@tiptap/react/menus"
 import { Bold, Check, Code, Heading2, Heading3, Italic, Link, Quote, Unlink } from "lucide-react"
 import { floatingPanel, ToolButton, ToolDivider } from "./controls"
 
-/**
- * Formatting appears against a selection rather than in a permanent toolbar,
- * so the page stays the article while it is being written.
- */
 export function SelectionMenu({ editor }: { editor: Editor }) {
   const [editingLink, setEditingLink] = useState(false)
 
@@ -28,13 +24,9 @@ export function SelectionMenu({ editor }: { editor: Editor }) {
   return (
     <BubbleMenu
       editor={editor}
-      // A selection inside a code block is code, not prose; offering bold there
-      // would produce a command the schema rejects.
       shouldShow={({ editor, from, to }) =>
         from !== to && !editor.isActive("codeBlock") && !editor.isActive("image")
       }
-      // Clear of the line by more than a line-height, flipping below when the
-      // selection is near the top, and shifted to stay inside the viewport.
       options={{ placement: "top", offset: 12, flip: true, shift: true }}
       className={floatingPanel}
       onKeyDown={event => event.key === "Escape" && setEditingLink(false)}
@@ -125,11 +117,16 @@ function LinkField({
     >
       <input
         ref={input}
+        type="url"
+        name="href"
+        aria-label="Link address"
+        autoComplete="url"
+        spellCheck={false}
         value={href}
         onChange={event => setHref(event.target.value)}
         onKeyDown={event => event.key === "Escape" && onCancel()}
-        placeholder="Paste a link"
-        className="w-56 bg-transparent px-1.5 py-1 text-sm text-foreground placeholder:text-subtle-foreground outline-none"
+        placeholder="https://…"
+        className="w-56 rounded-md bg-transparent px-1.5 py-1 text-sm text-foreground outline-none placeholder:text-subtle-foreground focus-visible:ring-2 focus-visible:ring-ring/50"
       />
       <ToolButton icon={Check} label="Apply link" onClick={() => onSubmit(href.trim())} />
       {initialHref && <ToolButton icon={Unlink} label="Remove link" onClick={() => onSubmit("")} />}

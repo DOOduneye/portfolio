@@ -2,7 +2,27 @@ import { useEffect, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { PenLine, Plus } from "lucide-react"
 import { api, errorMessage, type RouterOutputs } from "../api"
-import { Alert, Button, Card, EmptyState, Page, PageHeader, Status } from "../components/ui"
+import { PageHeader } from "../components/PageHeader"
+import { Alert, AlertTitle } from "@/components/ui/alert"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle
+} from "@/components/ui/empty"
+import {
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemGroup,
+  ItemMedia,
+  ItemTitle
+} from "@/components/ui/item"
 
 type Post = RouterOutputs["admin"]["posts"]["list"][number]
 
@@ -27,8 +47,6 @@ export function PostsList() {
     setCreating(true)
     setError(null)
     try {
-      // A placeholder slug keeps the draft addressable; the editor offers to
-      // match it to the title before the post is published.
       const slug = `untitled-${Date.now().toString(36)}`
       await api.admin.posts.create.mutate({ slug, title: "Untitled" })
       navigate(`/admin/posts/${slug}`)
@@ -39,76 +57,69 @@ export function PostsList() {
   }
 
   const newPost = (
-    <Button variant="primary" icon={Plus} onClick={createPost} disabled={creating}>
+    <Button onClick={createPost} disabled={creating}>
+      <Plus data-icon="inline-start" />
       New post
     </Button>
   )
 
   return (
-    <Page>
+    <div className="flex flex-col gap-6">
       <PageHeader title="Posts" description={summarise(posts)} action={newPost} />
 
-      {error && <Alert message={error} />}
+      {error && (
+        <Alert variant="destructive">
+          <AlertTitle>{error}</AlertTitle>
+        </Alert>
+      )}
 
       {posts?.length === 0 ? (
-        <Card>
-          <EmptyState
-            icon={PenLine}
-            title="No posts yet"
-            description="Drafts stay private until you publish them."
-            action={newPost}
-          />
-        </Card>
+        <Empty>
+          <EmptyHeader>
+            <EmptyMedia variant="icon">
+              <PenLine />
+            </EmptyMedia>
+            <EmptyTitle>No posts yet</EmptyTitle>
+            <EmptyDescription>Drafts stay private until you publish them.</EmptyDescription>
+          </EmptyHeader>
+          <EmptyContent>{newPost}</EmptyContent>
+        </Empty>
       ) : (
-        <Card className="divide-y divide-border overflow-hidden">
-          {posts?.map(post => (
-            <Link
-              key={post.slug}
-              to={`/admin/posts/${post.slug}`}
-              className="flex items-center gap-4 px-4 py-3.5 transition-colors hover:bg-muted/40"
-            >
-              {/* No placeholder box: an empty frame is a slot for nothing. */}
-              {post.coverImage && (
-                <img
-                  src={post.coverImage}
-                  alt=""
-                  className="h-11 w-16 shrink-0 rounded border border-border object-cover"
-                />
-              )}
-
-              <span className="min-w-0 flex-1">
-                <span className="flex items-center gap-2">
-                  <span className="truncate text-sm font-medium text-foreground">{post.title}</span>
-                  <Status status={post.status} />
-                </span>
-                {post.excerpt && (
-                  <span className="mt-0.5 block truncate text-sm text-muted-foreground">
-                    {post.excerpt}
-                  </span>
+        <Card className="p-0">
+          <ItemGroup>
+            {posts?.map(post => (
+              <Item key={post.slug} render={<Link to={`/admin/posts/${post.slug}`} />}>
+                {post.coverImage && (
+                  <ItemMedia variant="image">
+                    <img src={post.coverImage} alt="" width={64} height={44} loading="lazy" />
+                  </ItemMedia>
                 )}
-              </span>
-
-              <span className="shrink-0 font-mono text-xs tabular-nums text-subtle-foreground">
-                {post.publishedAt ? formatDate(post.publishedAt) : formatDate(post.updatedAt)}
-              </span>
-            </Link>
-          ))}
+                <ItemContent>
+                  <ItemTitle>
+                    {post.title}
+                    {post.status === "draft" && <Badge variant="outline">Draft</Badge>}
+                  </ItemTitle>
+                  {post.excerpt && <ItemDescription>{post.excerpt}</ItemDescription>}
+                </ItemContent>
+                <span className="shrink-0 font-mono text-xs tabular-nums text-subtle-foreground">
+                  {formatDate(post.publishedAt ?? post.updatedAt)}
+                </span>
+              </Item>
+            ))}
+          </ItemGroup>
         </Card>
       )}
-    </Page>
+    </div>
   )
 }
 
-/** Says what is live and what is still open, rather than restating the title. */
 function summarise(posts: Post[] | null): string | undefined {
   if (!posts) return undefined
   if (posts.length === 0) return "Nothing written yet."
 
   const drafts = posts.filter(post => post.status === "draft").length
   const live = posts.length - drafts
-  const parts = [`${live} live`]
-  if (drafts) parts.push(`${drafts} in draft`)
-  return parts.join(" · ")
+  return drafts ? `${live} live · ${drafts} in draft` : `${live} live`
 }
 
 function formatDate(value: string): string {

@@ -4,7 +4,6 @@ import { Home } from "./pages/Home"
 import { Writing } from "./pages/Writing"
 
 const Admin = lazy(() => import("./admin/Admin").then(m => ({ default: m.Admin })))
-// The renderer and its extensions are only needed once a post is opened.
 const Post = lazy(() => import("./pages/Post").then(m => ({ default: m.Post })))
 
 export function App() {
