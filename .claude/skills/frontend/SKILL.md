@@ -28,7 +28,19 @@ How to build and change the public site and the CMS that edits it.
 - **Editor**: `src/admin/components/PostEditor.tsx`, styles in `editor.css`
 - **Tokens**: `src/index.css`
 
-React 19, Vite, Tailwind v4, React Router 7, TipTap v3.
+React 19, Vite, Tailwind v4, React Router 7, TipTap v3. No `clsx`, no
+`tailwind-merge`, no component library — conditional classes are template
+literals and the shared styles are exported strings.
+
+## Design Philosophy
+
+Typography-first and quiet. The public site is one page of text with almost no
+chrome, and the CMS is a working surface rather than a product. Density over
+decoration: no cards around things that are already grouped, no headings
+restating the nav, no illustrations.
+
+Every element earns its place. If a control, label or container can be removed
+without losing meaning, remove it.
 
 Two vendored skills cover ground this file deliberately does not repeat.
 `vercel-react-best-practices` for rendering performance: memoisation, re-render
@@ -38,20 +50,32 @@ providers, children over render props.
 
 ## Typing Components
 
-Name prop types once they have more than one field, and export them if a caller
-needs to build the object. Inline object types are fine for a single prop.
+Use `type` for props, not `interface`, and name it once it has more than one
+field. Inline object types are fine for a single prop.
 
 ```tsx
-interface ProjectRowProps {
+// Correct
+type ProjectRowProps = {
   project: Project;
   onEdit: (project: Project) => void;
-}
+};
 
 export function ProjectRow({ project, onEdit }: ProjectRowProps) {}
+
+// Wrong — inline object type with several fields
+export function ProjectRow({ project, onEdit }: { project: Project; onEdit: (p: Project) => void }) {}
 ```
 
 Do not use `React.FC`. It adds an implicit `children` and gets in the way of
-generics. Type the parameter directly, as above.
+generics. Type the parameter directly.
+
+This is React 19, so **do not use `forwardRef`** — pass `ref` as an ordinary prop:
+
+```tsx
+function Input({ ref, ...props }: { ref?: React.Ref<HTMLInputElement> } & React.ComponentProps<"input">) {
+  return <input ref={ref} {...props} />;
+}
+```
 
 Use a discriminated union when props are mutually exclusive, rather than making
 everything optional and hoping callers pair them correctly. A component growing
@@ -108,6 +132,29 @@ Derive rather than store. If a value can be computed from props or state during
 render, compute it — do not mirror it into another `useState` and keep it in
 sync with an effect.
 
+## Rendering Patterns
+
+For several mutually exclusive branches in JSX, use an inline IIFE rather than
+nested ternaries:
+
+```tsx
+{(() => {
+  if (state === "loading") return <Spinner />;
+  if (state === "error") return <ErrorNote message={message} />;
+  return <ProjectList items={items} />;
+})()}
+```
+
+For per-variant icons, labels or styles, use a metadata map rather than a render
+helper with a switch:
+
+```tsx
+const STATUS_META: Record<Status, { label: string; className: string }> = {
+  draft: { label: "Draft", className: "text-subtle" },
+  published: { label: "Published", className: "text-ok" },
+};
+```
+
 ## Accessibility
 
 Client-side routing breaks screen readers by default: the DOM changes, the
@@ -149,12 +196,17 @@ dialog built from the same components as everything else when touching this.
 The palette lives once in `src/index.css` as Tailwind v4 theme tokens. Use the
 token, never a literal colour:
 
-```
---color-page      --color-fg       --color-accent
---color-surface   --color-muted    --color-accent-strong
---color-raised    --color-subtle   --color-ok
---color-line                       --color-danger
-```
+| Token | Use for |
+|---|---|
+| `page` | The base background |
+| `surface` | Anything sitting on the page |
+| `raised` | Anything sitting on a surface |
+| `line` | Borders and dividers |
+| `fg` | Headings and primary text |
+| `muted` | The workhorse — body text |
+| `subtle` | Helper and secondary text |
+| `accent` / `accent-strong` | Primary actions, links |
+| `ok` / `danger` | Published state, destructive actions |
 
 ```tsx
 // Correct
@@ -164,10 +216,19 @@ token, never a literal colour:
 <div className="bg-zinc-900 text-gray-400 border border-gray-800">
 ```
 
-`page` is the base, `surface` sits on it, `raised` on that. Text descends
-`fg` → `muted` → `subtle`. `danger` for destructive, `ok` for published.
-
 UI text is sentence case. "Save changes", not "Save Changes".
+
+Group class families across lines rather than one long string, so a diff shows
+which family changed:
+
+```tsx
+className={`rounded-lg px-3 py-1.5 text-sm transition-colors ${
+  isActive ? "bg-raised text-fg" : "text-muted hover:bg-surface hover:text-fg"
+}`}
+```
+
+Dates render through `toLocaleDateString` with an explicit locale and options,
+never a hand-rolled format.
 
 Reuse `components/ui.tsx` — `StatusBadge`, `Field`, `inputClass`,
 `primaryButton`, `ghostButton`, `dangerButton` — before writing new Tailwind.
@@ -241,17 +302,51 @@ session is `reauthenticate()`, which reloads. The `worker` skill covers why.
 `errorMessage()` output reaches real visitors. Write for someone who has never
 seen the repo.
 
-## Key Rules
+## Anti-Patterns
 
-- **Name prop types**, never `React.FC`, and use a union when props are
-  mutually exclusive.
-- **Derive types from the router**, do not restate server shapes.
-- **Make illegal states unrepresentable**: prefer a union over parallel booleans.
-- **Derive, do not mirror**: no `useState` for something computable in render.
-- **Interactive means `<button>` or `<a>`**: never `onClick` on a `div`.
-- **Every input gets a label**, via `Field`.
-- **Move focus to the heading on route change**: SPAs announce nothing otherwise.
-- **Use design tokens**, sentence case, and `components/ui.tsx` before new CSS.
-- **Optional integrations render nothing** when unavailable, never an error.
-- **Read `vercel-react-best-practices`** for performance, and
-  `vercel-composition-patterns` before adding a boolean prop.
+- **`interface` for props** — use `type`
+- **`React.FC`** — type the parameter directly
+- **`forwardRef`** — React 19 passes `ref` as an ordinary prop
+- **Arbitrary Tailwind colours** — use the tokens
+- **Title Case in UI text** — sentence case
+- **Boolean props to switch behaviour** — compose instead
+- **Parallel booleans for one state** — use a union
+- **`useState` mirroring something derivable** — compute it in render
+- **`onClick` on a `div`** — use a real `<button>`
+- **An input without a label** — use `Field`
+- **Nested ternaries in JSX** — inline IIFE
+- **A render helper switching on a variant** — metadata map
+- **Native `confirm()`** — currently used in three pages, should be a dialog
+- **A style written a third time** — move it into `components/ui.tsx`
+- **An error state for an optional integration** — render nothing
+- **Importing from `src/admin/` outside `App.tsx`** — breaks the lazy boundary
+
+## Reference Implementations
+
+Read these before writing something similar:
+
+- `src/admin/pages/PostsList.tsx` — the simplest list page; fetch, error, render
+- `src/admin/pages/Projects.tsx` — list plus inline draft editing and delete
+- `src/admin/pages/PostEdit.tsx` — detail page wrapping the TipTap editor
+- `src/pages/Home.tsx` — public composition, and `OnRepeat` for a degrading integration
+- `src/admin/components/ui.tsx` — the shared primitives
+
+## Known Gaps
+
+Marked so they are not mistaken for decisions:
+
+- **Route changes are not announced and focus is not moved.** No `aria-live` or
+  focus handling exists in `Admin.tsx` or `App.tsx`.
+- **Auth error handling is duplicated in nine handlers.** Moving it into the
+  client is the fix; do not add a tenth copy.
+- **No form abstraction.** Each page hand-rolls draft state and submission. A
+  canonical pattern should replace this section when one exists.
+- **No dialog component.** Destructive confirmations use native `confirm()`.
+
+## Related Skills
+
+- `vercel-composition-patterns` — compound components, avoiding boolean props
+- `vercel-react-best-practices` — re-renders, bundle size, memoisation
+- `frontend-design` — visual direction when building something new
+- `worker` — the API these pages call, and how auth works
+- `code-quality` — the lifecycle and the verify loop
