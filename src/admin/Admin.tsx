@@ -60,16 +60,15 @@ export function Admin() {
         </div>
       </aside>
 
+      {/* Each page sets its own measure: a list wants width, an article does not. */}
       <main className="min-w-0 flex-1">
-        <div className="mx-auto max-w-4xl px-8 py-10">
-          <Routes>
-            <Route index element={<Navigate to="posts" replace />} />
-            <Route path="posts" element={<PostsList />} />
-            <Route path="posts/:slug" element={<PostEdit />} />
-            <Route path="projects" element={<Projects />} />
-            <Route path="experiences" element={<Experiences />} />
-          </Routes>
-        </div>
+        <Routes>
+          <Route index element={<Navigate to="posts" replace />} />
+          <Route path="posts" element={<PostsList />} />
+          <Route path="posts/:slug" element={<PostEdit />} />
+          <Route path="projects" element={<Projects />} />
+          <Route path="experiences" element={<Experiences />} />
+        </Routes>
       </main>
     </div>
   )

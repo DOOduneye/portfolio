@@ -33,7 +33,9 @@ export function SelectionMenu({ editor }: { editor: Editor }) {
       shouldShow={({ editor, from, to }) =>
         from !== to && !editor.isActive("codeBlock") && !editor.isActive("image")
       }
-      options={{ placement: "top", offset: 8 }}
+      // Clear of the line by more than a line-height, flipping below when the
+      // selection is near the top, and shifted to stay inside the viewport.
+      options={{ placement: "top", offset: 12, flip: true, shift: true }}
       className={floatingPanel}
       onKeyDown={event => event.key === "Escape" && setEditingLink(false)}
     >

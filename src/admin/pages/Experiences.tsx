@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react"
 import { api, errorMessage } from "../api"
-import { Alert, Button, Card, Field, inputClass, PageHeader } from "../components/ui"
+import { Alert, Button, Card, Field, inputClass, Page, PageHeader } from "../components/ui"
 
 type Experience = Awaited<ReturnType<typeof api.admin.experiences.list.query>>[number]
 
@@ -77,7 +77,7 @@ export function Experiences() {
   }
 
   return (
-    <div className="space-y-6">
+    <Page>
       <PageHeader
         title="Experiences"
         description="Roles listed on the site, in the order they appear."
@@ -206,6 +206,6 @@ export function Experiences() {
           </li>
         ))}
       </ul>
-    </div>
+    </Page>
   )
 }

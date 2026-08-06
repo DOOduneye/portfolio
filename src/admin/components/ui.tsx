@@ -71,6 +71,11 @@ export function Status({ status }: { status: "draft" | "published" }) {
   )
 }
 
+/** The standard admin measure. The post editor opts out and uses the article's. */
+export function Page({ children }: { children: ReactNode }) {
+  return <div className="mx-auto max-w-4xl space-y-6 px-8 py-10">{children}</div>
+}
+
 export function PageHeader({
   title,
   description,
