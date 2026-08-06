@@ -76,7 +76,8 @@ Vitest with the Workers pool for tests.
 
 Generic guidance for the stack is vendored in `.claude/skills/` and pinned in
 `skills-lock.json`: `drizzle`, `drizzle-migrations`, `trpc-router`,
-`vercel-react-best-practices`. Restore them with
+`vercel-react-best-practices`, `vercel-composition-patterns`, `tdd`,
+`frontend-design`, `find-skills`, and the Cloudflare set. Restore them with
 `npx skills experimental_install`.
 
 Three skills override those where this repo differs, and the overrides win:
@@ -85,7 +86,7 @@ Three skills override those where this repo differs, and the overrides win:
 |---|---|---|
 | `db/schema.ts`, `migrations/` | `database` | `drizzle`, `drizzle-migrations` |
 | `worker/index.ts`, `trpc.ts`, `access.ts`, `routers/` | `worker` | `trpc-router` |
-| `src/pages`, `src/admin`, styling | `frontend` | `vercel-react-best-practices` |
+| `src/pages`, `src/admin`, styling | `frontend` | `vercel-react-best-practices`, `vercel-composition-patterns` |
 | a PR or a commit message | `pr` | — |
 | refactoring, reviewing, verifying before shipping | `code-quality` | — |
 
