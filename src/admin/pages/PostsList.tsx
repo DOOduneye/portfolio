@@ -88,7 +88,7 @@ export function PostsList() {
                 )}
               </span>
 
-              <span className="shrink-0 text-xs tabular-nums text-subtle-foreground">
+              <span className="shrink-0 font-mono text-xs tabular-nums text-subtle-foreground">
                 {post.publishedAt ? formatDate(post.publishedAt) : formatDate(post.updatedAt)}
               </span>
             </Link>

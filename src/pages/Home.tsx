@@ -102,7 +102,7 @@ function OnRepeat() {
         href={track.url}
         target="_blank"
         rel="noopener noreferrer"
-        className="text-foreground underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground"
+        className="text-muted-foreground transition-colors hover:text-accent"
       >
         {track.name}
       </a>{" "}
@@ -113,8 +113,13 @@ function OnRepeat() {
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <section className="mt-20">
-      <h2 className="mb-8 text-sm font-medium text-foreground">{title}</h2>
+    <section className="mt-24">
+      <div className="mb-10 flex items-baseline gap-3">
+        <h2 className="font-mono text-xs uppercase tracking-[0.25em] text-subtle-foreground">
+          {title}
+        </h2>
+        <div className="h-px flex-1 self-center bg-border" />
+      </div>
       {children}
     </section>
   )
@@ -140,7 +145,9 @@ function RecentWriting() {
           <li key={post.slug} className="border-b border-border last:border-b-0">
             <Link to={`/writing/${post.slug}`} className="group block py-6">
               <div className="flex items-baseline justify-between gap-4">
-                <h3 className="font-medium text-foreground">{post.title}</h3>
+                <h3 className="font-medium text-foreground transition-colors group-hover:text-accent">
+                  {post.title}
+                </h3>
                 <span className="shrink-0 font-mono text-xs text-subtle-foreground">
                   {post.publishedAt &&
                     new Date(post.publishedAt).toLocaleDateString("en-US", {
@@ -159,7 +166,7 @@ function RecentWriting() {
       {posts.length > 4 && (
         <Link
           to="/writing"
-          className="mt-6 inline-block font-mono text-xs text-subtle-foreground transition-colors hover:text-foreground"
+          className="mt-6 inline-block font-mono text-xs text-subtle-foreground transition-colors hover:text-accent"
         >
           All writing →
         </Link>
@@ -173,7 +180,7 @@ export function Home() {
     <div className="mx-auto max-w-2xl px-6 py-28">
       {/* Header */}
       <header>
-        <p className="text-sm text-muted-foreground">New York, NY</p>
+        <p className="font-mono text-xs tracking-wide text-subtle-foreground">New York, NY</p>
         <h1 className="mt-3 text-4xl font-semibold tracking-tight text-foreground">
           David Oduneye
         </h1>
@@ -183,7 +190,7 @@ export function Home() {
             href="https://www.agency.inc"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-foreground underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground"
+            className="text-foreground transition-colors hover:text-accent"
           >
             Agency
           </a>
@@ -197,7 +204,7 @@ export function Home() {
               href={link.url}
               target={link.url.startsWith("http") ? "_blank" : undefined}
               rel="noopener noreferrer"
-              className="text-muted-foreground underline decoration-border underline-offset-4 transition-colors hover:text-foreground hover:decoration-foreground"
+              className="text-subtle-foreground underline decoration-border underline-offset-4 transition-colors hover:text-accent hover:decoration-accent"
             >
               {link.label}
             </a>
@@ -222,7 +229,7 @@ export function Home() {
                       href={job.orgUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="transition-colors hover:text-foreground"
+                      className="transition-colors hover:text-accent"
                     >
                       {job.org}
                     </a>
@@ -244,9 +251,11 @@ export function Home() {
             const inner = (
               <>
                 <div className="flex items-baseline justify-between gap-4">
-                  <h3 className="font-medium text-foreground">{project.name}</h3>
+                  <h3 className="font-medium text-foreground transition-colors group-hover:text-accent">
+                    {project.name}
+                  </h3>
                   {project.url && (
-                    <span className="font-mono text-xs text-subtle-foreground transition-colors group-hover:text-foreground">
+                    <span className="font-mono text-xs text-subtle-foreground transition-colors group-hover:text-accent">
                       ↗
                     </span>
                   )}
@@ -290,7 +299,7 @@ export function Home() {
                 href={link.url}
                 target={link.url.startsWith("http") ? "_blank" : undefined}
                 rel="noopener noreferrer"
-                className="transition-colors hover:text-foreground"
+                className="transition-colors hover:text-accent"
               >
                 {link.label}
               </a>
