@@ -28,7 +28,6 @@ export function mediaKeyFromPath(pathname: string): string | null {
   return KEY_PATTERN.test(key) ? key : null
 }
 
-/** The favicon is addressed by a fixed path, so its bytes can change. */
 export const FAVICON_CACHE_CONTROL = "public, max-age=3600"
 
 export async function serveMedia(
@@ -44,7 +43,7 @@ export async function serveMedia(
   const headers = new Headers()
   object.writeHttpMetadata(headers)
   headers.set("etag", object.httpEtag)
-  // The default key is a hash of the bytes, so that URL can never change.
+  // The default key is a hash of the bytes, so that URL never changes.
   headers.set("cache-control", cacheControl)
   headers.set("x-content-type-options", "nosniff")
   headers.set("content-security-policy", "default-src 'none'; sandbox")
