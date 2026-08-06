@@ -70,7 +70,21 @@ export function PostEditor({
 
   return (
     <Tiptap editor={editor}>
-      <Tiptap.Content />
+      {/*
+        ProseMirror only takes focus from a click that lands on a text block, so
+        the empty space under a short document is dead to the mouse. Clicking
+        below the last block puts the caret at the end instead of doing nothing.
+      */}
+      <div
+        className="min-h-96 cursor-text"
+        onMouseDown={event => {
+          if (event.target !== event.currentTarget) return
+          event.preventDefault()
+          editor.commands.focus("end")
+        }}
+      >
+        <Tiptap.Content />
+      </div>
       <SelectionMenu editor={editor} />
       <InsertMenu
         editor={editor}

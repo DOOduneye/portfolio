@@ -54,11 +54,18 @@ body {
   color: var(--color-foreground);
 }
 
-/* One focus treatment everywhere, keyboard only. */
+/* One focus treatment for controls, keyboard only. Editorial inputs opt out:
+   the title and standfirst are the page's content, and a ring around them
+   while typing reads as a form field rather than as writing. */
 :focus-visible {
   outline: 2px solid var(--color-ring);
   outline-offset: 2px;
   border-radius: 4px;
+}
+
+.editorial:focus,
+.editorial:focus-visible {
+  outline: none;
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -57,17 +57,19 @@ export function LinkButton({
   )
 }
 
-export function Badge({ status }: { status: "draft" | "published" }) {
-  const style =
-    status === "published"
-      ? "border-success/30 bg-success/10 text-success"
-      : "border-border bg-muted text-muted-foreground"
+/**
+ * A dot rather than a filled pill. Published is the resting state and does not
+ * need to shout; a draft is the one that still wants something from you.
+ */
+export function Status({ status }: { status: "draft" | "published" }) {
+  const live = status === "published"
 
   return (
-    <span
-      className={`inline-flex items-center rounded-md border px-2 py-0.5 text-xs font-medium ${style}`}
-    >
-      {status === "published" ? "Published" : "Draft"}
+    <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
+      <span
+        className={`h-1.5 w-1.5 rounded-full ${live ? "bg-success" : "border border-subtle-foreground"}`}
+      />
+      {live ? "Live" : "Draft"}
     </span>
   )
 }

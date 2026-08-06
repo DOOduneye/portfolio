@@ -4,7 +4,7 @@ import { ArrowLeft, ArrowUpRight, Image as ImageIcon, LoaderCircle, Trash2 } fro
 import { api, errorMessage, uploadImage, type RouterOutputs } from "../api"
 import { PostEditor } from "../../editor/PostEditor"
 import { parseDocument, readingMinutes, slugify, wordCount } from "../../editor/document"
-import { Alert, Badge, Button, ConfirmButton, LinkButton } from "../components/ui"
+import { Alert, Button, ConfirmButton, LinkButton, Status } from "../components/ui"
 
 type Post = RouterOutputs["admin"]["posts"]["bySlug"]
 
@@ -183,7 +183,7 @@ export function PostEdit() {
       <header className="flex items-center justify-between gap-4">
         <Link
           to="/admin/posts"
-          className="inline-flex h-9 items-center gap-1.5 rounded-md px-2.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+          className="-ml-2.5 inline-flex h-9 items-center gap-1.5 rounded-md px-2.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
         >
           <ArrowLeft size={15} strokeWidth={2} />
           Posts
@@ -192,11 +192,11 @@ export function PostEdit() {
         <div className="flex items-center gap-3">
           <SaveIndicator state={titleMissing && dirty ? "needsTitle" : saveState} />
           {stats && stats.words > 0 && (
-            <span className="font-mono text-xs text-subtle-foreground">
-              {stats.words} words · {stats.minutes} min
+            <span className="text-xs text-muted-foreground">
+              {stats.words} words · {stats.minutes} min read
             </span>
           )}
-          <Badge status={post.status} />
+          <Status status={post.status} />
           {published && (
             <LinkButton
               href={`/writing/${slug}`}
@@ -227,14 +227,14 @@ export function PostEdit() {
           value={draft.title}
           onChange={title => change({ title })}
           placeholder="Title"
-          className="w-full resize-none bg-transparent text-4xl font-semibold leading-tight tracking-tight text-foreground placeholder:text-subtle-foreground outline-none"
+          className="editorial w-full resize-none bg-transparent text-4xl font-semibold leading-tight tracking-tight text-foreground outline-none placeholder:text-subtle-foreground"
         />
 
         <AutoTextarea
           value={draft.excerpt}
           onChange={excerpt => change({ excerpt })}
-          placeholder="Add a short standfirst, shown in the index and in previews"
-          className="mt-3 w-full resize-none bg-transparent text-lg leading-relaxed text-muted-foreground placeholder:text-subtle-foreground outline-none"
+          placeholder="Add a standfirst"
+          className="editorial mt-3 w-full resize-none bg-transparent text-lg leading-relaxed text-muted-foreground outline-none placeholder:text-subtle-foreground"
         />
 
         <div className="mt-8">
@@ -248,7 +248,7 @@ export function PostEdit() {
 
       <footer className="mt-16 space-y-4 border-t border-border pt-6">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="min-w-0 font-mono text-xs text-subtle-foreground">
+          <div className="min-w-0 text-xs text-muted-foreground">
             <span className="text-muted-foreground">/writing/{slug}</span>
             {!post.publishedAt && slugify(draft.title) !== slug && (
               <button
@@ -268,9 +268,7 @@ export function PostEdit() {
           />
         </div>
         {post.publishedAt && (
-          <p className="font-mono text-xs text-subtle-foreground">
-            The URL is fixed once a post has been published.
-          </p>
+          <p className="text-xs text-muted-foreground">Published posts keep their URL.</p>
         )}
       </footer>
     </div>
@@ -289,7 +287,7 @@ function SaveIndicator({ state }: { state: SaveState | "needsTitle" }) {
   const tone =
     state === "failed" || state === "needsTitle" ? "text-destructive" : "text-subtle-foreground"
 
-  return <span className={`font-mono text-xs ${tone}`}>{label}</span>
+  return <span className={`text-xs ${tone}`}>{label}</span>
 }
 
 function CoverImage({
@@ -334,7 +332,7 @@ function CoverImage({
         <button
           onClick={() => input.current?.click()}
           disabled={uploading}
-          className="flex items-center gap-2 font-mono text-xs text-subtle-foreground transition-colors hover:text-foreground"
+          className="flex items-center gap-2 text-xs text-muted-foreground transition-colors hover:text-foreground"
         >
           {uploading ? (
             <LoaderCircle size={14} className="animate-spin" />

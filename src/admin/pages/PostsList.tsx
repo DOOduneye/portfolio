@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { PenLine, Plus } from "lucide-react"
 import { api, errorMessage, type RouterOutputs } from "../api"
-import { Alert, Badge, Button, Card, EmptyState, PageHeader } from "../components/ui"
+import { Alert, Button, Card, EmptyState, PageHeader, Status } from "../components/ui"
 
 type Post = RouterOutputs["admin"]["posts"]["list"][number]
 
@@ -46,11 +46,7 @@ export function PostsList() {
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        title="Posts"
-        description="Everything you have written, drafts included."
-        action={newPost}
-      />
+      <PageHeader title="Posts" description={summarise(posts)} action={newPost} />
 
       {error && <Alert message={error} />}
 
@@ -84,11 +80,13 @@ export function PostsList() {
               <span className="min-w-0 flex-1">
                 <span className="flex items-center gap-2">
                   <span className="truncate text-sm font-medium text-foreground">{post.title}</span>
-                  <Badge status={post.status} />
+                  <Status status={post.status} />
                 </span>
-                <span className="mt-0.5 block truncate text-sm text-muted-foreground">
-                  {post.excerpt || `/writing/${post.slug}`}
-                </span>
+                {post.excerpt && (
+                  <span className="mt-0.5 block truncate text-sm text-muted-foreground">
+                    {post.excerpt}
+                  </span>
+                )}
               </span>
 
               <span className="shrink-0 text-xs tabular-nums text-subtle-foreground">
@@ -100,6 +98,18 @@ export function PostsList() {
       )}
     </div>
   )
+}
+
+/** Says what is live and what is still open, rather than restating the title. */
+function summarise(posts: Post[] | null): string | undefined {
+  if (!posts) return undefined
+  if (posts.length === 0) return "Nothing written yet."
+
+  const drafts = posts.filter(post => post.status === "draft").length
+  const live = posts.length - drafts
+  const parts = [`${live} live`]
+  if (drafts) parts.push(`${drafts} in draft`)
+  return parts.join(" · ")
 }
 
 function formatDate(value: string): string {

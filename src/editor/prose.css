@@ -132,10 +132,11 @@
   letter-spacing: 0.6em;
 }
 
-/* Editor-only. ProseMirror renders the document into .tiptap. */
+/* Editor-only. ProseMirror renders the document into .tiptap.
+   No min-height here: the wrapper owns it, so the space under a short
+   document belongs to an element that can act on a click. */
 .prose.tiptap {
   outline: none;
-  min-height: 24rem;
 }
 
 .prose.tiptap p.is-empty:first-child::before,
