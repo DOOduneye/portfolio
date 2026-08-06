@@ -10,10 +10,13 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noEmit": true,
+    "baseUrl": ".",
+    "paths": { "@/*": ["./src/*"] },
     "skipLibCheck": true,
     "isolatedModules": true,
     "forceConsistentCasingInFileNames": true,
     "types": [
+      "node",
       "@cloudflare/workers-types",
       "@cloudflare/vitest-pool-workers/types",
       "vite/client"

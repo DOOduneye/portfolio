@@ -3,7 +3,7 @@ import { ArrowUpRight, Briefcase, FileText, LogOut, Layers } from "lucide-react"
 import { useState } from "react"
 import { signOut } from "./api"
 import { SiteMark } from "./components/SiteMark"
-import { Alert } from "./components/ui"
+import { Alert, AlertTitle } from "@/components/ui/alert"
 import { PostsList } from "./pages/PostsList"
 import { PostEdit } from "./pages/PostEdit"
 import { Projects } from "./pages/Projects"
@@ -67,7 +67,9 @@ export function Admin() {
       <main className="min-w-0 flex-1">
         {error && (
           <div className="px-8 pt-6">
-            <Alert message={error} />
+            <Alert variant="destructive">
+              <AlertTitle>{error}</AlertTitle>
+            </Alert>
           </div>
         )}
         <Routes>

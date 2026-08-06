@@ -102,7 +102,7 @@ function OnRepeat() {
         href={track.url}
         target="_blank"
         rel="noopener noreferrer"
-        className="text-muted-foreground transition-colors hover:text-accent"
+        className="text-muted-foreground transition-colors hover:text-brand"
       >
         {track.name}
       </a>{" "}
@@ -125,7 +125,6 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   )
 }
 
-/** Renders nothing until something is published, so the page never shows an empty section. */
 function RecentWriting() {
   const [posts, setPosts] = useState<RouterOutputs["public"]["posts"]["published"]>([])
 
@@ -145,7 +144,7 @@ function RecentWriting() {
           <li key={post.slug} className="border-b border-border last:border-b-0">
             <Link to={`/writing/${post.slug}`} className="group block py-6">
               <div className="flex items-baseline justify-between gap-4">
-                <h3 className="font-medium text-foreground transition-colors group-hover:text-accent">
+                <h3 className="font-medium text-foreground transition-colors group-hover:text-brand">
                   {post.title}
                 </h3>
                 <span className="shrink-0 font-mono text-xs text-subtle-foreground">
@@ -166,7 +165,7 @@ function RecentWriting() {
       {posts.length > 4 && (
         <Link
           to="/writing"
-          className="mt-6 inline-block font-mono text-xs text-subtle-foreground transition-colors hover:text-accent"
+          className="mt-6 inline-block font-mono text-xs text-subtle-foreground transition-colors hover:text-brand"
         >
           All writing →
         </Link>
@@ -190,7 +189,7 @@ export function Home() {
             href="https://www.agency.inc"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-foreground transition-colors hover:text-accent"
+            className="text-foreground transition-colors hover:text-brand"
           >
             Agency
           </a>
@@ -204,7 +203,7 @@ export function Home() {
               href={link.url}
               target={link.url.startsWith("http") ? "_blank" : undefined}
               rel="noopener noreferrer"
-              className="text-subtle-foreground underline decoration-border underline-offset-4 transition-colors hover:text-accent hover:decoration-accent"
+              className="text-subtle-foreground underline decoration-border underline-offset-4 transition-colors hover:text-brand hover:decoration-brand"
             >
               {link.label}
             </a>
@@ -229,7 +228,7 @@ export function Home() {
                       href={job.orgUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="transition-colors hover:text-accent"
+                      className="transition-colors hover:text-brand"
                     >
                       {job.org}
                     </a>
@@ -251,11 +250,11 @@ export function Home() {
             const inner = (
               <>
                 <div className="flex items-baseline justify-between gap-4">
-                  <h3 className="font-medium text-foreground transition-colors group-hover:text-accent">
+                  <h3 className="font-medium text-foreground transition-colors group-hover:text-brand">
                     {project.name}
                   </h3>
                   {project.url && (
-                    <span className="font-mono text-xs text-subtle-foreground transition-colors group-hover:text-accent">
+                    <span className="font-mono text-xs text-subtle-foreground transition-colors group-hover:text-brand">
                       ↗
                     </span>
                   )}
@@ -299,7 +298,7 @@ export function Home() {
                 href={link.url}
                 target={link.url.startsWith("http") ? "_blank" : undefined}
                 rel="noopener noreferrer"
-                className="transition-colors hover:text-accent"
+                className="transition-colors hover:text-brand"
               >
                 {link.label}
               </a>

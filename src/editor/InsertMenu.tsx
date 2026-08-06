@@ -17,10 +17,6 @@ import {
 } from "lucide-react"
 import { floatingPanel, ToolButton } from "./controls"
 
-/**
- * The block inserter, offered only on an empty line. It starts as a single
- * plus so an empty document is not a wall of buttons.
- */
 export function InsertMenu({
   editor,
   onInsertImage,

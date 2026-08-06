@@ -1,10 +1,6 @@
 import type { JSONContent } from "@tiptap/core"
 
-/**
- * Posts are stored as a serialised ProseMirror document rather than HTML, so
- * the public page can render React elements instead of injecting markup, and
- * so word counts and headings can be read without parsing HTML.
- */
+// Posts are stored as a ProseMirror document, not HTML.
 export const EMPTY_DOCUMENT = '{"type":"doc","content":[]}'
 
 export function parseDocument(stored: string): JSONContent {
@@ -46,15 +42,10 @@ export function wordCount(document: JSONContent): number {
   return text ? text.split(/\s+/).length : 0
 }
 
-/** Whole minutes at an average adult reading speed, never less than one. */
 export function readingMinutes(document: JSONContent): number {
   return Math.max(1, Math.round(wordCount(document) / 200))
 }
 
-/**
- * A URL-safe slug derived from a title. Falls back to a timestamp so an
- * untitled post still gets a valid, unique slug.
- */
 export function slugify(title: string): string {
   const slug = title
     .toLowerCase()

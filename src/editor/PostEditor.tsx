@@ -22,9 +22,7 @@ export function PostEditor({
   initialContent: string
   onChange: (document: string) => void
   onError: (message: string) => void
-  /** Backspace at the very start of the body steps back up to the summary. */
   onLeaveStart?: () => void
-  /** Hands the instance up so the page can move focus into the body. */
   onReady?: (editor: Editor) => void
 }) {
   const [uploads, setUploads] = useState(0)
@@ -94,11 +92,8 @@ export function PostEditor({
 
   return (
     <Tiptap editor={editor}>
-      {/*
-        ProseMirror only takes focus from a click that lands on a text block, so
-        the empty space under a short document is dead to the mouse. Clicking
-        below the last block puts the caret at the end instead of doing nothing.
-      */}
+      {/* ProseMirror only focuses from a click on a text block, so the space
+          under a short document would otherwise be dead. */}
       <div
         className="min-h-96 cursor-text"
         onMouseDown={event => {

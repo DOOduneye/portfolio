@@ -53,9 +53,7 @@ export default {
       })
     }
 
-    // Browsers ask for a fixed path, so the chosen icon is served from there
-    // rather than by rewriting the markup. Falls through to the shipped file
-    // when nothing has been chosen.
+    // Falls through to the shipped file when no icon has been chosen.
     if (url.pathname === "/favicon.ico") {
       const chosen = await readSetting(drizzle(env.DB, { schema }), FAVICON_KEY)
       const chosenKey = chosen && mediaKeyFromPath(chosen)

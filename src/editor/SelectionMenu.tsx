@@ -5,10 +5,6 @@ import { BubbleMenu } from "@tiptap/react/menus"
 import { Bold, Check, Code, Heading2, Heading3, Italic, Link, Quote, Unlink } from "lucide-react"
 import { floatingPanel, ToolButton, ToolDivider } from "./controls"
 
-/**
- * Formatting appears against a selection rather than in a permanent toolbar,
- * so the page stays the article while it is being written.
- */
 export function SelectionMenu({ editor }: { editor: Editor }) {
   const [editingLink, setEditingLink] = useState(false)
 
@@ -33,8 +29,6 @@ export function SelectionMenu({ editor }: { editor: Editor }) {
       shouldShow={({ editor, from, to }) =>
         from !== to && !editor.isActive("codeBlock") && !editor.isActive("image")
       }
-      // Clear of the line by more than a line-height, flipping below when the
-      // selection is near the top, and shifted to stay inside the viewport.
       options={{ placement: "top", offset: 12, flip: true, shift: true }}
       className={floatingPanel}
       onKeyDown={event => event.key === "Escape" && setEditingLink(false)}

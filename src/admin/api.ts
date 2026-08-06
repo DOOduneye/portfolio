@@ -6,11 +6,6 @@ export { errorMessage, type RouterOutputs } from "../api"
 
 const ACCESS_TEAM_DOMAIN = "oduneye.cloudflareaccess.com"
 
-/**
- * An expired Access session is a property of the session, not of any one
- * screen. Handling it here is what keeps auth out of every page: a reload
- * bounces through Access and comes back with a fresh token.
- */
 const reauthenticateOnExpiry: TRPCLink<AppRouter> =
   () =>
   ({ op, next }) =>
