@@ -1,22 +1,9 @@
-import { useEffect, useState } from "react"
+import { useQuery } from "@tanstack/react-query"
 import { Link } from "react-router-dom"
-import { publicApi, type RouterOutputs } from "../api"
-
-type Post = RouterOutputs["public"]["posts"]["published"][number]
+import { trpc } from "../api"
 
 export function Writing() {
-  const [posts, setPosts] = useState<Post[] | null>(null)
-
-  useEffect(() => {
-    let cancelled = false
-    publicApi.public.posts.published
-      .query()
-      .then(loaded => !cancelled && setPosts(loaded))
-      .catch(() => !cancelled && setPosts([]))
-    return () => {
-      cancelled = true
-    }
-  }, [])
+  const { data: posts } = useQuery(trpc.public.posts.published.queryOptions())
 
   return (
     <div className="mx-auto max-w-2xl px-6 py-28">

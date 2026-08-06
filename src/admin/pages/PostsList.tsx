@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useMutation, useQuery } from "@tanstack/react-query"
 import { Link, useNavigate } from "react-router-dom"
 import { PenLine, Plus } from "lucide-react"
 import { api, errorMessage, type RouterOutputs } from "../api"
@@ -27,37 +27,24 @@ import {
 type Post = RouterOutputs["admin"]["posts"]["list"][number]
 
 export function PostsList() {
-  const [posts, setPosts] = useState<Post[] | null>(null)
-  const [error, setError] = useState<string | null>(null)
-  const [creating, setCreating] = useState(false)
   const navigate = useNavigate()
+  const posts = useQuery(api.admin.posts.list.queryOptions())
 
-  useEffect(() => {
-    let cancelled = false
-    api.admin.posts.list
-      .query()
-      .then(loaded => !cancelled && setPosts(loaded))
-      .catch(err => !cancelled && setError(errorMessage(err)))
-    return () => {
-      cancelled = true
-    }
-  }, [])
+  const create = useMutation(
+    api.admin.posts.create.mutationOptions({
+      onSuccess: post => post && navigate(`/admin/posts/${post.slug}`)
+    })
+  )
 
-  const createPost = async () => {
-    setCreating(true)
-    setError(null)
-    try {
-      const slug = `untitled-${Date.now().toString(36)}`
-      await api.admin.posts.create.mutate({ slug, title: "Untitled" })
-      navigate(`/admin/posts/${slug}`)
-    } catch (err) {
-      setError(errorMessage(err))
-      setCreating(false)
-    }
-  }
+  const error = posts.error ?? create.error
 
   const newPost = (
-    <Button onClick={createPost} disabled={creating}>
+    <Button
+      onClick={() =>
+        create.mutate({ slug: `untitled-${Date.now().toString(36)}`, title: "Untitled" })
+      }
+      disabled={create.isPending}
+    >
       <Plus data-icon="inline-start" />
       New post
     </Button>
@@ -65,15 +52,15 @@ export function PostsList() {
 
   return (
     <div className="flex flex-col gap-6">
-      <PageHeader title="Posts" description={summarise(posts)} action={newPost} />
+      <PageHeader title="Posts" description={summarise(posts.data)} action={newPost} />
 
       {error && (
         <Alert variant="destructive">
-          <AlertTitle>{error}</AlertTitle>
+          <AlertTitle>{errorMessage(error)}</AlertTitle>
         </Alert>
       )}
 
-      {posts?.length === 0 ? (
+      {posts.data?.length === 0 ? (
         <Empty>
           <EmptyHeader>
             <EmptyMedia variant="icon">
@@ -87,7 +74,7 @@ export function PostsList() {
       ) : (
         <Card className="p-0">
           <ItemGroup>
-            {posts?.map(post => (
+            {posts.data?.map(post => (
               <Item key={post.slug} render={<Link to={`/admin/posts/${post.slug}`} />}>
                 {post.coverImage && (
                   <ItemMedia variant="image">
@@ -113,7 +100,7 @@ export function PostsList() {
   )
 }
 
-function summarise(posts: Post[] | null): string | undefined {
+function summarise(posts: Post[] | undefined): string | undefined {
   if (!posts) return undefined
   if (posts.length === 0) return "Nothing written yet."
 

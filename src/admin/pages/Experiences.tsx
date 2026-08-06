@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useState } from "react"
-import { api, errorMessage } from "../api"
+import { useState } from "react"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { api, errorMessage, type RouterOutputs } from "../api"
 import { PageHeader } from "../components/PageHeader"
 import { Alert, AlertTitle } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
@@ -8,7 +9,7 @@ import { Field, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 
-type Experience = Awaited<ReturnType<typeof api.admin.experiences.list.query>>[number]
+type Experience = RouterOutputs["admin"]["experiences"]["list"][number]
 
 interface Draft {
   id: number | null
@@ -33,24 +34,24 @@ const empty: Draft = {
 }
 
 export function Experiences() {
-  const [items, setItems] = useState<Experience[] | null>(null)
   const [draft, setDraft] = useState<Draft | null>(null)
-  const [error, setError] = useState<string | null>(null)
-  const [saving, setSaving] = useState(false)
+  const queryClient = useQueryClient()
 
-  const refresh = useCallback(() => {
-    api.admin.experiences.list
-      .query()
-      .then(setItems)
-      .catch(err => setError(errorMessage(err)))
-  }, [])
+  const list = useQuery(api.admin.experiences.list.queryOptions())
 
-  useEffect(refresh, [refresh])
+  const settled = {
+    onSuccess: () => queryClient.invalidateQueries(api.admin.experiences.list.queryFilter())
+  }
+  const create = useMutation(api.admin.experiences.create.mutationOptions(settled))
+  const update = useMutation(api.admin.experiences.update.mutationOptions(settled))
+  const destroy = useMutation(api.admin.experiences.remove.mutationOptions(settled))
+
+  const items = list.data
+  const saving = create.isPending || update.isPending
+  const error = list.error ?? create.error ?? update.error ?? destroy.error
 
   const save = async () => {
     if (!draft) return
-    setSaving(true)
-    setError(null)
     const payload = {
       role: draft.role,
       org: draft.org,
@@ -60,26 +61,14 @@ export function Experiences() {
       sortOrder: draft.sortOrder,
       visible: draft.visible ? 1 : 0
     }
-    try {
-      if (draft.id === null) await api.admin.experiences.create.mutate(payload)
-      else await api.admin.experiences.update.mutate({ id: draft.id, ...payload })
-      setDraft(null)
-      refresh()
-    } catch (err) {
-      setError(errorMessage(err))
-    } finally {
-      setSaving(false)
-    }
+    if (draft.id === null) await create.mutateAsync(payload)
+    else await update.mutateAsync({ id: draft.id, ...payload })
+    setDraft(null)
   }
 
-  const remove = async (item: Experience) => {
-    if (!confirm(`Delete "${item.role} · ${item.org}"?`)) return
-    try {
-      await api.admin.experiences.remove.mutate({ id: item.id })
-      refresh()
-    } catch (err) {
-      setError(errorMessage(err))
-    }
+  const remove = (item: Experience) => {
+    if (!confirm(`Delete "${`${item.role} · ${item.org}`}"?`)) return
+    destroy.mutate({ id: item.id })
   }
 
   return (
@@ -92,7 +81,7 @@ export function Experiences() {
 
       {error && (
         <Alert variant="destructive">
-          <AlertTitle>{error}</AlertTitle>
+          <AlertTitle>{errorMessage(error)}</AlertTitle>
         </Alert>
       )}
 
@@ -161,7 +150,10 @@ export function Experiences() {
             </label>
           </div>
           <div className="flex gap-2 border-t border-border pt-4">
-            <Button onClick={save} disabled={saving || !draft.role.trim() || !draft.org.trim()}>
+            <Button
+              onClick={() => void save()}
+              disabled={saving || !draft.role.trim() || !draft.org.trim()}
+            >
               {saving ? "Saving…" : draft.id === null ? "Create" : "Save"}
             </Button>
             <Button onClick={() => setDraft(null)}>Cancel</Button>

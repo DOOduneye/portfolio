@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react"
+import { useQuery } from "@tanstack/react-query"
 import { Link } from "react-router-dom"
-import { publicApi, type RouterOutputs } from "../api"
+import { trpc } from "../api"
 
 const experience = [
   {
@@ -81,17 +81,8 @@ const links = [
   }
 ]
 
-type TopTrack = RouterOutputs["public"]["music"]["topTrack"]
-
 function OnRepeat() {
-  const [track, setTrack] = useState<TopTrack | null>(null)
-
-  useEffect(() => {
-    publicApi.public.music.topTrack
-      .query()
-      .then(setTrack)
-      .catch(() => setTrack(null))
-  }, [])
+  const { data: track } = useQuery(trpc.public.music.topTrack.queryOptions())
 
   if (!track) return null
 
@@ -126,14 +117,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 }
 
 function RecentWriting() {
-  const [posts, setPosts] = useState<RouterOutputs["public"]["posts"]["published"]>([])
-
-  useEffect(() => {
-    publicApi.public.posts.published
-      .query()
-      .then(setPosts)
-      .catch(() => setPosts([]))
-  }, [])
+  const { data: posts = [] } = useQuery(trpc.public.posts.published.queryOptions())
 
   if (posts.length === 0) return null
 
