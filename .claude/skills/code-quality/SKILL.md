@@ -48,10 +48,14 @@ Serves the site, the Worker, and a local D1 on `:5173`.
 ### 3. Verify before claiming anything works
 
 ```bash
+pnpm run lint     # oxlint
+pnpm run format   # oxfmt --check
 pnpm run check    # tsc --noEmit
 pnpm test         # vitest, Worker against a real local D1
 pnpm run build
 ```
+
+`pnpm run fix` applies both the lint autofixes and the formatter.
 
 If `src/worker/db/schema.ts` changed, also:
 
@@ -204,16 +208,22 @@ These are real and worth fixing when you are next in the file:
 
 ## Toolchain
 
-There is no linter or formatter yet, so `tsc --noEmit` is the whole automated
-gate. `oxlint` and `oxfmt` are the intended addition, matching the agency repo.
+`oxlint` and `oxfmt`, configured in `.oxlintrc.json` and `.oxfmtrc.json` to match
+the agency repo so one style covers both. Formatting is not a matter of taste
+here — run `pnpm run fix` rather than arguing with the formatter.
 
-Until they exist, formatting and dead code are unenforced — match the
-surrounding file rather than introducing a new style, and do not rely on review
-to catch a stray unused import.
+`tsconfig` runs `strict` plus `noUncheckedIndexedAccess`, `noUnusedLocals` and
+`noUnusedParameters`. The first is why an index access needs narrowing rather
+than a non-null assertion.
+
+Lint warnings that remain are non-null assertions in test fixtures and the React
+entry point. `scripts/` is excluded, since `spotify-auth.mjs` is a CLI whose
+console output is the point.
 
 ## Key Rules
 
-- **Verify locally before saying it works**: `check`, `test`, `build`.
+- **Verify locally before saying it works**: `lint`, `format`, `check`, `test`,
+  `build`.
 - **Branch from `main`**: never from another PR's branch.
 - **Move a repeated concern down a layer**: do not extract a helper for the
   repeated lines and call it done.

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from "react"
 
 const experience = [
   {
@@ -6,7 +6,7 @@ const experience = [
     org: "Agency",
     orgUrl: "https://www.agency.inc",
     dates: "Jan 2025 - Present",
-    description: "Early engineer building the core product.",
+    description: "Early engineer building the core product."
   },
   {
     role: "Software Engineering Intern",
@@ -14,7 +14,7 @@ const experience = [
     orgUrl: "https://about.google",
     dates: "Aug - Nov 2024",
     description:
-      "Worked on Google's CI tooling for the onArm initiative, adding multi-architecture (ARM and x86) test visibility for internal developers.",
+      "Worked on Google's CI tooling for the onArm initiative, adding multi-architecture (ARM and x86) test visibility for internal developers."
   },
   {
     role: "Software Engineering Intern",
@@ -22,7 +22,7 @@ const experience = [
     orgUrl: "https://www.microsoft.com",
     dates: "May - Aug 2024",
     description:
-      "Improved a synthetic data generator with multithreading and a move to cloud VMs, added tests in production for pipeline validation, and built a dashboard for monitoring test runs across production regions.",
+      "Improved a synthetic data generator with multithreading and a move to cloud VMs, added tests in production for pipeline validation, and built a dashboard for monitoring test runs across production regions."
   },
   {
     role: "Technical Lead",
@@ -30,9 +30,9 @@ const experience = [
     orgUrl: "https://generatenu.com",
     dates: "Jul 2023 - Jun 2024",
     description:
-      "Led a team of 5 to 10 engineers building four full-stack applications for student clubs and events.",
-  },
-];
+      "Led a team of 5 to 10 engineers building four full-stack applications for student clubs and events."
+  }
+]
 
 const projects = [
   {
@@ -40,67 +40,64 @@ const projects = [
     url: null,
     description:
       "A campus events platform serving 15,000+ students, with a Go backend, web and mobile apps, admin dashboards, and a development CLI.",
-    stack: "Go · React · React Native · Redis · AWS · Postgres",
+    stack: "Go · React · React Native · Redis · AWS · Postgres"
   },
   {
     name: "brain-kit",
     url: "https://github.com/DOOduneye/brain-kit",
     description:
       "A CLI, vault skeleton, and set of skills for developing out of a personal knowledge base with Claude Code.",
-    stack: "TypeScript · Claude Code",
+    stack: "TypeScript · Claude Code"
   },
   {
     name: "monkey",
     url: "https://github.com/DOOduneye/monkey",
-    description:
-      "An interpreter and compiler for the Monkey language, from Thorsten Ball's books.",
-    stack: "Go",
+    description: "An interpreter and compiler for the Monkey language, from Thorsten Ball's books.",
+    stack: "Go"
   },
   {
     name: "hydrate",
     url: "https://github.com/DOOduneye/hydrate",
     description: "A token-based authentication utility for Go.",
-    stack: "Go",
+    stack: "Go"
   },
   {
     name: "davidoduneye.com",
     url: "https://github.com/DOOduneye/portfolio",
     description:
       "This site. A React app with a built-in CMS, using tRPC on Cloudflare Workers, D1, and a TipTap editor.",
-    stack: "React · tRPC · Cloudflare · TipTap",
-  },
-];
+    stack: "React · tRPC · Cloudflare · TipTap"
+  }
+]
 
 const links = [
   { label: "GitHub", url: "https://github.com/DOOduneye" },
   { label: "LinkedIn", url: "https://linkedin.com/in/dooduneye" },
   {
     label: "Spotify",
-    url: "https://open.spotify.com/user/317gsn3rqunkxocwuvf7njcj5luy",
-  },
-];
+    url: "https://open.spotify.com/user/317gsn3rqunkxocwuvf7njcj5luy"
+  }
+]
 
 interface TopTrack {
-  name: string;
-  artist: string;
-  url: string;
+  name: string
+  artist: string
+  url: string
 }
 
 function OnRepeat() {
-  const [track, setTrack] = useState<TopTrack | null>(null);
+  const [track, setTrack] = useState<TopTrack | null>(null)
 
   useEffect(() => {
     fetch("/trpc/public.music.topTrack")
-      .then((response) =>
-        response.ok
-          ? (response.json() as Promise<{ result?: { data?: TopTrack | null } }>)
-          : null
+      .then(response =>
+        response.ok ? (response.json() as Promise<{ result?: { data?: TopTrack | null } }>) : null
       )
-      .then((body) => setTrack(body?.result?.data ?? null))
-      .catch(() => setTrack(null));
-  }, []);
+      .then(body => setTrack(body?.result?.data ?? null))
+      .catch(() => setTrack(null))
+  }, [])
 
-  if (!track) return null;
+  if (!track) return null
 
   return (
     <p className="mb-6">
@@ -115,30 +112,28 @@ function OnRepeat() {
       </a>{" "}
       · {track.artist}
     </p>
-  );
+  )
 }
 
 function Section({
   index,
   title,
-  children,
+  children
 }: {
-  index: string;
-  title: string;
-  children: React.ReactNode;
+  index: string
+  title: string
+  children: React.ReactNode
 }) {
   return (
     <section className="mt-24">
       <div className="mb-10 flex items-baseline gap-3">
         <span className="font-mono text-xs text-accent">{index}</span>
-        <h2 className="font-mono text-xs uppercase tracking-[0.25em] text-subtle">
-          {title}
-        </h2>
+        <h2 className="font-mono text-xs uppercase tracking-[0.25em] text-subtle">{title}</h2>
         <div className="h-px flex-1 self-center bg-line" />
       </div>
       {children}
     </section>
-  );
+  )
 }
 
 export function Home() {
@@ -146,12 +141,8 @@ export function Home() {
     <div className="mx-auto max-w-2xl px-6 py-28">
       {/* Header */}
       <header>
-        <p className="font-mono text-xs tracking-wide text-subtle">
-          New York, NY
-        </p>
-        <h1 className="mt-3 text-4xl font-semibold tracking-tight text-fg">
-          David Oduneye
-        </h1>
+        <p className="font-mono text-xs tracking-wide text-subtle">New York, NY</p>
+        <h1 className="mt-3 text-4xl font-semibold tracking-tight text-fg">David Oduneye</h1>
         <p className="mt-5 max-w-lg leading-relaxed">
           Software engineer, member of technical staff at{" "}
           <a
@@ -162,12 +153,11 @@ export function Home() {
           >
             Agency
           </a>
-          . Computer science at{" "}
-          <span className="text-fg">Northeastern University</span>, class of
+          . Computer science at <span className="text-fg">Northeastern University</span>, class of
           2025.
         </p>
         <nav className="mt-8 flex gap-6 font-mono text-xs">
-          {links.map((link) => (
+          {links.map(link => (
             <a
               key={link.label}
               href={link.url}
@@ -184,11 +174,8 @@ export function Home() {
       {/* Experience */}
       <Section index="01" title="Experience">
         <ol className="space-y-12">
-          {experience.map((job) => (
-            <li
-              key={job.org + job.role}
-              className="grid gap-1.5 sm:grid-cols-[10rem_1fr] sm:gap-6"
-            >
+          {experience.map(job => (
+            <li key={job.org + job.role} className="grid gap-1.5 sm:grid-cols-[10rem_1fr] sm:gap-6">
               <span className="whitespace-nowrap pt-0.5 font-mono text-xs leading-6 text-subtle">
                 {job.dates}
               </span>
@@ -209,9 +196,7 @@ export function Home() {
                     <span>{job.org}</span>
                   )}
                 </h3>
-                <p className="mt-1.5 text-sm leading-relaxed">
-                  {job.description}
-                </p>
+                <p className="mt-1.5 text-sm leading-relaxed">{job.description}</p>
               </div>
             </li>
           ))}
@@ -221,7 +206,7 @@ export function Home() {
       {/* Projects */}
       <Section index="02" title="Projects">
         <ul>
-          {projects.map((project) => {
+          {projects.map(project => {
             const inner = (
               <>
                 <div className="flex items-baseline justify-between gap-4">
@@ -234,20 +219,13 @@ export function Home() {
                     </span>
                   )}
                 </div>
-                <p className="mt-1.5 max-w-xl text-sm leading-relaxed">
-                  {project.description}
-                </p>
-                <p className="mt-2.5 font-mono text-xs text-subtle">
-                  {project.stack}
-                </p>
+                <p className="mt-1.5 max-w-xl text-sm leading-relaxed">{project.description}</p>
+                <p className="mt-2.5 font-mono text-xs text-subtle">{project.stack}</p>
               </>
-            );
+            )
 
             return (
-              <li
-                key={project.name}
-                className="border-b border-line last:border-b-0"
-              >
+              <li key={project.name} className="border-b border-line last:border-b-0">
                 {project.url ? (
                   <a
                     href={project.url}
@@ -261,7 +239,7 @@ export function Home() {
                   <div className="py-6">{inner}</div>
                 )}
               </li>
-            );
+            )
           })}
         </ul>
       </Section>
@@ -272,7 +250,7 @@ export function Home() {
         <div className="flex items-center justify-between">
           <span>© {new Date().getFullYear()} David Oduneye</span>
           <div className="flex gap-5">
-            {links.map((link) => (
+            {links.map(link => (
               <a
                 key={link.label}
                 href={link.url}
@@ -287,5 +265,5 @@ export function Home() {
         </div>
       </footer>
     </div>
-  );
+  )
 }

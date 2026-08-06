@@ -1,8 +1,5 @@
-import {
-  cloudflareTest,
-  readD1Migrations,
-} from "@cloudflare/vitest-pool-workers";
-import { defineConfig } from "vitest/config";
+import { cloudflareTest, readD1Migrations } from "@cloudflare/vitest-pool-workers"
+import { defineConfig } from "vitest/config"
 
 export default defineConfig({
   plugins: [
@@ -12,13 +9,13 @@ export default defineConfig({
       miniflare: {
         bindings: {
           TEST_MIGRATIONS: await readD1Migrations("migrations"),
-          ENVIRONMENT: "development",
-        },
-      },
-    })),
+          ENVIRONMENT: "development"
+        }
+      }
+    }))
   ],
   test: {
     include: ["src/worker/**/*.test.ts"],
-    setupFiles: ["./src/worker/test-setup.ts"],
-  },
-});
+    setupFiles: ["./src/worker/test-setup.ts"]
+  }
+})

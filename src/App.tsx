@@ -1,10 +1,8 @@
-import { lazy, Suspense } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { Home } from "./pages/Home";
+import { lazy, Suspense } from "react"
+import { BrowserRouter, Route, Routes } from "react-router-dom"
+import { Home } from "./pages/Home"
 
-const Admin = lazy(() =>
-  import("./admin/Admin").then((m) => ({ default: m.Admin }))
-);
+const Admin = lazy(() => import("./admin/Admin").then(m => ({ default: m.Admin })))
 
 export function App() {
   return (
@@ -21,5 +19,5 @@ export function App() {
         />
       </Routes>
     </BrowserRouter>
-  );
+  )
 }

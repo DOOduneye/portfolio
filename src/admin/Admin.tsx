@@ -1,17 +1,15 @@
-import { Navigate, NavLink, Route, Routes } from "react-router-dom";
-import { reauthenticate, signOut } from "./api";
-import { PostsList } from "./pages/PostsList";
-import { PostEdit } from "./pages/PostEdit";
-import { Projects } from "./pages/Projects";
-import { Experiences } from "./pages/Experiences";
+import { Navigate, NavLink, Route, Routes } from "react-router-dom"
+import { reauthenticate, signOut } from "./api"
+import { PostsList } from "./pages/PostsList"
+import { PostEdit } from "./pages/PostEdit"
+import { Projects } from "./pages/Projects"
+import { Experiences } from "./pages/Experiences"
 
 export function Admin() {
   const navClass = ({ isActive }: { isActive: boolean }) =>
     `rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
-      isActive
-        ? "bg-raised text-fg"
-        : "text-muted hover:bg-surface hover:text-fg"
-    }`;
+      isActive ? "bg-raised text-fg" : "text-muted hover:bg-surface hover:text-fg"
+    }`
 
   return (
     <div className="flex min-h-screen">
@@ -48,25 +46,13 @@ export function Admin() {
         <div className="mx-auto max-w-3xl">
           <Routes>
             <Route index element={<Navigate to="posts" replace />} />
-            <Route
-              path="posts"
-              element={<PostsList onAuthError={reauthenticate} />}
-            />
-            <Route
-              path="posts/:slug"
-              element={<PostEdit onAuthError={reauthenticate} />}
-            />
-            <Route
-              path="projects"
-              element={<Projects onAuthError={reauthenticate} />}
-            />
-            <Route
-              path="experiences"
-              element={<Experiences onAuthError={reauthenticate} />}
-            />
+            <Route path="posts" element={<PostsList onAuthError={reauthenticate} />} />
+            <Route path="posts/:slug" element={<PostEdit onAuthError={reauthenticate} />} />
+            <Route path="projects" element={<Projects onAuthError={reauthenticate} />} />
+            <Route path="experiences" element={<Experiences onAuthError={reauthenticate} />} />
           </Routes>
         </div>
       </main>
     </div>
-  );
+  )
 }
