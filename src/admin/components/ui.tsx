@@ -58,18 +58,15 @@ export function LinkButton({
 }
 
 /**
- * A dot rather than a filled pill. Published is the resting state and does not
- * need to shout; a draft is the one that still wants something from you.
+ * Only a draft is marked. Published is the resting state, and its date already
+ * says so, so labelling both leaves every row shouting the same thing.
  */
 export function Status({ status }: { status: "draft" | "published" }) {
-  const live = status === "published"
+  if (status === "published") return null
 
   return (
-    <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
-      <span
-        className={`h-1.5 w-1.5 rounded-full ${live ? "bg-success" : "border border-subtle-foreground"}`}
-      />
-      {live ? "Live" : "Draft"}
+    <span className="rounded border border-border px-1.5 py-px text-xs font-medium text-muted-foreground">
+      Draft
     </span>
   )
 }

@@ -67,14 +67,13 @@ export function PostsList() {
               to={`/admin/posts/${post.slug}`}
               className="flex items-center gap-4 px-4 py-3.5 transition-colors hover:bg-muted/40"
             >
-              {post.coverImage ? (
+              {/* No placeholder box: an empty frame is a slot for nothing. */}
+              {post.coverImage && (
                 <img
                   src={post.coverImage}
                   alt=""
                   className="h-11 w-16 shrink-0 rounded border border-border object-cover"
                 />
-              ) : (
-                <span className="h-11 w-16 shrink-0 rounded border border-border bg-muted/50" />
               )}
 
               <span className="min-w-0 flex-1">
