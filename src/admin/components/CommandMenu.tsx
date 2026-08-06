@@ -135,7 +135,7 @@ export function CommandMenu({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         showCloseButton={false}
-        className="top-1/4 max-w-xl translate-y-0 gap-0 overflow-hidden p-0"
+        className="top-[12vh] w-full translate-y-0 gap-0 overflow-hidden p-0 sm:max-w-2xl"
       >
         <DialogTitle className="sr-only">Commands</DialogTitle>
         <DialogDescription className="sr-only">
@@ -150,10 +150,10 @@ export function CommandMenu({
           placeholder="Search posts, or jump to a section…"
           aria-label="Search commands"
           spellCheck={false}
-          className="w-full border-b border-border bg-transparent px-4 py-3.5 text-sm text-foreground outline-none placeholder:text-subtle-foreground"
+          className="w-full border-b border-border bg-transparent px-4 py-4 text-base text-foreground outline-none placeholder:text-subtle-foreground"
         />
 
-        <div className="max-h-80 overflow-y-auto p-1.5">
+        <div className="max-h-[26rem] overflow-y-auto p-1.5">
           {matches.length === 0 && (
             <p className="px-3 py-6 text-center text-sm text-muted-foreground">
               Nothing matches that.
@@ -177,7 +177,7 @@ export function CommandMenu({
                   onClick={command.run}
                   onMouseMove={() => setHighlighted(index)}
                   data-highlighted={index === highlighted || undefined}
-                  className="flex w-full items-center gap-2.5 rounded-md px-2.5 py-2 text-left text-sm text-muted-foreground data-highlighted:bg-muted data-highlighted:text-foreground"
+                  className="flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-left text-sm text-muted-foreground data-highlighted:bg-muted data-highlighted:text-foreground"
                 >
                   <Icon size={15} strokeWidth={2} className="shrink-0" />
                   <span className="min-w-0 flex-1 truncate">{command.label}</span>
