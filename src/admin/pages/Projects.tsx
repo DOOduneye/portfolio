@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react"
-import { api, errorMessage, isUnauthorized } from "../api"
-import { dangerButton, Field, ghostButton, inputClass, primaryButton } from "../components/ui"
+import { api, errorMessage } from "../api"
+import { Alert, Button, Card, Field, inputClass, PageHeader } from "../components/ui"
 
 type Project = Awaited<ReturnType<typeof api.admin.projects.list.query>>[number]
 
@@ -22,7 +22,7 @@ const empty: Draft = {
   visible: true
 }
 
-export function Projects({ onAuthError }: { onAuthError: () => void }) {
+export function Projects() {
   const [items, setItems] = useState<Project[] | null>(null)
   const [draft, setDraft] = useState<Draft | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -32,11 +32,8 @@ export function Projects({ onAuthError }: { onAuthError: () => void }) {
     api.admin.projects.list
       .query()
       .then(setItems)
-      .catch(err => {
-        if (isUnauthorized(err)) onAuthError()
-        else setError(errorMessage(err))
-      })
-  }, [onAuthError])
+      .catch(err => setError(errorMessage(err)))
+  }, [])
 
   useEffect(refresh, [refresh])
 
@@ -57,8 +54,7 @@ export function Projects({ onAuthError }: { onAuthError: () => void }) {
       setDraft(null)
       refresh()
     } catch (err) {
-      if (isUnauthorized(err)) onAuthError()
-      else setError(errorMessage(err))
+      setError(errorMessage(err))
     } finally {
       setSaving(false)
     }
@@ -70,28 +66,26 @@ export function Projects({ onAuthError }: { onAuthError: () => void }) {
       await api.admin.projects.remove.mutate({ id: item.id })
       refresh()
     } catch (err) {
-      if (isUnauthorized(err)) onAuthError()
-      else setError(errorMessage(err))
+      setError(errorMessage(err))
     }
   }
 
   return (
-    <div>
-      <header className="flex items-center justify-between">
-        <h1 className="text-xl font-semibold text-fg">Projects</h1>
-        <button onClick={() => setDraft(empty)} className={primaryButton}>
-          New project
-        </button>
-      </header>
+    <div className="space-y-6">
+      <PageHeader
+        title="Projects"
+        description="The work listed on the site, in the order it appears."
+        action={
+          <Button variant="primary" onClick={() => setDraft(empty)}>
+            New project
+          </Button>
+        }
+      />
 
-      {error && (
-        <p className="mt-6 rounded-lg border border-danger/20 bg-danger/10 px-4 py-3 text-sm text-danger">
-          {error}
-        </p>
-      )}
+      {error && <Alert message={error} />}
 
       {draft && (
-        <div className="mt-6 space-y-4 rounded-xl border border-line bg-surface p-5">
+        <Card className="space-y-4 p-5">
           <Field label="Name">
             <input
               value={draft.name}
@@ -125,7 +119,7 @@ export function Projects({ onAuthError }: { onAuthError: () => void }) {
                 className={`${inputClass} w-24`}
               />
             </Field>
-            <label className="flex items-center gap-2 pt-5 text-sm text-muted">
+            <label className="flex items-center gap-2 pt-5 text-sm text-muted-foreground">
               <input
                 type="checkbox"
                 checked={draft.visible}
@@ -135,37 +129,33 @@ export function Projects({ onAuthError }: { onAuthError: () => void }) {
               Visible on site
             </label>
           </div>
-          <div className="flex gap-2 border-t border-line pt-4">
-            <button
-              onClick={save}
-              disabled={saving || !draft.name.trim()}
-              className={primaryButton}
-            >
+          <div className="flex gap-2 border-t border-border pt-4">
+            <Button variant="primary" onClick={save} disabled={saving || !draft.name.trim()}>
               {saving ? "Saving…" : draft.id === null ? "Create" : "Save"}
-            </button>
-            <button onClick={() => setDraft(null)} className={ghostButton}>
-              Cancel
-            </button>
+            </Button>
+            <Button onClick={() => setDraft(null)}>Cancel</Button>
           </div>
-        </div>
+        </Card>
       )}
 
       {items && items.length === 0 && !draft && (
-        <p className="mt-10 text-sm text-subtle">No projects yet.</p>
+        <p className="text-sm text-muted-foreground">No projects yet.</p>
       )}
 
-      <ul className="mt-6 divide-y divide-line">
+      <ul className="divide-y divide-border">
         {items?.map(item => (
           <li key={item.id} className="flex items-center justify-between gap-4 py-3.5">
             <div className="min-w-0">
-              <span className="font-medium text-fg">
+              <span className="font-medium text-foreground">
                 {item.name}
-                {!item.visible && <span className="ml-2 text-xs text-subtle">(hidden)</span>}
+                {!item.visible && (
+                  <span className="ml-2 text-xs text-subtle-foreground">(hidden)</span>
+                )}
               </span>
-              <p className="truncate text-sm text-subtle">{item.description}</p>
+              <p className="truncate text-sm text-subtle-foreground">{item.description}</p>
             </div>
             <div className="flex shrink-0 gap-1.5">
-              <button
+              <Button
                 onClick={() =>
                   setDraft({
                     id: item.id,
@@ -176,13 +166,12 @@ export function Projects({ onAuthError }: { onAuthError: () => void }) {
                     visible: item.visible === 1
                   })
                 }
-                className={ghostButton}
               >
                 Edit
-              </button>
-              <button onClick={() => remove(item)} className={dangerButton}>
+              </Button>
+              <Button variant="destructive" onClick={() => remove(item)}>
                 Delete
-              </button>
+              </Button>
             </div>
           </li>
         ))}

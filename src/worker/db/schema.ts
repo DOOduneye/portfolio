@@ -1,5 +1,6 @@
 import { sql } from "drizzle-orm"
 import { index, integer, sqliteTable, text } from "drizzle-orm/sqlite-core"
+import { EMPTY_DOCUMENT } from "../../editor/document"
 
 const timestamp = (column: string) =>
   text(column)
@@ -35,8 +36,10 @@ export const posts = sqliteTable("posts", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   slug: text("slug").notNull().unique(),
   title: text("title").notNull(),
-  content: text("content").notNull().default(""),
+  // A serialised ProseMirror document, not HTML. See src/editor/document.ts.
+  content: text("content").notNull().default(EMPTY_DOCUMENT),
   excerpt: text("excerpt"),
+  coverImage: text("cover_image"),
   status: text("status", { enum: ["draft", "published"] })
     .notNull()
     .default("draft"),

@@ -55,6 +55,12 @@
       "skillPath": "skills/engineering/tdd/SKILL.md",
       "computedHash": "614ac2e45fb0ec02f6ce422d26bd9aa4e33aa4867323f5a3a5c0c20b96f78ff4"
     },
+    "tiptap": {
+      "source": "ueberdosis/tiptap",
+      "sourceType": "github",
+      "skillPath": "skills/tiptap/SKILL.md",
+      "computedHash": "d3abb7a7e4cb1eb4064e8dcb0928771d58052c7d92e2ec3725a3a9a3c6cd338b"
+    },
     "trpc-router": {
       "source": "trpc/trpc",
       "sourceType": "github",

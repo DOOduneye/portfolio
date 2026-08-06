@@ -24,6 +24,12 @@
       "database_name": "portfolio-cms",
       "database_id": "5b894ca3-c901-4105-9a0d-7aeb02a141c3"
     }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "MEDIA",
+      "bucket_name": "portfolio-media"
+    }
   ]
   // Secrets (set with `wrangler secret put <name>`):
   //   SPOTIFY_CLIENT_ID       — Spotify app client id

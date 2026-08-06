@@ -1,55 +1,73 @@
 import { Navigate, NavLink, Route, Routes } from "react-router-dom"
-import { reauthenticate, signOut } from "./api"
+import { ArrowUpRight, Briefcase, FileText, LogOut, Layers } from "lucide-react"
+import { signOut } from "./api"
 import { PostsList } from "./pages/PostsList"
 import { PostEdit } from "./pages/PostEdit"
 import { Projects } from "./pages/Projects"
 import { Experiences } from "./pages/Experiences"
 
-export function Admin() {
-  const navClass = ({ isActive }: { isActive: boolean }) =>
-    `rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
-      isActive ? "bg-raised text-fg" : "text-muted hover:bg-surface hover:text-fg"
-    }`
+const SECTIONS = [
+  { to: "/admin/posts", label: "Posts", icon: FileText },
+  { to: "/admin/projects", label: "Projects", icon: Layers },
+  { to: "/admin/experiences", label: "Experience", icon: Briefcase }
+]
 
+export function Admin() {
   return (
-    <div className="flex min-h-screen">
-      <aside className="flex w-52 shrink-0 flex-col gap-8 border-r border-line p-5">
-        <div>
-          <div className="font-semibold text-fg">David Oduneye</div>
-          <div className="text-xs text-subtle">Content admin</div>
+    <div className="flex min-h-screen bg-background">
+      <aside className="flex w-60 shrink-0 flex-col border-r border-border bg-card">
+        <div className="flex items-center gap-2.5 px-4 py-5">
+          <span className="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-sm font-semibold text-primary-foreground">
+            D
+          </span>
+          <span className="text-sm font-medium text-foreground">davidoduneye.com</span>
         </div>
-        <nav className="flex flex-col gap-1">
-          <NavLink to="/admin/posts" className={navClass}>
-            Posts
-          </NavLink>
-          <NavLink to="/admin/projects" className={navClass}>
-            Projects
-          </NavLink>
-          <NavLink to="/admin/experiences" className={navClass}>
-            Experiences
-          </NavLink>
+
+        <nav className="flex flex-col gap-0.5 px-2.5">
+          {SECTIONS.map(({ to, label, icon: Icon }) => (
+            <NavLink
+              key={to}
+              to={to}
+              className={({ isActive }) =>
+                `flex h-9 items-center gap-2.5 rounded-md px-2.5 text-sm transition-colors ${
+                  isActive
+                    ? "bg-muted font-medium text-foreground"
+                    : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
+                }`
+              }
+            >
+              <Icon size={15} strokeWidth={2} />
+              {label}
+            </NavLink>
+          ))}
         </nav>
-        <div className="mt-auto flex flex-col gap-2 text-sm">
-          <a href="/" className="text-subtle transition-colors hover:text-muted">
-            ← View site
+
+        <div className="mt-auto flex flex-col gap-0.5 border-t border-border p-2.5">
+          <a
+            href="/"
+            className="flex h-9 items-center gap-2.5 rounded-md px-2.5 text-sm text-muted-foreground transition-colors hover:bg-muted/60 hover:text-foreground"
+          >
+            <ArrowUpRight size={15} strokeWidth={2} />
+            View site
           </a>
           <button
             onClick={signOut}
-            className="text-left text-subtle transition-colors hover:text-muted"
+            className="flex h-9 items-center gap-2.5 rounded-md px-2.5 text-sm text-muted-foreground transition-colors hover:bg-muted/60 hover:text-foreground"
           >
+            <LogOut size={15} strokeWidth={2} />
             Sign out
           </button>
         </div>
       </aside>
 
-      <main className="min-w-0 flex-1 px-8 py-10">
-        <div className="mx-auto max-w-3xl">
+      <main className="min-w-0 flex-1">
+        <div className="mx-auto max-w-4xl px-8 py-10">
           <Routes>
             <Route index element={<Navigate to="posts" replace />} />
-            <Route path="posts" element={<PostsList onAuthError={reauthenticate} />} />
-            <Route path="posts/:slug" element={<PostEdit onAuthError={reauthenticate} />} />
-            <Route path="projects" element={<Projects onAuthError={reauthenticate} />} />
-            <Route path="experiences" element={<Experiences onAuthError={reauthenticate} />} />
+            <Route path="posts" element={<PostsList />} />
+            <Route path="posts/:slug" element={<PostEdit />} />
+            <Route path="projects" element={<Projects />} />
+            <Route path="experiences" element={<Experiences />} />
           </Routes>
         </div>
       </main>
