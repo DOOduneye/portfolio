@@ -29,7 +29,6 @@ export function createSlashExtension(bridge: SlashBridge) {
           editor: this.editor,
           char: "/",
           allowSpaces: false,
-          startOfLine: true,
 
           items: ({ query }) => {
             const needle = query.toLowerCase()

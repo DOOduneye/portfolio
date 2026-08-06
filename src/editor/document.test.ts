@@ -7,8 +7,8 @@ const paragraph = (text: string) => ({
 })
 
 describe("parseDocument", () => {
-  it("returns an empty document for an empty column", () => {
-    expect(parseDocument("")).toEqual({ type: "doc", content: [] })
+  it("returns a usable document for an empty column", () => {
+    expect(parseDocument("")).toEqual({ type: "doc", content: [{ type: "paragraph" }] })
   })
 
   it("round-trips a stored document", () => {
@@ -25,7 +25,10 @@ describe("parseDocument", () => {
   })
 
   it("parses the stored default", () => {
-    expect(parseDocument(EMPTY_DOCUMENT)).toEqual({ type: "doc", content: [] })
+    expect(parseDocument(EMPTY_DOCUMENT)).toEqual({
+      type: "doc",
+      content: [{ type: "paragraph" }]
+    })
   })
 })
 
@@ -82,5 +85,18 @@ describe("slugify", () => {
     for (const title of ["Hello There World", "What's next? (part 2)", "Café façade", "!!!"]) {
       expect(slugify(title)).toMatch(pattern)
     }
+  })
+})
+
+describe("blank documents", () => {
+  it("gives an empty column a paragraph to type into", () => {
+    expect(parseDocument("")).toEqual({ type: "doc", content: [{ type: "paragraph" }] })
+  })
+
+  it("repairs a stored document with no blocks", () => {
+    expect(parseDocument(EMPTY_DOCUMENT)).toEqual({
+      type: "doc",
+      content: [{ type: "paragraph" }]
+    })
   })
 })
