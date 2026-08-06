@@ -127,7 +127,7 @@ function LinkField({
         onChange={event => setHref(event.target.value)}
         onKeyDown={event => event.key === "Escape" && onCancel()}
         placeholder="Paste a link"
-        className="w-56 bg-transparent px-1.5 py-1 text-sm text-fg placeholder-subtle outline-none"
+        className="w-56 bg-transparent px-1.5 py-1 text-sm text-foreground placeholder:text-subtle-foreground outline-none"
       />
       <ToolButton icon={Check} label="Apply link" onClick={() => onSubmit(href.trim())} />
       {initialHref && <ToolButton icon={Unlink} label="Remove link" onClick={() => onSubmit("")} />}

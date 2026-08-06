@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
+import { PenLine, Plus } from "lucide-react"
 import { api, errorMessage, type RouterOutputs } from "../api"
-import { StatusBadge } from "../components/ui"
+import { Alert, Badge, Button, Card, EmptyState, PageHeader } from "../components/ui"
 
 type Post = RouterOutputs["admin"]["posts"]["list"][number]
 
@@ -37,62 +38,66 @@ export function PostsList() {
     }
   }
 
+  const newPost = (
+    <Button variant="primary" icon={Plus} onClick={createPost} disabled={creating}>
+      New post
+    </Button>
+  )
+
   return (
-    <div>
-      <header className="flex items-center justify-between">
-        <h1 className="text-xl font-semibold text-fg">Posts</h1>
-        <button
-          onClick={createPost}
-          disabled={creating}
-          className="rounded-lg bg-accent px-3.5 py-1.5 text-sm font-medium text-page transition-colors hover:bg-accent-strong disabled:opacity-50"
-        >
-          New post
-        </button>
-      </header>
+    <div className="space-y-6">
+      <PageHeader
+        title="Posts"
+        description="Everything you have written, drafts included."
+        action={newPost}
+      />
 
-      {error && (
-        <p className="mt-6 rounded-lg border border-danger/20 bg-danger/10 px-4 py-3 text-sm text-danger">
-          {error}
-        </p>
-      )}
+      {error && <Alert message={error} />}
 
-      {posts?.length === 0 && (
-        <p className="mt-10 text-sm text-subtle">Nothing here yet. Write the first one.</p>
-      )}
-
-      <ul className="mt-4 divide-y divide-line">
-        {posts?.map(post => (
-          <li key={post.slug}>
-            <Link to={`/admin/posts/${post.slug}`} className="group flex gap-4 py-5">
-              <div className="min-w-0 flex-1">
-                <div className="flex items-center gap-2.5">
-                  <span className="truncate font-medium text-fg transition-colors group-hover:text-accent">
-                    {post.title}
-                  </span>
-                  <StatusBadge status={post.status} />
-                </div>
-                {post.excerpt && (
-                  <p className="mt-1.5 line-clamp-2 text-sm leading-relaxed text-muted">
-                    {post.excerpt}
-                  </p>
-                )}
-                <p className="mt-2 font-mono text-xs text-subtle">
-                  {post.publishedAt
-                    ? `published ${formatDate(post.publishedAt)}`
-                    : `edited ${formatDate(post.updatedAt)}`}
-                </p>
-              </div>
-              {post.coverImage && (
+      {posts?.length === 0 ? (
+        <Card>
+          <EmptyState
+            icon={PenLine}
+            title="No posts yet"
+            description="Drafts stay private until you publish them."
+            action={newPost}
+          />
+        </Card>
+      ) : (
+        <Card className="divide-y divide-border overflow-hidden">
+          {posts?.map(post => (
+            <Link
+              key={post.slug}
+              to={`/admin/posts/${post.slug}`}
+              className="flex items-center gap-4 px-4 py-3.5 transition-colors hover:bg-muted/40"
+            >
+              {post.coverImage ? (
                 <img
                   src={post.coverImage}
                   alt=""
-                  className="h-20 w-32 shrink-0 rounded-lg border border-line object-cover"
+                  className="h-11 w-16 shrink-0 rounded border border-border object-cover"
                 />
+              ) : (
+                <span className="h-11 w-16 shrink-0 rounded border border-border bg-muted/50" />
               )}
+
+              <span className="min-w-0 flex-1">
+                <span className="flex items-center gap-2">
+                  <span className="truncate text-sm font-medium text-foreground">{post.title}</span>
+                  <Badge status={post.status} />
+                </span>
+                <span className="mt-0.5 block truncate text-sm text-muted-foreground">
+                  {post.excerpt || `/writing/${post.slug}`}
+                </span>
+              </span>
+
+              <span className="shrink-0 text-xs tabular-nums text-subtle-foreground">
+                {post.publishedAt ? formatDate(post.publishedAt) : formatDate(post.updatedAt)}
+              </span>
             </Link>
-          </li>
-        ))}
-      </ul>
+          ))}
+        </Card>
+      )}
     </div>
   )
 }

@@ -122,7 +122,7 @@ export function InsertMenu({
           aria-label="Insert"
           onMouseDown={event => event.preventDefault()}
           onClick={() => setOpen(true)}
-          className="flex h-7 w-7 items-center justify-center rounded-full border border-line text-subtle transition-colors hover:border-accent hover:text-accent"
+          className="flex h-7 w-7 items-center justify-center rounded-full border border-border text-subtle-foreground transition-colors hover:border-ring hover:text-foreground"
         >
           <Plus size={15} strokeWidth={2} />
         </button>

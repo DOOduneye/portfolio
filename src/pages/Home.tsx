@@ -102,7 +102,7 @@ function OnRepeat() {
         href={track.url}
         target="_blank"
         rel="noopener noreferrer"
-        className="text-muted transition-colors hover:text-accent"
+        className="text-foreground underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground"
       >
         {track.name}
       </a>{" "}
@@ -111,22 +111,10 @@ function OnRepeat() {
   )
 }
 
-function Section({
-  index,
-  title,
-  children
-}: {
-  index: string
-  title: string
-  children: React.ReactNode
-}) {
+function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <section className="mt-24">
-      <div className="mb-10 flex items-baseline gap-3">
-        <span className="font-mono text-xs text-accent">{index}</span>
-        <h2 className="font-mono text-xs uppercase tracking-[0.25em] text-subtle">{title}</h2>
-        <div className="h-px flex-1 self-center bg-line" />
-      </div>
+    <section className="mt-20">
+      <h2 className="mb-8 text-sm font-medium text-foreground">{title}</h2>
       {children}
     </section>
   )
@@ -146,16 +134,14 @@ function RecentWriting() {
   if (posts.length === 0) return null
 
   return (
-    <Section index="03" title="Writing">
+    <Section title="Writing">
       <ul>
         {posts.slice(0, 4).map(post => (
-          <li key={post.slug} className="border-b border-line last:border-b-0">
+          <li key={post.slug} className="border-b border-border last:border-b-0">
             <Link to={`/writing/${post.slug}`} className="group block py-6">
               <div className="flex items-baseline justify-between gap-4">
-                <h3 className="font-medium text-fg transition-colors group-hover:text-accent">
-                  {post.title}
-                </h3>
-                <span className="shrink-0 font-mono text-xs text-subtle">
+                <h3 className="font-medium text-foreground">{post.title}</h3>
+                <span className="shrink-0 font-mono text-xs text-subtle-foreground">
                   {post.publishedAt &&
                     new Date(post.publishedAt).toLocaleDateString("en-US", {
                       month: "short",
@@ -173,7 +159,7 @@ function RecentWriting() {
       {posts.length > 4 && (
         <Link
           to="/writing"
-          className="mt-6 inline-block font-mono text-xs text-subtle transition-colors hover:text-accent"
+          className="mt-6 inline-block font-mono text-xs text-subtle-foreground transition-colors hover:text-foreground"
         >
           All writing →
         </Link>
@@ -187,20 +173,22 @@ export function Home() {
     <div className="mx-auto max-w-2xl px-6 py-28">
       {/* Header */}
       <header>
-        <p className="font-mono text-xs tracking-wide text-subtle">New York, NY</p>
-        <h1 className="mt-3 text-4xl font-semibold tracking-tight text-fg">David Oduneye</h1>
+        <p className="text-sm text-muted-foreground">New York, NY</p>
+        <h1 className="mt-3 text-4xl font-semibold tracking-tight text-foreground">
+          David Oduneye
+        </h1>
         <p className="mt-5 max-w-lg leading-relaxed">
           Software engineer, member of technical staff at{" "}
           <a
             href="https://www.agency.inc"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-fg transition-colors hover:text-accent"
+            className="text-foreground underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground"
           >
             Agency
           </a>
-          . Computer science at <span className="text-fg">Northeastern University</span>, class of
-          2025.
+          . Computer science at <span className="text-foreground">Northeastern University</span>,
+          class of 2025.
         </p>
         <nav className="mt-8 flex gap-6 font-mono text-xs">
           {links.map(link => (
@@ -209,7 +197,7 @@ export function Home() {
               href={link.url}
               target={link.url.startsWith("http") ? "_blank" : undefined}
               rel="noopener noreferrer"
-              className="text-subtle underline decoration-line underline-offset-4 transition-colors hover:text-accent hover:decoration-accent"
+              className="text-muted-foreground underline decoration-border underline-offset-4 transition-colors hover:text-foreground hover:decoration-foreground"
             >
               {link.label}
             </a>
@@ -218,23 +206,23 @@ export function Home() {
       </header>
 
       {/* Experience */}
-      <Section index="01" title="Experience">
+      <Section title="Experience">
         <ol className="space-y-12">
           {experience.map(job => (
             <li key={job.org + job.role} className="grid gap-1.5 sm:grid-cols-[10rem_1fr] sm:gap-6">
-              <span className="whitespace-nowrap pt-0.5 font-mono text-xs leading-6 text-subtle">
+              <span className="whitespace-nowrap pt-0.5 font-mono text-xs leading-6 text-subtle-foreground">
                 {job.dates}
               </span>
               <div>
-                <h3 className="font-medium text-fg">
+                <h3 className="font-medium text-foreground">
                   {job.role}
-                  <span className="text-subtle"> · </span>
+                  <span className="text-subtle-foreground"> · </span>
                   {job.orgUrl ? (
                     <a
                       href={job.orgUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="transition-colors hover:text-accent"
+                      className="transition-colors hover:text-foreground"
                     >
                       {job.org}
                     </a>
@@ -250,28 +238,26 @@ export function Home() {
       </Section>
 
       {/* Projects */}
-      <Section index="02" title="Projects">
+      <Section title="Projects">
         <ul>
           {projects.map(project => {
             const inner = (
               <>
                 <div className="flex items-baseline justify-between gap-4">
-                  <h3 className="font-medium text-fg transition-colors group-hover:text-accent">
-                    {project.name}
-                  </h3>
+                  <h3 className="font-medium text-foreground">{project.name}</h3>
                   {project.url && (
-                    <span className="font-mono text-xs text-subtle transition-colors group-hover:text-accent">
+                    <span className="font-mono text-xs text-subtle-foreground transition-colors group-hover:text-foreground">
                       ↗
                     </span>
                   )}
                 </div>
                 <p className="mt-1.5 max-w-xl text-sm leading-relaxed">{project.description}</p>
-                <p className="mt-2.5 font-mono text-xs text-subtle">{project.stack}</p>
+                <p className="mt-2.5 font-mono text-xs text-subtle-foreground">{project.stack}</p>
               </>
             )
 
             return (
-              <li key={project.name} className="border-b border-line last:border-b-0">
+              <li key={project.name} className="border-b border-border last:border-b-0">
                 {project.url ? (
                   <a
                     href={project.url}
@@ -293,7 +279,7 @@ export function Home() {
       <RecentWriting />
 
       {/* Footer */}
-      <footer className="mt-16 border-t border-line pt-8 font-mono text-xs text-subtle">
+      <footer className="mt-16 border-t border-border pt-8 font-mono text-xs text-subtle-foreground">
         <OnRepeat />
         <div className="flex items-center justify-between">
           <span>© {new Date().getFullYear()} David Oduneye</span>
@@ -304,7 +290,7 @@ export function Home() {
                 href={link.url}
                 target={link.url.startsWith("http") ? "_blank" : undefined}
                 rel="noopener noreferrer"
-                className="transition-colors hover:text-accent"
+                className="transition-colors hover:text-foreground"
               >
                 {link.label}
               </a>

@@ -32,10 +32,10 @@ export function Post() {
   if (missing) {
     return (
       <Shell>
-        <h1 className="text-2xl font-semibold text-fg">Not found</h1>
+        <h1 className="text-2xl font-semibold text-foreground">Not found</h1>
         <p className="mt-3 text-sm">
           That post does not exist, or it is not published.{" "}
-          <Link to="/writing" className="text-accent hover:underline">
+          <Link to="/writing" className="text-foreground hover:underline">
             See what is.
           </Link>
         </p>
@@ -52,17 +52,19 @@ export function Post() {
           <img
             src={post.coverImage}
             alt=""
-            className="mb-10 w-full rounded-xl border border-line"
+            className="mb-10 w-full rounded-xl border border-border"
           />
         )}
 
-        <h1 className="text-4xl font-semibold leading-tight tracking-tight text-fg">
+        <h1 className="text-4xl font-semibold leading-tight tracking-tight text-foreground">
           {post.title}
         </h1>
 
-        {post.excerpt && <p className="mt-4 text-lg leading-relaxed text-muted">{post.excerpt}</p>}
+        {post.excerpt && (
+          <p className="mt-4 text-lg leading-relaxed text-muted-foreground">{post.excerpt}</p>
+        )}
 
-        <p className="mt-6 font-mono text-xs text-subtle">
+        <p className="mt-6 font-mono text-xs text-subtle-foreground">
           {formatDate(post.publishedAt)} · {minutes} min read
         </p>
 
@@ -71,10 +73,10 @@ export function Post() {
         </div>
       </article>
 
-      <footer className="mt-20 border-t border-line pt-8">
+      <footer className="mt-20 border-t border-border pt-8">
         <Link
           to="/writing"
-          className="font-mono text-xs text-subtle transition-colors hover:text-accent"
+          className="font-mono text-xs text-subtle-foreground transition-colors hover:text-foreground"
         >
           ← All writing
         </Link>
@@ -86,7 +88,10 @@ export function Post() {
 function Shell({ children }: { children?: React.ReactNode }) {
   return (
     <div className="mx-auto max-w-2xl px-6 py-28">
-      <Link to="/" className="font-mono text-xs text-subtle transition-colors hover:text-accent">
+      <Link
+        to="/"
+        className="font-mono text-xs text-subtle-foreground transition-colors hover:text-foreground"
+      >
         ← David Oduneye
       </Link>
       <div className="mt-10">{children}</div>

@@ -22,7 +22,9 @@ export function ToolButton({
       onMouseDown={event => event.preventDefault()}
       onClick={onClick}
       className={`flex h-8 w-8 items-center justify-center rounded-md transition-colors ${
-        active ? "bg-accent/15 text-accent" : "text-muted hover:bg-raised hover:text-fg"
+        active
+          ? "bg-primary/15 text-foreground"
+          : "text-muted-foreground hover:bg-muted hover:text-foreground"
       }`}
     >
       <Icon size={16} strokeWidth={2} />
@@ -31,8 +33,8 @@ export function ToolButton({
 }
 
 export function ToolDivider() {
-  return <div className="mx-1 my-1.5 w-px self-stretch bg-line" />
+  return <div className="mx-1 my-1.5 w-px self-stretch bg-border" />
 }
 
 export const floatingPanel =
-  "flex items-center rounded-xl border border-line bg-surface p-1 shadow-xl shadow-black/40"
+  "flex items-center rounded-xl border border-border bg-card p-1 shadow-xl shadow-black/40"

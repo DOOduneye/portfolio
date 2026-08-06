@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { Link, useNavigate, useParams } from "react-router-dom"
-import { Image as ImageIcon, LoaderCircle, Trash2 } from "lucide-react"
+import { ArrowLeft, ArrowUpRight, Image as ImageIcon, LoaderCircle, Trash2 } from "lucide-react"
 import { api, errorMessage, uploadImage, type RouterOutputs } from "../api"
 import { PostEditor } from "../../editor/PostEditor"
 import { parseDocument, readingMinutes, slugify, wordCount } from "../../editor/document"
-import { ConfirmButton, ghostButton, primaryButton, StatusBadge } from "../components/ui"
+import { Alert, Badge, Button, ConfirmButton, LinkButton } from "../components/ui"
 
 type Post = RouterOutputs["admin"]["posts"]["bySlug"]
 
@@ -169,7 +169,11 @@ export function PostEdit() {
     })()
 
   if (!post || !draft) {
-    return error ? <ErrorBox message={error} /> : <p className="text-sm text-subtle">Loading…</p>
+    return error ? (
+      <Alert message={error} />
+    ) : (
+      <p className="text-sm text-subtle-foreground">Loading…</p>
+    )
   }
 
   const published = post.status === "published"
@@ -177,35 +181,39 @@ export function PostEdit() {
   return (
     <div className="pb-24">
       <header className="flex items-center justify-between gap-4">
-        <Link to="/admin/posts" className="text-sm text-subtle transition-colors hover:text-muted">
-          ← Posts
+        <Link
+          to="/admin/posts"
+          className="inline-flex h-9 items-center gap-1.5 rounded-md px-2.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+        >
+          <ArrowLeft size={15} strokeWidth={2} />
+          Posts
         </Link>
 
         <div className="flex items-center gap-3">
           <SaveIndicator state={titleMissing && dirty ? "needsTitle" : saveState} />
           {stats && stats.words > 0 && (
-            <span className="font-mono text-xs text-subtle">
+            <span className="font-mono text-xs text-subtle-foreground">
               {stats.words} words · {stats.minutes} min
             </span>
           )}
-          <StatusBadge status={post.status} />
+          <Badge status={post.status} />
           {published && (
-            <a
+            <LinkButton
               href={`/writing/${slug}`}
               target="_blank"
               rel="noopener noreferrer"
-              className={ghostButton}
+              icon={ArrowUpRight}
             >
               View
-            </a>
+            </LinkButton>
           )}
-          <button onClick={togglePublished} disabled={busy} className={primaryButton}>
+          <Button variant="primary" onClick={togglePublished} disabled={busy}>
             {published ? "Unpublish" : "Publish"}
-          </button>
+          </Button>
         </div>
       </header>
 
-      {error && <ErrorBox message={error} />}
+      {error && <Alert message={error} />}
 
       <article className="mt-10">
         <CoverImage
@@ -219,14 +227,14 @@ export function PostEdit() {
           value={draft.title}
           onChange={title => change({ title })}
           placeholder="Title"
-          className="w-full resize-none bg-transparent text-4xl font-semibold leading-tight tracking-tight text-fg placeholder-subtle outline-none"
+          className="w-full resize-none bg-transparent text-4xl font-semibold leading-tight tracking-tight text-foreground placeholder:text-subtle-foreground outline-none"
         />
 
         <AutoTextarea
           value={draft.excerpt}
           onChange={excerpt => change({ excerpt })}
           placeholder="Add a short standfirst, shown in the index and in previews"
-          className="mt-3 w-full resize-none bg-transparent text-lg leading-relaxed text-muted placeholder-subtle outline-none"
+          className="mt-3 w-full resize-none bg-transparent text-lg leading-relaxed text-muted-foreground placeholder:text-subtle-foreground outline-none"
         />
 
         <div className="mt-8">
@@ -238,15 +246,15 @@ export function PostEdit() {
         </div>
       </article>
 
-      <footer className="mt-16 space-y-4 border-t border-line pt-6">
+      <footer className="mt-16 space-y-4 border-t border-border pt-6">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="min-w-0 font-mono text-xs text-subtle">
-            <span className="text-muted">/writing/{slug}</span>
+          <div className="min-w-0 font-mono text-xs text-subtle-foreground">
+            <span className="text-muted-foreground">/writing/{slug}</span>
             {!post.publishedAt && slugify(draft.title) !== slug && (
               <button
                 onClick={rename}
                 disabled={busy}
-                className="ml-3 text-accent transition-opacity hover:opacity-80"
+                className="ml-3 text-foreground transition-opacity hover:opacity-80"
               >
                 match to title
               </button>
@@ -260,7 +268,7 @@ export function PostEdit() {
           />
         </div>
         {post.publishedAt && (
-          <p className="font-mono text-xs text-subtle">
+          <p className="font-mono text-xs text-subtle-foreground">
             The URL is fixed once a post has been published.
           </p>
         )}
@@ -278,17 +286,10 @@ function SaveIndicator({ state }: { state: SaveState | "needsTitle" }) {
     needsTitle: "Needs a title"
   }[state]
 
-  const tone = state === "failed" || state === "needsTitle" ? "text-danger" : "text-subtle"
+  const tone =
+    state === "failed" || state === "needsTitle" ? "text-destructive" : "text-subtle-foreground"
 
   return <span className={`font-mono text-xs ${tone}`}>{label}</span>
-}
-
-function ErrorBox({ message }: { message: string }) {
-  return (
-    <p className="mt-5 rounded-lg border border-danger/20 bg-danger/10 px-4 py-3 text-sm text-danger">
-      {message}
-    </p>
-  )
 }
 
 function CoverImage({
@@ -320,11 +321,11 @@ function CoverImage({
 
       {src ? (
         <div className="group relative">
-          <img src={src} alt="" className="w-full rounded-xl border border-line" />
+          <img src={src} alt="" className="w-full rounded-xl border border-border" />
           <button
             onClick={onRemove}
             aria-label="Remove cover image"
-            className="absolute right-3 top-3 rounded-lg bg-page/80 p-2 text-muted opacity-0 backdrop-blur transition-opacity hover:text-danger group-hover:opacity-100"
+            className="absolute right-3 top-3 rounded-lg bg-background/80 p-2 text-muted-foreground opacity-0 backdrop-blur transition-opacity hover:text-destructive group-hover:opacity-100"
           >
             <Trash2 size={16} />
           </button>
@@ -333,7 +334,7 @@ function CoverImage({
         <button
           onClick={() => input.current?.click()}
           disabled={uploading}
-          className="flex items-center gap-2 font-mono text-xs text-subtle transition-colors hover:text-accent"
+          className="flex items-center gap-2 font-mono text-xs text-subtle-foreground transition-colors hover:text-foreground"
         >
           {uploading ? (
             <LoaderCircle size={14} className="animate-spin" />
