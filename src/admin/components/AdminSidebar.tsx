@@ -15,7 +15,8 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
-  SidebarSeparator
+  SidebarSeparator,
+  SidebarTrigger
 } from "@/components/ui/sidebar"
 
 const SECTIONS = [
@@ -34,10 +35,15 @@ export function AdminSidebar({ onOpenCommands }: { onOpenCommands: () => void })
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem className="flex items-center gap-2 px-1 py-0.5">
-            <SiteMark />
+            {/* Collapsed, the mark gives way to the toggle: the panel has to be
+                able to bring itself back without hunting for the rail. */}
+            <span className="group-data-[collapsible=icon]:hidden">
+              <SiteMark />
+            </span>
             <span className="truncate text-sm font-medium text-sidebar-foreground group-data-[collapsible=icon]:hidden">
               davidoduneye.com
             </span>
+            <SidebarTrigger className="ml-auto text-subtle-foreground group-data-[collapsible=icon]:ml-0" />
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>

@@ -10,15 +10,36 @@ import {
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import type { Editor } from "@tiptap/react"
 import { Link, useNavigate, useParams } from "react-router-dom"
-import { ArrowLeft, ArrowUpRight, Image as ImageIcon, Trash2 } from "lucide-react"
+import {
+  ArrowLeft,
+  ArrowUpRight,
+  Image as ImageIcon,
+  MoreHorizontal,
+  PenLine,
+  Trash2
+} from "lucide-react"
 import { api, errorMessage, uploadImage, type RouterOutputs } from "../api"
 import { PostEditor } from "../../editor/PostEditor"
 import { parseDocument, readingMinutes, slugify, wordCount } from "../../editor/document"
-import { ConfirmButton } from "../components/ConfirmButton"
 import { Alert, AlertTitle } from "@/components/ui/alert"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Separator } from "@/components/ui/separator"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle
+} from "@/components/ui/dialog"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu"
 import { Spinner } from "@/components/ui/spinner"
 
 type Post = RouterOutputs["admin"]["posts"]["bySlug"]
@@ -41,6 +62,7 @@ export function PostEdit() {
 
   const [draft, setDraft] = useState<Draft | null>(null)
   const [editorError, setEditorError] = useState<string | null>(null)
+  const [confirmingDelete, setConfirmingDelete] = useState(false)
 
   const saved = useRef("")
   const inFlight = useRef("")
@@ -202,18 +224,18 @@ export function PostEdit() {
 
   return (
     <div>
-      <header className="sticky top-0 z-20 flex items-center justify-between gap-4 border-b border-border bg-background/85 px-8 py-3 backdrop-blur">
+      <header className="sticky top-0 z-20 flex h-12 items-center gap-2 border-b border-border bg-background/85 px-4 backdrop-blur">
         <Link
           to="/admin/posts"
-          className="-ml-2.5 inline-flex h-9 items-center gap-1.5 rounded-md px-2.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+          className="inline-flex h-7 items-center gap-1.5 rounded-md px-2 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
         >
-          <ArrowLeft size={15} strokeWidth={2} />
+          <ArrowLeft size={14} strokeWidth={2} />
           Posts
         </Link>
 
-        <div className="flex items-center gap-3">
+        <div className="ml-auto flex items-center gap-2">
           {stats && stats.words > 0 && (
-            <span className="font-mono text-xs text-subtle-foreground">
+            <span className="font-mono text-xs tabular-nums text-subtle-foreground">
               {stats.words} words · {stats.minutes} min
             </span>
           )}
@@ -221,7 +243,8 @@ export function PostEdit() {
           {!published && <Badge variant="outline">Draft</Badge>}
           {published && (
             <Button
-              variant="outline"
+              size="sm"
+              variant="ghost"
               render={<a href={`/writing/${slug}`} target="_blank" rel="noopener noreferrer" />}
             >
               <ArrowUpRight data-icon="inline-start" />
@@ -229,16 +252,70 @@ export function PostEdit() {
             </Button>
           )}
           <Button
+            size="sm"
             onClick={togglePublished}
             disabled={busy || (!published && titleMissing)}
             title={!published && titleMissing ? "Give the post a title first" : undefined}
           >
             {published ? "Unpublish" : "Publish"}
           </Button>
+
+          {/* The address and the destructive action are settings, not part of
+              the document, so they live off the header rather than under it. */}
+          <DropdownMenu>
+            <DropdownMenuTrigger
+              render={<Button variant="ghost" size="icon-sm" aria-label="Post settings" />}
+            >
+              <MoreHorizontal />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-64">
+              <DropdownMenuLabel className="font-mono text-xs font-normal text-subtle-foreground">
+                /writing/{slug}
+              </DropdownMenuLabel>
+              {!post.publishedAt && slugify(draft.title) !== slug && (
+                <DropdownMenuItem onClick={renameToTitle} disabled={busy}>
+                  <PenLine />
+                  Match the address to the title
+                </DropdownMenuItem>
+              )}
+              {post.publishedAt && (
+                <DropdownMenuItem disabled>The address is fixed once published</DropdownMenuItem>
+              )}
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                variant="destructive"
+                disabled={busy}
+                onClick={() => setConfirmingDelete(true)}
+              >
+                <Trash2 />
+                Delete post
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </header>
 
-      <div className="mx-auto w-full max-w-2xl px-6 pb-32 pt-12">
+      <Dialog open={confirmingDelete} onOpenChange={setConfirmingDelete}>
+        <DialogContent className="sm:max-w-sm">
+          <DialogHeader>
+            <DialogTitle>Delete this post?</DialogTitle>
+            <DialogDescription>
+              {draft.title.trim() || "This post"} and everything written in it goes away. This
+              cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setConfirmingDelete(false)}>
+              Keep it
+            </Button>
+            <Button variant="destructive" disabled={busy} onClick={() => remove.mutate({ slug })}>
+              Delete post
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <div className="mx-auto w-full max-w-2xl px-6 pb-32 pt-10">
         {error && (
           <div className="mb-8">
             <Alert variant="destructive">
@@ -261,7 +338,7 @@ export function PostEdit() {
             onChange={title => change({ title })}
             onEnter={() => summaryField.current?.focus()}
             placeholder="Title"
-            className="editorial w-full resize-none bg-transparent text-4xl font-semibold leading-tight tracking-tight text-foreground outline-none placeholder:text-subtle-foreground"
+            className="editorial w-full resize-none bg-transparent text-[1.875rem] font-semibold leading-[1.2] tracking-[-0.022em] text-foreground outline-none placeholder:text-subtle-foreground"
           />
 
           <AutoTextarea
@@ -271,10 +348,10 @@ export function PostEdit() {
             onEnter={focusBody}
             onBackspaceAtStart={() => focusEnd(titleField.current)}
             placeholder="Add a summary"
-            className="editorial mt-4 w-full resize-none bg-transparent text-lg leading-relaxed text-muted-foreground outline-none placeholder:text-subtle-foreground"
+            className="editorial mt-2 w-full resize-none bg-transparent text-[0.9375rem] leading-relaxed text-muted-foreground outline-none placeholder:text-subtle-foreground"
           />
 
-          <div className="mt-10">
+          <div className="mt-8">
             <PostEditor
               onReady={editor => (body.current = editor)}
               initialContent={post.content}
@@ -284,31 +361,6 @@ export function PostEdit() {
             />
           </div>
         </article>
-
-        <Separator className="mt-16" />
-
-        <footer className="mt-5 flex flex-wrap items-center justify-between gap-3">
-          <div className="min-w-0 font-mono text-xs text-subtle-foreground">
-            /writing/{slug}
-            {!post.publishedAt && slugify(draft.title) !== slug && (
-              <button
-                onClick={renameToTitle}
-                disabled={busy}
-                className="ml-3 text-foreground underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground"
-              >
-                Use the title
-              </button>
-            )}
-            {post.publishedAt && <span className="ml-3">Fixed once published</span>}
-          </div>
-          <ConfirmButton
-            label="Delete"
-            confirmLabel="Delete permanently"
-            icon={Trash2}
-            onConfirm={() => remove.mutate({ slug })}
-            disabled={busy}
-          />
-        </footer>
       </div>
     </div>
   )
@@ -378,14 +430,22 @@ function CoverImage({
           </button>
         </div>
       ) : (
-        <button
+        // Mono is for data, not for actions, and the target was a 12px line of
+        // text. This is a real button that reads as one.
+        <Button
+          variant="ghost"
+          size="sm"
           onClick={() => input.current?.click()}
           disabled={uploading}
-          className="flex items-center gap-2 font-mono text-xs text-subtle-foreground transition-colors hover:text-foreground"
+          className="-ml-2.5 text-muted-foreground"
         >
-          {uploading ? <Spinner /> : <ImageIcon size={14} />}
-          {uploading ? "Uploading…" : "Add a cover image"}
-        </button>
+          {uploading ? (
+            <Spinner data-icon="inline-start" />
+          ) : (
+            <ImageIcon data-icon="inline-start" />
+          )}
+          {uploading ? "Uploading cover" : "Add cover"}
+        </Button>
       )}
     </div>
   )
