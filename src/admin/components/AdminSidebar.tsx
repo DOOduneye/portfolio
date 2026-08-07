@@ -1,6 +1,17 @@
 import { useQuery } from "@tanstack/react-query"
 import { NavLink, useLocation } from "react-router-dom"
-import { ArrowUpRight, Briefcase, FileText, Layers, LogOut, Search } from "lucide-react"
+import {
+  ArrowUpRight,
+  Briefcase,
+  FileText,
+  HardDrive,
+  Layers,
+  LogOut,
+  MessageSquare,
+  NotebookPen,
+  Search,
+  Terminal
+} from "lucide-react"
 import { api, signOut } from "../api"
 import { SiteMark } from "./SiteMark"
 import {
@@ -8,6 +19,7 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
+  SidebarGroupContent,
   SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
@@ -15,14 +27,23 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
-  SidebarSeparator,
   SidebarTrigger
 } from "@/components/ui/sidebar"
 
-const SECTIONS = [
+const CONTENT = [
   { to: "/admin/posts", label: "Posts", icon: FileText },
   { to: "/admin/projects", label: "Projects", icon: Layers },
   { to: "/admin/experiences", label: "Experience", icon: Briefcase }
+]
+
+// Margin is four separate surfaces, one per subdomain, each with its own job:
+// the journal app, the phone-sized chat, personal storage, and the tool API.
+// They are listed by what they do rather than collapsed into one platform link.
+const MARGIN = [
+  { href: "https://margin.davidoduneye.com", label: "Journal", icon: NotebookPen },
+  { href: "https://chat.davidoduneye.com", label: "Chat", icon: MessageSquare },
+  { href: "https://drive.davidoduneye.com", label: "Drive", icon: HardDrive },
+  { href: "https://agent.davidoduneye.com", label: "Agent", icon: Terminal }
 ]
 
 export function AdminSidebar({ onOpenCommands }: { onOpenCommands: () => void }) {
@@ -50,43 +71,68 @@ export function AdminSidebar({ onOpenCommands }: { onOpenCommands: () => void })
 
       <SidebarContent>
         <SidebarGroup>
-          <SidebarMenu>
-            <SidebarMenuItem>
-              <SidebarMenuButton tooltip="Search" onClick={onOpenCommands}>
-                <Search />
-                <span>Search</span>
-                <SidebarMenuBadge className="font-mono text-[0.6875rem] text-subtle-foreground">
-                  ⌘K
-                </SidebarMenuBadge>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          </SidebarMenu>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton tooltip="Search" onClick={onOpenCommands}>
+                  <Search />
+                  <span>Search</span>
+                  <SidebarMenuBadge className="font-mono text-[0.6875rem] text-subtle-foreground group-data-[collapsible=icon]:hidden">
+                    ⌘K
+                  </SidebarMenuBadge>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
         </SidebarGroup>
 
         <SidebarGroup>
           <SidebarGroupLabel>Content</SidebarGroupLabel>
-          <SidebarMenu>
-            {SECTIONS.map(({ to, label, icon: Icon }) => (
-              <SidebarMenuItem key={to}>
-                <SidebarMenuButton
-                  tooltip={label}
-                  isActive={pathname.startsWith(to)}
-                  render={<NavLink to={to} />}
-                >
-                  <Icon />
-                  <span>{label}</span>
-                </SidebarMenuButton>
-                {to === "/admin/posts" && drafts > 0 && (
-                  <SidebarMenuBadge>{drafts}</SidebarMenuBadge>
-                )}
-              </SidebarMenuItem>
-            ))}
-          </SidebarMenu>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {CONTENT.map(({ to, label, icon: Icon }) => (
+                <SidebarMenuItem key={to}>
+                  <SidebarMenuButton
+                    tooltip={label}
+                    isActive={pathname.startsWith(to)}
+                    render={<NavLink to={to} />}
+                  >
+                    <Icon />
+                    <span>{label}</span>
+                  </SidebarMenuButton>
+                  {to === "/admin/posts" && drafts > 0 && (
+                    <SidebarMenuBadge className="group-data-[collapsible=icon]:hidden">
+                      {drafts}
+                    </SidebarMenuBadge>
+                  )}
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <SidebarGroup>
+          <SidebarGroupLabel>Margin</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {MARGIN.map(({ href, label, icon: Icon }) => (
+                <SidebarMenuItem key={href}>
+                  <SidebarMenuButton
+                    tooltip={label}
+                    render={<a href={href} target="_blank" rel="noopener noreferrer" />}
+                  >
+                    <Icon />
+                    <span>{label}</span>
+                    <ArrowUpRight className="ml-auto size-3.5 text-subtle-foreground group-data-[collapsible=icon]:hidden" />
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
 
       <SidebarFooter>
-        <SidebarSeparator />
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton tooltip="View site" render={<a href="/" />}>

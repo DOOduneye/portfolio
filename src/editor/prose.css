@@ -127,30 +127,6 @@
   letter-spacing: 0.6em;
 }
 
-.prose.tiptap {
-  outline: none;
-}
-
-.prose.tiptap p.is-empty:first-child::before,
-.prose.tiptap h2.is-empty::before,
-.prose.tiptap h3.is-empty::before {
-  content: attr(data-placeholder);
-  color: var(--color-subtle-foreground);
-  pointer-events: none;
-  float: left;
-  height: 0;
-}
-
-.prose.tiptap .ProseMirror-selectednode {
-  outline: 2px solid var(--color-foreground);
-  outline-offset: 3px;
-  border-radius: 10px;
-}
-
-.prose.tiptap .ProseMirror-gapcursor::after {
-  border-top-color: var(--color-foreground);
-}
-
 .prose ul[data-type="taskList"] {
   list-style: none;
   padding-left: 0;

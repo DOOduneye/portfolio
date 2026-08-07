@@ -127,9 +127,12 @@ const LinkMain: React.FC<LinkMainProps> = ({
         }
       }}
     >
+      {/* The toolbar is already a panel, so the field sits inside it rather
+          than drawing a second border and background of its own. */}
       <Input
         type="url"
-        placeholder="Paste link..."
+        aria-label="Link address"
+        placeholder="Paste a link"
         value={url}
         onChange={e => setUrl(e.target.value)}
         onKeyDown={handleKeyDown}
@@ -138,31 +141,37 @@ const LinkMain: React.FC<LinkMainProps> = ({
         autoComplete="off"
         autoCorrect="off"
         autoCapitalize="off"
-        className="min-w-[180px]"
+        className="h-7 w-64 border-transparent bg-transparent px-1.5 text-sm focus-visible:border-transparent focus-visible:ring-0 dark:bg-transparent"
       />
 
       <ToolbarSeparator />
 
       <div className="flex items-center gap-1">
-        <Button
-          type="button"
-          onClick={() => openLink()}
-          disabled={!url && !isActive}
-          variant="ghost"
-          size="iconSm"
-        >
-          <ExternalLinkIcon />
-        </Button>
+        <ToolbarTooltip label="Open in a new tab">
+          <Button
+            type="button"
+            aria-label="Open in a new tab"
+            onClick={() => openLink()}
+            disabled={!url && !isActive}
+            variant="ghost"
+            size="iconSm"
+          >
+            <ExternalLinkIcon />
+          </Button>
+        </ToolbarTooltip>
 
-        <Button
-          type="button"
-          onClick={removeLink}
-          disabled={!url && !isActive}
-          variant="ghost"
-          size="iconSm"
-        >
-          <TrashIcon />
-        </Button>
+        <ToolbarTooltip label="Remove link">
+          <Button
+            type="button"
+            aria-label="Remove link"
+            onClick={removeLink}
+            disabled={!url && !isActive}
+            variant="ghost"
+            size="iconSm"
+          >
+            <TrashIcon />
+          </Button>
+        </ToolbarTooltip>
       </div>
     </div>
   )
