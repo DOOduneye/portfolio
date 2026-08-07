@@ -31,6 +31,7 @@ import {
   X
 } from "lucide-react"
 import { api, errorMessage, type RouterOutputs } from "../api"
+import { AdminPage } from "../components/AdminPage"
 import { Alert, AlertTitle } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -309,13 +310,11 @@ export function PostsList() {
     </Button>
   )
 
-  return (
-    <div className="flex h-svh flex-col">
-      {/* The header carries whichever mode the list is in: making something, or
-          acting on a selection. Never both. */}
-      <header className="flex h-12 shrink-0 items-center gap-3 border-b border-border px-6">
-        {picked.length > 0 ? (
-          <>
+  // The header carries whichever mode the list is in: making something, or
+  // acting on a selection. Never both.
+  const selectionHeader =
+    picked.length > 0 ? (
+      <>
             <Button variant="ghost" size="sm" onClick={() => setRowSelection({})}>
               <X data-icon="inline-start" />
               Clear
@@ -354,18 +353,13 @@ export function PostsList() {
               <Trash2 data-icon="inline-start" />
               Delete
             </Button>
-          </>
-        ) : (
-          <>
-            <h1 className="text-sm font-medium text-foreground">Posts</h1>
-            <div className="ml-auto">{newPost}</div>
-          </>
-        )}
-      </header>
+      </>
+    ) : undefined
 
-      {/* Narrowing what is already on the page belongs with the list, not with
-          the button that makes a new one. */}
-      <div className="flex shrink-0 items-center gap-2 px-6 pt-4 pb-3">
+  // Narrowing what is already on the page belongs with the list, not with the
+  // button that makes a new one.
+  const toolbar = (
+    <>
         <InputGroup className="h-7 w-40 lg:w-56">
           <InputGroupAddon>
             <Search />
@@ -394,10 +388,12 @@ export function PostsList() {
               {filter.label}
             </ToggleGroupItem>
           ))}
-        </ToggleGroup>
-      </div>
+      </ToggleGroup>
+    </>
+  )
 
-      <div className="min-h-0 flex-1 overflow-y-auto px-6 pb-4">
+  return (
+    <AdminPage title="Posts" action={newPost} header={selectionHeader} toolbar={toolbar}>
         {error && (
           <Alert variant="destructive" className="mb-4">
             <AlertTitle>{errorMessage(error)}</AlertTitle>
@@ -486,8 +482,7 @@ export function PostsList() {
             </TableBody>
           </Table>
         )}
-      </div>
-    </div>
+    </AdminPage>
   )
 }
 

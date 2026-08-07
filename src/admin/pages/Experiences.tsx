@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { api, errorMessage, type RouterOutputs } from "../api"
-import { PageHeader } from "../components/PageHeader"
+import { AdminPage } from "../components/AdminPage"
 import { Alert, AlertTitle } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
@@ -72,12 +72,8 @@ export function Experiences() {
   }
 
   return (
-    <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 px-8 py-10">
-      <PageHeader
-        title="Experiences"
-        description="Roles listed on the site, in the order they appear."
-        action={<Button onClick={() => setDraft(empty)}>New experience</Button>}
-      />
+    <AdminPage title="Experience" action={<Button onClick={() => setDraft(empty)}>New experience</Button>}>
+      <div className="flex flex-col gap-6">
 
       {error && (
         <Alert variant="destructive">
@@ -202,5 +198,6 @@ export function Experiences() {
         ))}
       </ul>
     </div>
+    </AdminPage>
   )
 }

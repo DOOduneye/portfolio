@@ -265,7 +265,14 @@ export function PostEdit() {
               the document, so they live off the header rather than under it. */}
           <DropdownMenu>
             <DropdownMenuTrigger
-              render={<Button variant="ghost" size="icon-sm" aria-label="Post settings" />}
+              render={
+                <Button
+                  variant="ghost"
+                  size="icon-sm"
+                  aria-label="Post settings"
+                  className="ml-1 text-subtle-foreground hover:text-foreground"
+                />
+              }
             >
               <MoreHorizontal />
             </DropdownMenuTrigger>
