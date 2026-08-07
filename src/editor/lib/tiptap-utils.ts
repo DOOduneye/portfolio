@@ -412,7 +412,9 @@ export function getElementOverflowPosition(
 export const isSelectionValid = (
   editor: Editor | null,
   selection?: Selection,
-  excludedNodeTypes: string[] = ["imageUpload", "horizontalRule"]
+  // "image" is the node this editor actually inserts; none of the toolbar's
+  // marks apply to a selected picture, so the toolbar has nothing to offer.
+  excludedNodeTypes: string[] = ["image", "imageUpload", "horizontalRule"]
 ): boolean => {
   if (!editor) return false
   if (!selection) selection = editor.state.selection

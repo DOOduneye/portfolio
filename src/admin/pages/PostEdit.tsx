@@ -16,7 +16,8 @@ import {
   Image as ImageIcon,
   MoreHorizontal,
   PenLine,
-  Trash2
+  Trash2,
+  X
 } from "lucide-react"
 import { api, errorMessage, uploadImage, type RouterOutputs } from "../api"
 import { PostEditor } from "../../editor/PostEditor"
@@ -86,6 +87,7 @@ export function PostEdit() {
     refetchOnWindowFocus: false
   })
   const post = postQuery.data
+  const postsList = useQuery(api.admin.posts.list.queryOptions())
 
   const seeded = useRef<string | null>(null)
   useEffect(() => {
@@ -159,6 +161,17 @@ export function PostEdit() {
     remove.error ??
     uploadCover.error
 
+  // A failed action reports once. Left alone it would sit on the page for the
+  // rest of the session, because a mutation holds its error until the next run.
+  const dismissError = () => {
+    setEditorError(null)
+    update.reset()
+    setStatus.reset()
+    rename.reset()
+    remove.reset()
+    uploadCover.reset()
+  }
+
   const persist = useCallback(
     (next: Draft) => {
       inFlight.current = JSON.stringify(next)
@@ -211,10 +224,17 @@ export function PostEdit() {
     setStatus.mutate({ slug, status: post?.status === "published" ? "draft" : "published" })
   }
 
+  // The list is already cached for the nav, so a rename that could only come
+  // back as a conflict is never offered in the first place.
+  const targetSlug = slugify(draft?.title ?? "")
+  const slugTaken = (postsList.data ?? []).some(
+    other => other.slug === targetSlug && other.slug !== slug
+  )
+  const canRename = Boolean(targetSlug) && targetSlug !== slug && !slugTaken
+
   const renameToTitle = () => {
-    const nextSlug = slugify(draft?.title ?? "")
-    if (!nextSlug || nextSlug === slug) return
-    rename.mutate({ slug, nextSlug })
+    if (!canRename) return
+    rename.mutate({ slug, nextSlug: targetSlug })
   }
 
   if (!post || !draft) {
@@ -240,20 +260,17 @@ export function PostEdit() {
           Posts
         </Link>
 
-        {/* One muted line rather than a row of competing chips: what this post
-            is, how long it is, and whether it is saved all read together. */}
+        {/* Only the transient bit lives here. How long the post is belongs
+            with the post, not in the toolbar, and whether it is published is
+            already what the button beside it says. */}
         <p className="ml-auto text-xs text-subtle-foreground" aria-live="polite">
-          {[
-            published ? "Published" : "Draft",
-            stats && stats.words > 0 ? `${stats.words} words` : null,
-            stats && stats.words > 0 ? `${stats.minutes} min` : null,
-            SAVE_LABEL[saveState]
-          ]
-            .filter(Boolean)
-            .join("  ·  ")}
+          {SAVE_LABEL[saveState]}
         </p>
 
         <div className="flex items-center gap-2">
+          <span className="text-xs text-subtle-foreground">
+            {published ? "Published" : "Draft"}
+          </span>
           {published && (
             <Button
               size="sm"
@@ -291,13 +308,23 @@ export function PostEdit() {
             <DropdownMenuContent align="end" className="w-64">
               {/* Base UI requires a GroupLabel to sit inside a Group. */}
               <DropdownMenuGroup>
-                <DropdownMenuLabel className="font-mono text-xs font-normal text-subtle-foreground">
-                  /writing/{slug}
+                <DropdownMenuLabel className="font-normal text-subtle-foreground">
+                  <span className="block font-mono text-xs">/writing/{slug}</span>
+                  {stats && stats.words > 0 && (
+                    <span className="mt-1 block text-xs">
+                      {stats.words} words, about {stats.minutes} minutes to read
+                    </span>
+                  )}
                 </DropdownMenuLabel>
-                {!post.publishedAt && slugify(draft.title) !== slug && (
+                {!post.publishedAt && canRename && (
                   <DropdownMenuItem onClick={renameToTitle} disabled={busy}>
                     <PenLine />
                     Match the address to the title
+                  </DropdownMenuItem>
+                )}
+                {!post.publishedAt && slugTaken && (
+                  <DropdownMenuItem disabled>
+                    Another post already uses /{targetSlug}
                   </DropdownMenuItem>
                 )}
                 {post.publishedAt && (
@@ -343,8 +370,17 @@ export function PostEdit() {
       <div className="mx-auto w-full max-w-[36rem] px-6 pt-16 pb-32">
         {error && (
           <div className="mb-8">
-            <Alert variant="destructive">
-              <AlertTitle>{errorMessage(error)}</AlertTitle>
+            <Alert variant="destructive" className="flex items-center gap-3">
+              <AlertTitle className="grow">{errorMessage(error)}</AlertTitle>
+              <Button
+                variant="ghost"
+                size="icon-xs"
+                aria-label="Dismiss"
+                onClick={dismissError}
+                className="shrink-0 text-destructive"
+              >
+                <X />
+              </Button>
             </Alert>
           </div>
         )}
