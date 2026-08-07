@@ -2,12 +2,21 @@ import type { JSONContent } from "@tiptap/core"
 
 export const EMPTY_DOCUMENT = '{"type":"doc","content":[]}'
 
+// The schema requires block+, so a doc with no children cannot be loaded: the
+// editor comes up with nowhere to place a caret and refuses every keystroke.
+const blankDocument = (): JSONContent => ({
+  type: "doc",
+  content: [{ type: "paragraph" }]
+})
+
 export function parseDocument(stored: string): JSONContent {
-  if (!stored.trim()) return JSON.parse(EMPTY_DOCUMENT) as JSONContent
+  if (!stored.trim()) return blankDocument()
 
   try {
     const parsed: unknown = JSON.parse(stored)
-    if (isDocument(parsed)) return parsed
+    if (isDocument(parsed)) {
+      return parsed.content?.length ? parsed : blankDocument()
+    }
   } catch {}
 
   return {
@@ -39,6 +48,17 @@ export function wordCount(document: JSONContent): number {
 
 export function readingMinutes(document: JSONContent): number {
   return Math.max(1, Math.round(wordCount(document) / 200))
+}
+
+/**
+ * The title a post is born with. It is a placeholder, not something the writer
+ * chose, so nothing should be derived from it.
+ */
+export const UNTITLED = "Untitled"
+
+export function isUntitled(title: string): boolean {
+  const trimmed = title.trim()
+  return trimmed === "" || trimmed.toLowerCase() === UNTITLED.toLowerCase()
 }
 
 export function slugify(title: string): string {
