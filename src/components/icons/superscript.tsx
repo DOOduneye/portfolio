@@ -1,0 +1,27 @@
+export const SuperscriptIcon = (props: React.SVGProps<SVGSVGElement>) => {
+  return (
+    <svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M21 11H17C17 9.11594 21 7.79799 21 5.9309C21 4.76739 20.1098 4 19.0052 4C18.0383 4 17.3801 4.58369 17.1243 5.34775"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M3 6L13 18M13 6L3 18"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
