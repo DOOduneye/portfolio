@@ -7,6 +7,7 @@ import { PostEdit } from "./pages/PostEdit"
 import { Projects } from "./pages/Projects"
 import { Experiences } from "./pages/Experiences"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
+import { Toaster } from "@/components/ui/sonner"
 
 export function Admin() {
   const [commandsOpen, setCommandsOpen] = useState(false)
@@ -27,6 +28,7 @@ export function Admin() {
         </Routes>
       </SidebarInset>
       <CommandMenu open={commandsOpen} onOpenChange={setCommandsOpen} />
+      <Toaster position="bottom-right" />
     </SidebarProvider>
   )
 }

@@ -32,6 +32,7 @@ import {
 } from "lucide-react"
 import { api, errorMessage, type RouterOutputs } from "../api"
 import { AdminPage } from "../components/AdminPage"
+import { useIsMobile } from "@/hooks/use-mobile"
 import { Alert, AlertTitle } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -95,6 +96,7 @@ export function PostsList() {
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all")
   const [sorting, setSorting] = useState<SortingState>([{ id: "updated", desc: true }])
   const [rowSelection, setRowSelection] = useState({})
+  const isMobile = useIsMobile()
 
   const navigate = useNavigate()
   const queryClient = useQueryClient()
@@ -282,7 +284,13 @@ export function PostsList() {
     features,
     data,
     columns,
-    state: { sorting, rowSelection },
+    // A phone has room for what a post is called and when it changed. Status
+    // is already the filter above, and the slug is on the post itself.
+    state: {
+      sorting,
+      rowSelection,
+      columnVisibility: isMobile ? { select: false, status: false, slug: false } : {}
+    },
     getRowId: row => row.slug,
     enableRowSelection: true,
     onSortingChange: setSorting,

@@ -1,4 +1,5 @@
 import type { ReactNode } from "react"
+import { SidebarTrigger } from "@/components/ui/sidebar"
 
 /**
  * The shell every admin section sits in: a fixed bar for what the page is and
@@ -22,7 +23,10 @@ export function AdminPage({
 }) {
   return (
     <div className="flex h-svh flex-col">
-      <header className="flex h-12 shrink-0 items-center gap-3 border-b border-border px-6">
+      <header className="flex h-12 shrink-0 items-center gap-3 border-b border-border px-4 md:px-6">
+        {/* On a phone the sidebar is a sheet that starts closed, so its own
+            toggle is unreachable and the way back has to live out here. */}
+        <SidebarTrigger className="-ml-1 text-subtle-foreground md:hidden" />
         {header ?? (
           <>
             <h1 className="text-sm font-medium text-foreground">{title}</h1>
@@ -32,10 +36,14 @@ export function AdminPage({
       </header>
 
       {toolbar && (
-        <div className="flex shrink-0 items-center gap-2 px-6 pt-4 pb-3">{toolbar}</div>
+        <div className="flex shrink-0 flex-wrap items-center gap-2 px-4 pt-4 pb-3 md:px-6">
+          {toolbar}
+        </div>
       )}
 
-      <div className={`min-h-0 flex-1 overflow-y-auto px-6 pb-6 ${toolbar ? "" : "pt-4"}`}>
+      <div
+        className={`min-h-0 flex-1 overflow-y-auto px-4 pb-6 md:px-6 ${toolbar ? "" : "pt-4"}`}
+      >
         {children}
       </div>
     </div>

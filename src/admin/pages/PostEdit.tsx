@@ -16,12 +16,11 @@ import {
   Image as ImageIcon,
   MoreHorizontal,
   PenLine,
-  Trash2,
-  X
+  Trash2
 } from "lucide-react"
 import { api, errorMessage, uploadImage, type RouterOutputs } from "../api"
 import { PostEditor } from "../../editor/PostEditor"
-import { parseDocument, readingMinutes, slugify, wordCount } from "../../editor/document"
+import { isUntitled, parseDocument, readingMinutes, slugify, wordCount } from "../../editor/document"
 import { Alert, AlertTitle } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
 import {
@@ -41,7 +40,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
+import { SidebarTrigger } from "@/components/ui/sidebar"
+import { Skeleton } from "@/components/ui/skeleton"
 import { Spinner } from "@/components/ui/spinner"
+import { toast } from "sonner"
 
 type Post = RouterOutputs["admin"]["posts"]["bySlug"]
 
@@ -69,7 +71,6 @@ export function PostEdit() {
   const queryClient = useQueryClient()
 
   const [draft, setDraft] = useState<Draft | null>(null)
-  const [editorError, setEditorError] = useState<string | null>(null)
   const [confirmingDelete, setConfirmingDelete] = useState(false)
 
   const saved = useRef("")
@@ -103,6 +104,8 @@ export function PostEdit() {
     setDraft(next)
   }, [post])
 
+  const reportFailure = (cause: unknown) => toast.error(errorMessage(cause))
+
   const afterWrite = (updated: Post) => {
     queryClient.setQueryData(api.admin.posts.bySlug.queryKey({ slug: updated.slug }), updated)
     void queryClient.invalidateQueries(api.admin.posts.list.queryFilter())
@@ -110,6 +113,7 @@ export function PostEdit() {
 
   const update = useMutation(
     api.admin.posts.update.mutationOptions({
+      onError: reportFailure,
       onSuccess: updated => {
         saved.current = inFlight.current
         afterWrite(updated)
@@ -117,10 +121,11 @@ export function PostEdit() {
     })
   )
   const setStatus = useMutation(
-    api.admin.posts.setStatus.mutationOptions({ onSuccess: afterWrite })
+    api.admin.posts.setStatus.mutationOptions({ onError: reportFailure, onSuccess: afterWrite })
   )
   const rename = useMutation(
     api.admin.posts.rename.mutationOptions({
+      onError: reportFailure,
       onSuccess: renamed => {
         void queryClient.invalidateQueries(api.admin.posts.list.queryFilter())
         if (renamed) navigate(`/admin/posts/${renamed.slug}`, { replace: true })
@@ -129,6 +134,7 @@ export function PostEdit() {
   )
   const remove = useMutation(
     api.admin.posts.remove.mutationOptions({
+      onError: reportFailure,
       onSuccess: () => {
         void queryClient.invalidateQueries(api.admin.posts.list.queryFilter())
         navigate("/admin/posts")
@@ -137,6 +143,7 @@ export function PostEdit() {
   )
   const uploadCover = useMutation({
     mutationFn: uploadImage,
+    onError: reportFailure,
     onSuccess: url => change({ coverImage: url })
   })
 
@@ -152,25 +159,10 @@ export function PostEdit() {
         ? "dirty"
         : "clean"
 
-  const error =
-    editorError ??
-    postQuery.error ??
-    update.error ??
-    setStatus.error ??
-    rename.error ??
-    remove.error ??
-    uploadCover.error
-
-  // A failed action reports once. Left alone it would sit on the page for the
-  // rest of the session, because a mutation holds its error until the next run.
-  const dismissError = () => {
-    setEditorError(null)
-    update.reset()
-    setStatus.reset()
-    rename.reset()
-    remove.reset()
-    uploadCover.reset()
-  }
+  // Only a post that will not load is a state of the page. Everything else is
+  // something that failed while you were working, which is a toast, not a
+  // banner wedged above the document.
+  const error = postQuery.error
 
   const persist = useCallback(
     (next: Draft) => {
@@ -224,26 +216,53 @@ export function PostEdit() {
     setStatus.mutate({ slug, status: post?.status === "published" ? "draft" : "published" })
   }
 
-  // The list is already cached for the nav, so a rename that could only come
-  // back as a conflict is never offered in the first place.
+  // Every post starts as "Untitled", which slugifies to an address another
+  // Untitled post already holds. Offering the rename there is a dead end, so
+  // the action waits until the title is one the writer actually chose. The
+  // list is already cached for the nav, so a genuine collision is known too.
+  const titled = !isUntitled(draft?.title ?? "")
   const targetSlug = slugify(draft?.title ?? "")
   const slugTaken = (postsList.data ?? []).some(
     other => other.slug === targetSlug && other.slug !== slug
   )
-  const canRename = Boolean(targetSlug) && targetSlug !== slug && !slugTaken
+  const canRename = titled && Boolean(targetSlug) && targetSlug !== slug && !slugTaken
 
   const renameToTitle = () => {
     if (!canRename) return
     rename.mutate({ slug, nextSlug: targetSlug })
   }
 
+  // Loading and failure keep the frame. Dropping to a bare line of text loses
+  // the way back, which on a phone is the whole screen.
   if (!post || !draft) {
-    return error ? (
-      <Alert variant="destructive">
-        <AlertTitle>{errorMessage(error)}</AlertTitle>
-      </Alert>
-    ) : (
-      <p className="text-sm text-subtle-foreground">Loading…</p>
+    return (
+      <div className="flex h-svh flex-col">
+        <header className="flex h-12 shrink-0 items-center gap-3 border-b border-border px-4 md:px-6">
+          <SidebarTrigger className="-ml-1 text-subtle-foreground md:hidden" />
+          <Link
+            to="/admin/posts"
+            className="inline-flex h-7 items-center gap-1.5 rounded-md px-2 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+          >
+            <ArrowLeft size={14} strokeWidth={2} />
+            Posts
+          </Link>
+        </header>
+
+        <div className="mx-auto w-full max-w-[36rem] px-6 pt-16">
+          {error ? (
+            <Alert variant="destructive">
+              <AlertTitle>{errorMessage(error)}</AlertTitle>
+            </Alert>
+          ) : (
+            <div className="flex flex-col gap-4" aria-label="Loading the post">
+              <Skeleton className="h-9 w-2/3" />
+              <Skeleton className="h-4 w-1/2" />
+              <Skeleton className="mt-6 h-4 w-full" />
+              <Skeleton className="h-4 w-11/12" />
+            </div>
+          )}
+        </div>
+      </div>
     )
   }
 
@@ -251,7 +270,8 @@ export function PostEdit() {
 
   return (
     <div>
-      <header className="sticky top-0 z-20 flex h-12 items-center gap-2 border-b border-border bg-background/85 px-4 backdrop-blur">
+      <header className="sticky top-0 z-20 flex h-12 items-center gap-2 border-b border-border bg-background/85 px-4 backdrop-blur md:px-6">
+        <SidebarTrigger className="-ml-1 text-subtle-foreground md:hidden" />
         <Link
           to="/admin/posts"
           className="inline-flex h-7 items-center gap-1.5 rounded-md px-2 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
@@ -368,23 +388,6 @@ export function PostEdit() {
       {/* A measure, not a container width: 36rem holds roughly seventy
           characters a line, which is where prose stops being tiring to read. */}
       <div className="mx-auto w-full max-w-[36rem] px-6 pt-16 pb-32">
-        {error && (
-          <div className="mb-8">
-            <Alert variant="destructive" className="flex items-center gap-3">
-              <AlertTitle className="grow">{errorMessage(error)}</AlertTitle>
-              <Button
-                variant="ghost"
-                size="icon-xs"
-                aria-label="Dismiss"
-                onClick={dismissError}
-                className="shrink-0 text-destructive"
-              >
-                <X />
-              </Button>
-            </Alert>
-          </div>
-        )}
-
         <article>
           {/* The cover control belongs to the title, and it is an action you
               take once, so it stays out of the way until you go looking. */}
@@ -421,7 +424,7 @@ export function PostEdit() {
               onReady={editor => (body.current = editor)}
               initialContent={post.content}
               onChange={content => change({ content })}
-              onError={setEditorError}
+              onError={message => toast.error(message)}
               onLeaveStart={() => focusEnd(summaryField.current)}
             />
           </div>

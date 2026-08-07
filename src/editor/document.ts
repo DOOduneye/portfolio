@@ -50,6 +50,17 @@ export function readingMinutes(document: JSONContent): number {
   return Math.max(1, Math.round(wordCount(document) / 200))
 }
 
+/**
+ * The title a post is born with. It is a placeholder, not something the writer
+ * chose, so nothing should be derived from it.
+ */
+export const UNTITLED = "Untitled"
+
+export function isUntitled(title: string): boolean {
+  const trimmed = title.trim()
+  return trimmed === "" || trimmed.toLowerCase() === UNTITLED.toLowerCase()
+}
+
 export function slugify(title: string): string {
   const slug = title
     .toLowerCase()
