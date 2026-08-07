@@ -1,0 +1,727 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   EDITOR LATEST - Unified TipTap Editor Styling
+   
+   A consolidated styling system combining the best of .tiptap-content and 
+   .notion-editor approaches. Uses design system tokens, low specificity with
+   :where(), and the lobotomized owl spacing pattern.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   CSS CUSTOM PROPERTIES
+   Wrapped in @layer components so @layer utilities (Tailwind) can override
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@layer components {
+  :where(.editor) {
+    /* ─────────────────────────────────────────────────────────────────────────
+     TYPOGRAPHY
+  ───────────────────────────────────────────────────────────────────────── */
+    --editor-font-size: 1rem;
+    --editor-line-height: 1.6;
+    --editor-letter-spacing: -0.006em;
+    --editor-font-weight: 450;
+    --editor-font-weight-semibold: 600;
+
+    /* ─────────────────────────────────────────────────────────────────────────
+     SPACING
+  ───────────────────────────────────────────────────────────────────────── */
+    --editor-spacing-sm: 0.375rem; /* 6px */
+    --editor-spacing-md: 1rem; /* 16px */
+    --editor-spacing-lg: 1.375rem; /* 22px */
+    --editor-spacing-xl: 2rem; /* 32px */
+
+    /* ─────────────────────────────────────────────────────────────────────────
+     RADII
+  ───────────────────────────────────────────────────────────────────────── */
+    --editor-radius-xs: 2px;
+    --editor-radius-sm: 4px;
+    --editor-radius-md: 6px;
+    --editor-radius-lg: 8px;
+
+    /* ─────────────────────────────────────────────────────────────────────────
+     COLORS (reference design system)
+  ───────────────────────────────────────────────────────────────────────── */
+    --editor-text-color: var(--color-foreground);
+    --editor-heading-color: var(--color-foreground);
+    --editor-placeholder-color: var(--color-subtle-foreground);
+    --editor-suggestion-decoration-color: var(--color-muted);
+    --editor-suggestion-decoration-border: var(--color-border);
+    --editor-selection-color: color-mix(in srgb, var(--color-brand) 30%, transparent);
+    --editor-cursor-color: var(--color-foreground);
+
+    /* ─────────────────────────────────────────────────────────────────────────
+     LISTS
+  ───────────────────────────────────────────────────────────────────────── */
+    --editor-list-inset: 1.5rem;
+    --editor-marker-color: var(--color-muted-foreground);
+
+    /* ─────────────────────────────────────────────────────────────────────────
+     CHECKBOX / TASK LIST
+  ───────────────────────────────────────────────────────────────────────── */
+    --editor-checkbox-size: 16px;
+    --editor-checkbox-border: var(--color-border);
+    --editor-checkbox-checked-bg: var(--color-brand);
+    --editor-checkbox-checked-border: var(--color-brand);
+
+    /* ─────────────────────────────────────────────────────────────────────────
+     CODE
+  ───────────────────────────────────────────────────────────────────────── */
+    --editor-code-bg: var(--color-muted);
+    --editor-code-text: var(--color-foreground);
+    --editor-code-border: var(--color-border);
+    --editor-codeblock-bg: var(--color-muted);
+    --editor-codeblock-text: var(--color-foreground);
+    --editor-codeblock-border: var(--color-border);
+
+    /* ─────────────────────────────────────────────────────────────────────────
+     BLOCKQUOTE
+  ───────────────────────────────────────────────────────────────────────── */
+    --editor-blockquote-border: var(--color-border);
+
+    /* ─────────────────────────────────────────────────────────────────────────
+     HORIZONTAL RULE
+  ───────────────────────────────────────────────────────────────────────── */
+    --editor-hr-color: var(--color-border);
+
+    /* ─────────────────────────────────────────────────────────────────────────
+     TABLE
+  ───────────────────────────────────────────────────────────────────────── */
+    --editor-table-border: var(--color-border);
+    --editor-table-header-bg: var(--color-muted);
+    --editor-table-cell-padding: 0.375rem 0.5rem;
+    --editor-table-selected-bg: color-mix(in srgb, var(--color-brand) 15%, transparent);
+    --editor-table-selected-stroke: var(--color-brand);
+    --editor-table-resize-handle: var(--color-brand);
+    --editor-table-margin: 1.25rem;
+    --editor-table-pad-block-start: 1rem;
+    --editor-table-pad-block-end: 1.5rem;
+    --editor-table-pad-inline-start: 1rem;
+    --editor-table-pad-inline-end: 1.5rem;
+    --editor-table-handle-bg: var(--color-muted);
+
+    /* ─────────────────────────────────────────────────────────────────────────
+     COLLABORATION
+  ───────────────────────────────────────────────────────────────────────── */
+    --editor-collab-caret-label: var(--color-foreground);
+
+    /* ─────────────────────────────────────────────────────────────────────────
+       INTERACTIVE
+    ───────────────────────────────────────────────────────────────────────── */
+    --editor-dropcursor: var(--color-brand);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   BASE STYLING
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:where(.editor) {
+  color: var(--editor-text-color);
+  font-size: var(--editor-font-size);
+  line-height: var(--editor-line-height);
+  letter-spacing: var(--editor-letter-spacing);
+  font-weight: var(--editor-font-weight);
+  overflow-wrap: break-word;
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+:where(.editor) .tiptap.ProseMirror {
+  position: relative;
+  cursor: text;
+  white-space: pre-wrap;
+  outline: none;
+  caret-color: var(--editor-cursor-color);
+  padding-bottom: var(--editor-scroll-past);
+}
+
+/* Zero default margins on blocky elements; spacing comes from the stack */
+:where(.editor) :where(p, dl, ol, ul, pre, blockquote, table, figure, hr) {
+  margin: 0;
+}
+
+/* Lobotomized owl: every element after another gets spacing */
+:where(.editor .ProseMirror) > :where(* + *) {
+  margin-top: var(--editor-spacing-lg);
+}
+
+/* Trim edges so the first/last blocks don't add extra space */
+:where(.editor .ProseMirror) > :where(:first-child) {
+  margin-top: 0 !important;
+}
+
+:where(.editor .ProseMirror) > :where(:last-child) {
+  margin-bottom: 0 !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SELECTION & SELECTED NODES
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Text selection highlighting - hidden when ProseMirror-hideselection is present (e.g., cell selection) */
+:where(.editor) .tiptap.ProseMirror:not(.ProseMirror-hideselection) ::selection {
+  background-color: var(--editor-selection-color);
+}
+
+/* Prevent double-highlighting when .selection class is used */
+:where(.editor) .tiptap.ProseMirror .selection::selection {
+  background: transparent;
+}
+
+/* Programmatic selection class */
+:where(.editor) .tiptap.ProseMirror .selection {
+  display: inline;
+  background-color: var(--editor-selection-color);
+}
+
+/* Selected node outline (generalized) */
+:where(.editor) .ProseMirror-focused .ProseMirror-selectednode {
+  outline: var(--color-brand) solid 2px;
+  outline-offset: 2px;
+  border-radius: var(--editor-radius-xs);
+}
+
+/* HR selected node (tighter offset) */
+:where(.editor) .ProseMirror-focused hr.ProseMirror-selectednode {
+  outline-offset: 1px;
+}
+
+/* Hide caret when selection is hidden (e.g., during drag operations) */
+:where(.editor) .tiptap.ProseMirror .ProseMirror-hideselection {
+  caret-color: transparent;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   HEADINGS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:where(.editor) :is(h1, h2, h3, h4, h5, h6) {
+  color: var(--editor-heading-color);
+  font-family: var(--font-heading, inherit);
+  font-weight: var(--editor-font-weight-semibold);
+}
+
+:where(.editor) h1 {
+  font-size: 1.5rem;
+  line-height: 1.85;
+  letter-spacing: -0.005em;
+  margin-top: calc(var(--editor-spacing-md) * 3);
+  margin-bottom: var(--editor-spacing-md);
+  scroll-margin-top: var(--editor-spacing-md);
+}
+
+:where(.editor) h2 {
+  font-size: 1.25rem;
+  line-height: 1.75;
+  letter-spacing: -0.004375em;
+  margin-top: calc(var(--editor-spacing-md) * 2);
+  margin-bottom: var(--editor-spacing-md);
+  scroll-margin-top: var(--editor-spacing-md);
+}
+
+:where(.editor) h3 {
+  font-size: 1.125rem;
+  line-height: 1.5;
+  letter-spacing: -0.00375em;
+  margin-top: calc(var(--editor-spacing-md) * 1.5);
+  margin-bottom: var(--editor-spacing-sm);
+  scroll-margin-top: var(--editor-spacing-sm);
+}
+
+:where(.editor) :is(h4, h5, h6) {
+  font-size: 1rem;
+  line-height: 1.5;
+  margin-top: var(--editor-spacing-lg);
+  margin-bottom: var(--editor-spacing-sm);
+  scroll-margin-top: var(--editor-spacing-sm);
+}
+
+/* Don't double-space immediately after headings */
+:where(.editor) :is(h1, h2, h3, h4, h5, h6) + * {
+  margin-top: 0;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   LINKS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:where(.editor) a:not([data-inline-reference]) {
+  color: var(--color-muted-foreground);
+  text-decoration-line: underline;
+  text-underline-offset: 2px;
+  text-decoration-thickness: 1px;
+  text-decoration-color: var(--color-border);
+  cursor: pointer;
+  overflow-wrap: anywhere;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ORDERED LISTS (Native Styles)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:where(.editor) ol {
+  list-style: decimal;
+  padding-inline-start: var(--editor-list-inset);
+  margin-top: var(--editor-spacing-sm);
+}
+
+:where(.editor) ol ol {
+  list-style: lower-alpha;
+}
+
+:where(.editor) ol ol ol {
+  list-style: lower-roman;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   UNORDERED LISTS (Custom Bullets - All Same Style)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:where(.editor) ul:not([data-type="taskList"]) {
+  list-style: none;
+  padding-inline-start: var(--editor-list-inset);
+  margin-top: var(--editor-spacing-sm);
+}
+
+:where(.editor) ul:not([data-type="taskList"]) > li {
+  position: relative;
+}
+
+:where(.editor) ul:not([data-type="taskList"]) > li::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: calc(-1 * var(--editor-list-inset) + 0.375rem);
+  block-size: 0.3125em;
+  inline-size: 0.3125em;
+  border-radius: 9999px;
+  background: var(--editor-marker-color);
+  top: 0.8125em;
+  transform: translateY(-50%);
+}
+
+/* Nested unordered lists keep the same bullet style */
+:where(.editor) ul:not([data-type="taskList"]) ul > li::before {
+  content: "";
+  block-size: 0.3125em;
+  inline-size: 0.3125em;
+  border-radius: 9999px;
+  background: var(--editor-marker-color);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   LIST ITEM SPACING
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:where(.editor) li,
+:where(.editor) li + li,
+:where(.editor) li > ol,
+:where(.editor) li > ul {
+  margin-top: var(--editor-spacing-sm);
+}
+
+:where(.editor) ol:first-child,
+:where(.editor) ul:first-child {
+  margin-top: 0;
+}
+
+:where(.editor) ol:last-child,
+:where(.editor) ul:last-child {
+  margin-bottom: 0;
+}
+
+:where(.editor) ol ol,
+:where(.editor) ol ul,
+:where(.editor) ul ol,
+:where(.editor) ul ul {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+:where(.editor) li p {
+  margin-top: 0;
+  line-height: var(--editor-line-height);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   TASK / TODO LISTS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:where(.editor) ul[data-type="taskList"] {
+  list-style: none;
+  padding-inline-start: 0;
+  margin-top: var(--editor-spacing-sm);
+}
+
+:where(.editor) ul[data-type="taskList"] > li {
+  display: flex;
+  align-items: flex-start;
+}
+
+:where(.editor) ul[data-type="taskList"] > li > label {
+  height: 1lh;
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  margin-right: 0.5rem;
+  text-align: center;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+:where(.editor) ul[data-type="taskList"] > li > div {
+  flex: 1 1 auto;
+}
+
+:where(.editor) ul[data-type="taskList"] > li > div > :not(ul):not(ol) {
+  transition: opacity 0.1s;
+}
+
+/* Checkbox styling */
+:where(.editor) ul[data-type="taskList"] input[type="checkbox"] {
+  appearance: none;
+  width: var(--editor-checkbox-size);
+  height: var(--editor-checkbox-size);
+  border: 1px solid var(--editor-checkbox-border);
+  border-radius: var(--editor-radius-sm);
+  position: relative;
+  flex-shrink: 0;
+  transition:
+    background-color 0.1s,
+    border-color 0.1s;
+  transform: translateY(-0.5px);
+  cursor: pointer;
+}
+
+/* Read-only checkbox */
+:where(.editor) [contenteditable="false"] ul[data-type="taskList"] input[type="checkbox"] {
+  cursor: default;
+  pointer-events: none;
+}
+
+/* Checked state */
+:where(.editor)
+  ul[data-type="taskList"]
+  > li[data-checked="true"]
+  > label
+  > input[type="checkbox"] {
+  border: 1px solid var(--editor-checkbox-checked-border);
+  background-color: var(--editor-checkbox-checked-bg);
+  background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 5.25L6.66669 10.75L4 8.00009' stroke='white' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* Checked text styling - dimmed + strikethrough */
+:where(.editor) ul[data-type="taskList"] > li[data-checked="true"] > div > :not(ul):not(ol) {
+  opacity: 0.75;
+  text-decoration: line-through;
+  text-decoration-color: color-mix(in srgb, currentColor 50%, transparent);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   BLOCKQUOTES
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:where(.editor) blockquote {
+  position: relative;
+  padding-inline-start: 1em;
+  margin: var(--editor-spacing-lg) 0;
+}
+
+:where(.editor) blockquote > p {
+  margin-top: 0;
+}
+
+:where(.editor) blockquote::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--editor-blockquote-border);
+  border-radius: var(--editor-radius-xs);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   INLINE CODE
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:where(.editor) code {
+  font-family: var(--font-mono);
+  background-color: var(--editor-code-bg);
+  color: var(--editor-code-text);
+  border: 0.5px solid var(--editor-code-border);
+  font-size: 0.875em;
+  line-height: 1.4;
+  border-radius: var(--editor-radius-md);
+  padding: 0.1em 0.2em;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   CODE BLOCKS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:where(.editor) pre {
+  font-family: var(--font-mono);
+  background-color: var(--editor-codeblock-bg);
+  color: var(--editor-codeblock-text);
+  border: 0.5px solid var(--editor-codeblock-border);
+  margin-top: var(--editor-spacing-lg);
+  margin-bottom: var(--editor-spacing-lg);
+  padding: 1em;
+  font-size: 0.875rem;
+  border-radius: var(--editor-radius-md);
+  overflow-x: auto;
+  line-height: 1.6;
+}
+
+:where(.editor) pre code {
+  background-color: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  font-size: inherit;
+  color: inherit;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   HORIZONTAL RULE
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:where(.editor) hr {
+  border: 0;
+  height: 1px;
+  background: var(--editor-hr-color);
+  margin: var(--editor-spacing-lg) 0;
+  border-radius: 1px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   TABLES
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:where(.editor) .ProseMirror .tableWrapper {
+  overflow-x: auto;
+}
+
+:where(.editor) .ProseMirror table {
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: fixed;
+  width: 100%;
+  overflow: hidden;
+  border-radius: var(--editor-radius-lg);
+  border: 0.5px solid var(--editor-table-border);
+}
+
+:where(.editor) .ProseMirror td,
+:where(.editor) .ProseMirror th {
+  vertical-align: top;
+  box-sizing: border-box;
+  position: relative;
+  border: 0.5px solid var(--editor-table-border);
+  border-top: none;
+  border-left: none;
+  padding: var(--editor-table-cell-padding);
+}
+
+:where(.editor) .ProseMirror td:last-child,
+:where(.editor) .ProseMirror th:last-child {
+  border-right: none;
+}
+
+:where(.editor) .ProseMirror tr:last-child td,
+:where(.editor) .ProseMirror tr:last-child th {
+  border-bottom: none;
+}
+
+:where(.editor) .ProseMirror th {
+  background-color: var(--editor-table-header-bg);
+  font-weight: var(--editor-font-weight-semibold);
+  text-align: left;
+}
+
+/* Table wrapper - provides padding for handles and overflow */
+:where(.editor) .tiptap [data-content-type="table"] .tableWrapper {
+  padding-block-start: var(--editor-table-pad-block-start);
+  padding-block-end: var(--editor-table-pad-block-end);
+  padding-inline-start: var(--editor-table-pad-inline-start);
+  padding-inline-end: var(--editor-table-pad-inline-end);
+  margin-left: -1rem;
+  overflow-y: hidden;
+  position: relative;
+  width: 100%;
+}
+
+/* Table element - fixed layout for consistent columns */
+:where(.editor) .tiptap table {
+  width: 100% !important;
+  table-layout: fixed !important;
+  word-break: break-word;
+}
+
+/* Table cells - auto width for fixed layout */
+:where(.editor) .ProseMirror td,
+:where(.editor) .ProseMirror th {
+  width: auto !important;
+  min-width: auto !important;
+}
+
+/* Table cell selection */
+:where(.editor) .ProseMirror .selectedCell:after {
+  z-index: 2;
+  position: absolute;
+  content: "";
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: var(--editor-table-selected-bg);
+  pointer-events: none;
+}
+
+/* Table cell alignment */
+:where(.editor) td[data-text-align="left"],
+:where(.editor) th[data-text-align="left"] {
+  text-align: left;
+}
+
+:where(.editor) td[data-text-align="center"],
+:where(.editor) th[data-text-align="center"] {
+  text-align: center;
+}
+
+:where(.editor) td[data-text-align="right"],
+:where(.editor) th[data-text-align="right"] {
+  text-align: right;
+}
+
+:where(.editor) td[data-text-align="justify"],
+:where(.editor) th[data-text-align="justify"] {
+  text-align: justify;
+}
+
+/* Table vertical alignment */
+:where(.editor) td[data-vertical-align="top"],
+:where(.editor) th[data-vertical-align="top"] {
+  vertical-align: top;
+}
+
+:where(.editor) td[data-vertical-align="middle"],
+:where(.editor) th[data-vertical-align="middle"] {
+  vertical-align: middle;
+}
+
+:where(.editor) td[data-vertical-align="bottom"],
+:where(.editor) th[data-vertical-align="bottom"] {
+  vertical-align: bottom;
+}
+
+/* Table dropcursor - visual indicator for drag/drop */
+:where(.editor) .tiptap-table-dropcursor {
+  position: absolute;
+  z-index: 20;
+  background-color: var(--editor-table-resize-handle);
+  pointer-events: none;
+}
+
+/* Table cell dragging source - visual feedback during drag */
+:where(.editor) .table-cell-dragging-source {
+  z-index: 2;
+  position: absolute;
+  content: "";
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: var(--editor-table-selected-bg);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   EMOJI
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.tiptap.ProseMirror [data-type="emoji"] img {
+  display: inline-block;
+  width: 1.25em;
+  height: 1.25em;
+  cursor: text;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   PLACEHOLDER
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:where(.editor) .is-empty[data-placeholder]:has(> .ProseMirror-trailingBreak:only-child)::before {
+  content: attr(data-placeholder);
+  pointer-events: none;
+  float: left;
+  height: 0;
+  max-width: 100%;
+  text-align: inherit;
+  white-space: nowrap;
+}
+
+:where(.editor) .is-empty[data-placeholder]:has(> .ProseMirror-trailingBreak)::before {
+  color: var(--editor-placeholder-color);
+  font-style: normal;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SUGGESTION DECORATIONS (slash commands, emoji, etc.)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:where(.editor)
+  .tiptap.ProseMirror
+  :is(.tiptap-slash-decoration, .tiptap-emoji-decoration, .tiptap-mention-decoration) {
+  background: var(--editor-suggestion-decoration-color);
+  box-shadow:
+    0 0 0 3px var(--editor-suggestion-decoration-color),
+    0 0 0 4px var(--editor-suggestion-decoration-border);
+  border-radius: var(--editor-radius-xs);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   DROPCURSOR
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:where(.editor) .prosemirror-dropcursor-block,
+:where(.editor) .prosemirror-dropcursor-inline {
+  background: var(--editor-dropcursor) !important;
+  border-radius: 2px;
+  margin-left: -1px;
+  margin-right: -1px;
+  width: 100%;
+  height: 2px;
+  cursor: grabbing;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   COLLABORATION CARETS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:where(.editor) .tiptap.ProseMirror .collaboration-carets__caret {
+  border-right: 1px solid transparent;
+  border-left: 1px solid transparent;
+  pointer-events: none;
+  margin-left: -1px;
+  margin-right: -1px;
+  position: relative;
+  word-break: normal;
+}
+
+:where(.editor) .tiptap.ProseMirror .collaboration-carets__label {
+  color: var(--editor-collab-caret-label);
+  border-radius: var(--editor-radius-sm);
+  border-bottom-left-radius: 0;
+  font-size: 0.75rem;
+  font-weight: var(--editor-font-weight-semibold);
+  left: -1px;
+  line-height: 1;
+  padding: 0.125rem 0.375rem;
+  position: absolute;
+  top: -1.3em;
+  user-select: none;
+  white-space: nowrap;
+}

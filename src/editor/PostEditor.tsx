@@ -1,18 +1,33 @@
-import { useCallback, useEffect, useRef, useState } from "react"
-import type { Editor } from "@tiptap/react"
-import { Tiptap, useEditor } from "@tiptap/react"
+import { useCallback, useMemo, useRef, useState } from "react"
 import FileHandler from "@tiptap/extension-file-handler"
-import { Placeholder } from "@tiptap/extensions"
+import type { Editor } from "@tiptap/react"
+
+import { ImageIcon } from "@/components/icons/image"
 import { uploadImage } from "../admin/api"
 import { parseDocument } from "./document"
-import { contentExtensions } from "./extensions"
-import { createSlashExtension, type SlashState } from "./slash"
-import { InsertMenu } from "./InsertMenu"
-import { SelectionMenu } from "./SelectionMenu"
-import { REQUEST_IMAGE, SlashMenu } from "./SlashMenu"
-import "./prose.css"
+import { BaseEditor } from "./editor"
+import type { SlashMenuConfig } from "./tiptap-ui/slash-dropdown-menu/use-slash-dropdown-menu"
 
 const IMAGE_TYPES = ["image/png", "image/jpeg", "image/gif", "image/webp", "image/avif"]
+
+// Heading one is the post title, and images go through R2 rather than the
+// editor's own upload node, so both defaults are replaced below.
+const SLASH_ITEMS = [
+  "heading_2",
+  "heading_3",
+  "bullet_list",
+  "ordered_list",
+  "task_list",
+  "blockquote",
+  "code_block",
+  "table",
+  "divider",
+  "add_row",
+  "add_column",
+  "delete_row",
+  "delete_column",
+  "delete_table"
+] as const
 
 export function PostEditor({
   initialContent,
@@ -27,16 +42,15 @@ export function PostEditor({
   onLeaveStart?: () => void
   onReady?: (editor: Editor) => void
 }) {
-  const [uploads, setUploads] = useState(0)
+  const [uploading, setUploading] = useState(false)
+  const fileInput = useRef<HTMLInputElement>(null)
+  const editorRef = useRef<Editor | null>(null)
 
-  const handlers = useRef({ onChange, onError, onLeaveStart })
-  handlers.current = { onChange, onError, onLeaveStart }
-
-  const onReadyRef = useRef(onReady)
-  onReadyRef.current = onReady
+  const handlers = useRef({ onChange, onError, onLeaveStart, onReady })
+  handlers.current = { onChange, onError, onLeaveStart, onReady }
 
   const insertImage = useCallback(async (editor: Editor, file: File, position?: number) => {
-    setUploads(count => count + 1)
+    setUploading(true)
     try {
       const src = await uploadImage(file)
       const at = position ?? editor.state.selection.anchor
@@ -44,29 +58,14 @@ export function PostEditor({
     } catch (error) {
       handlers.current.onError(error instanceof Error ? error.message : "Upload failed.")
     } finally {
-      setUploads(count => count - 1)
+      setUploading(false)
     }
   }, [])
 
-  const fileInput = useRef<HTMLInputElement>(null)
-  const [slash, setSlash] = useState<SlashState | null>(null)
-  const slashKeys = useRef<((event: KeyboardEvent) => boolean) | null>(null)
-  const slashBridge = useRef({ onChange: setSlash, keyHandler: slashKeys })
+  const content = useMemo(() => parseDocument(initialContent), [initialContent])
 
-  useEffect(() => {
-    const open = () => fileInput.current?.click()
-    window.addEventListener(REQUEST_IMAGE, open)
-    return () => window.removeEventListener(REQUEST_IMAGE, open)
-  }, [])
-
-  const editor = useEditor({
-    extensions: [
-      ...contentExtensions,
-      createSlashExtension(slashBridge.current),
-      Placeholder.configure({
-        placeholder: ({ node }) =>
-          node.type.name === "heading" ? "Heading" : "Start writing, or press + to insert"
-      }),
+  const extensions = useMemo(
+    () => [
       FileHandler.configure({
         allowedMimeTypes: IMAGE_TYPES,
         consumePasteEvent: true,
@@ -78,28 +77,31 @@ export function PostEditor({
         }
       })
     ],
-    content: parseDocument(initialContent),
-    editorProps: {
-      attributes: { class: "prose tiptap" },
-      handleKeyDown: (view, event) => {
-        if (event.key !== "Backspace") return false
-        const { empty, from } = view.state.selection
-        if (!empty || from !== 1) return false
-        handlers.current.onLeaveStart?.()
-        return true
-      }
-    },
-    onUpdate: ({ editor }) => handlers.current.onChange(JSON.stringify(editor.getJSON()))
-  })
+    [insertImage]
+  )
 
-  useEffect(() => {
-    if (editor) onReadyRef.current?.(editor)
-  }, [editor])
-
-  if (!editor) return null
+  const slashConfig = useMemo<SlashMenuConfig>(
+    () => ({
+      enabledItems: [...SLASH_ITEMS],
+      customItems: [
+        {
+          title: uploading ? "Uploading…" : "Image",
+          subtext: "Upload a picture from your machine",
+          keywords: ["image", "photo", "picture", "upload", "media"],
+          badge: ImageIcon,
+          group: "Media",
+          onSelect: ({ editor, range }) => {
+            editor.chain().focus().deleteRange(range).run()
+            fileInput.current?.click()
+          }
+        }
+      ]
+    }),
+    [uploading]
+  )
 
   return (
-    <Tiptap editor={editor}>
+    <>
       <input
         ref={fileInput}
         type="file"
@@ -107,27 +109,24 @@ export function PostEditor({
         className="hidden"
         onChange={event => {
           const file = event.target.files?.[0]
-          if (file) void insertImage(editor, file)
+          const editor = editorRef.current
+          if (file && editor) void insertImage(editor, file)
           event.target.value = ""
         }}
       />
-      <div
-        className="min-h-96 cursor-text"
-        onMouseDown={event => {
-          if (event.target !== event.currentTarget) return
-          event.preventDefault()
-          editor.commands.focus("end")
+      <BaseEditor
+        content={content}
+        variant="fullPage"
+        placeholder="Tell the story."
+        slashConfig={slashConfig}
+        extensions={extensions}
+        onChange={document => handlers.current.onChange(JSON.stringify(document))}
+        onLeaveStart={() => handlers.current.onLeaveStart?.()}
+        onCreate={editor => {
+          editorRef.current = editor
+          handlers.current.onReady?.(editor)
         }}
-      >
-        <Tiptap.Content />
-      </div>
-      <SlashMenu state={slash} keyHandler={slashKeys} />
-      <SelectionMenu editor={editor} />
-      <InsertMenu
-        editor={editor}
-        uploading={uploads > 0}
-        onInsertImage={file => void insertImage(editor, file)}
       />
-    </Tiptap>
+    </>
   )
 }
