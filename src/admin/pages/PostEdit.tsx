@@ -35,6 +35,7 @@ import {
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -269,18 +270,21 @@ export function PostEdit() {
               <MoreHorizontal />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-64">
-              <DropdownMenuLabel className="font-mono text-xs font-normal text-subtle-foreground">
-                /writing/{slug}
-              </DropdownMenuLabel>
-              {!post.publishedAt && slugify(draft.title) !== slug && (
-                <DropdownMenuItem onClick={renameToTitle} disabled={busy}>
-                  <PenLine />
-                  Match the address to the title
-                </DropdownMenuItem>
-              )}
-              {post.publishedAt && (
-                <DropdownMenuItem disabled>The address is fixed once published</DropdownMenuItem>
-              )}
+              {/* Base UI requires a GroupLabel to sit inside a Group. */}
+              <DropdownMenuGroup>
+                <DropdownMenuLabel className="font-mono text-xs font-normal text-subtle-foreground">
+                  /writing/{slug}
+                </DropdownMenuLabel>
+                {!post.publishedAt && slugify(draft.title) !== slug && (
+                  <DropdownMenuItem onClick={renameToTitle} disabled={busy}>
+                    <PenLine />
+                    Match the address to the title
+                  </DropdownMenuItem>
+                )}
+                {post.publishedAt && (
+                  <DropdownMenuItem disabled>The address is fixed once published</DropdownMenuItem>
+                )}
+              </DropdownMenuGroup>
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 variant="destructive"
