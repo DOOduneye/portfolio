@@ -22,7 +22,6 @@ import { api, errorMessage, uploadImage, type RouterOutputs } from "../api"
 import { PostEditor } from "../../editor/PostEditor"
 import { parseDocument, readingMinutes, slugify, wordCount } from "../../editor/document"
 import { Alert, AlertTitle } from "@/components/ui/alert"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -55,6 +54,13 @@ interface Draft {
 type SaveState = "clean" | "dirty" | "saving" | "failed"
 
 const AUTOSAVE_DELAY_MS = 1200
+
+const SAVE_LABEL: Record<SaveState, string | null> = {
+  clean: null,
+  dirty: "Unsaved",
+  saving: "Saving",
+  failed: "Could not save"
+}
 
 export function PostEdit() {
   const { slug = "" } = useParams()
@@ -234,14 +240,20 @@ export function PostEdit() {
           Posts
         </Link>
 
-        <div className="ml-auto flex items-center gap-2">
-          {stats && stats.words > 0 && (
-            <span className="font-mono text-xs tabular-nums text-subtle-foreground">
-              {stats.words} words · {stats.minutes} min
-            </span>
-          )}
-          <SaveIndicator state={saveState} />
-          {!published && <Badge variant="outline">Draft</Badge>}
+        {/* One muted line rather than a row of competing chips: what this post
+            is, how long it is, and whether it is saved all read together. */}
+        <p className="ml-auto text-xs text-subtle-foreground" aria-live="polite">
+          {[
+            published ? "Published" : "Draft",
+            stats && stats.words > 0 ? `${stats.words} words` : null,
+            stats && stats.words > 0 ? `${stats.minutes} min` : null,
+            SAVE_LABEL[saveState]
+          ]
+            .filter(Boolean)
+            .join("  ·  ")}
+        </p>
+
+        <div className="flex items-center gap-2">
           {published && (
             <Button
               size="sm"
@@ -326,7 +338,9 @@ export function PostEdit() {
         </DialogContent>
       </Dialog>
 
-      <div className="mx-auto w-full max-w-2xl px-6 pb-32 pt-10">
+      {/* A measure, not a container width: 36rem holds roughly seventy
+          characters a line, which is where prose stops being tiring to read. */}
+      <div className="mx-auto w-full max-w-[36rem] px-6 pt-16 pb-32">
         {error && (
           <div className="mb-8">
             <Alert variant="destructive">
@@ -336,33 +350,37 @@ export function PostEdit() {
         )}
 
         <article>
-          <CoverImage
-            src={draft.coverImage}
-            uploading={uploadCover.isPending}
-            onPick={file => uploadCover.mutate(file)}
-            onRemove={() => change({ coverImage: null })}
-          />
+          {/* The cover control belongs to the title, and it is an action you
+              take once, so it stays out of the way until you go looking. */}
+          <div className="group/cover">
+            <CoverImage
+              src={draft.coverImage}
+              uploading={uploadCover.isPending}
+              onPick={file => uploadCover.mutate(file)}
+              onRemove={() => change({ coverImage: null })}
+            />
 
-          <AutoTextarea
-            ref={titleField}
-            value={draft.title}
-            onChange={title => change({ title })}
-            onEnter={() => summaryField.current?.focus()}
-            placeholder="Title"
-            className="editorial w-full resize-none bg-transparent text-[1.875rem] font-semibold leading-[1.2] tracking-[-0.022em] text-foreground outline-none placeholder:text-subtle-foreground"
-          />
+            <AutoTextarea
+              ref={titleField}
+              value={draft.title}
+              onChange={title => change({ title })}
+              onEnter={() => summaryField.current?.focus()}
+              placeholder="Title"
+              className="editorial w-full resize-none bg-transparent text-[2rem] leading-[1.15] font-semibold tracking-[-0.03em] text-foreground outline-none placeholder:text-subtle-foreground"
+            />
 
-          <AutoTextarea
-            ref={summaryField}
-            value={draft.excerpt}
-            onChange={excerpt => change({ excerpt })}
-            onEnter={focusBody}
-            onBackspaceAtStart={() => focusEnd(titleField.current)}
-            placeholder="Add a summary"
-            className="editorial mt-2 w-full resize-none bg-transparent text-[0.9375rem] leading-relaxed text-muted-foreground outline-none placeholder:text-subtle-foreground"
-          />
+            <AutoTextarea
+              ref={summaryField}
+              value={draft.excerpt}
+              onChange={excerpt => change({ excerpt })}
+              onEnter={focusBody}
+              onBackspaceAtStart={() => focusEnd(titleField.current)}
+              placeholder="Add a summary"
+              className="editorial mt-3 w-full resize-none bg-transparent text-[0.9375rem] leading-relaxed text-muted-foreground outline-none placeholder:text-subtle-foreground"
+            />
+          </div>
 
-          <div className="mt-8">
+          <div className="mt-10">
             <PostEditor
               onReady={editor => (body.current = editor)}
               initialContent={post.content}
@@ -389,18 +407,6 @@ function focusEnd(field: HTMLTextAreaElement | null): void {
   field.setSelectionRange(field.value.length, field.value.length)
 }
 
-function SaveIndicator({ state }: { state: SaveState }) {
-  if (state === "clean") return null
-
-  const label = { dirty: "Unsaved", saving: "Saving…", failed: "Could not save" }[state]
-  const tone = state === "failed" ? "text-destructive" : "text-muted-foreground"
-
-  return (
-    <span aria-live="polite" className={`font-mono text-xs ${tone}`}>
-      {label}
-    </span>
-  )
-}
 
 function CoverImage({
   src,
@@ -448,7 +454,7 @@ function CoverImage({
           size="sm"
           onClick={() => input.current?.click()}
           disabled={uploading}
-          className="-ml-2.5 text-muted-foreground"
+          className="-ml-2.5 text-subtle-foreground opacity-0 transition-opacity group-hover/cover:opacity-100 hover:text-foreground focus-visible:opacity-100"
         >
           {uploading ? (
             <Spinner data-icon="inline-start" />
