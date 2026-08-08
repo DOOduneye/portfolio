@@ -32,7 +32,7 @@ const t = initTRPC.context<Context>().create({
     if (error.code !== "INTERNAL_SERVER_ERROR") return shape
 
     console.error("trpc", error.cause ?? error)
-    return { ...shape, message: "Something went wrong. The details are in the logs." }
+    return { ...shape, message: "Something went wrong." }
   }
 })
 
