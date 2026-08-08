@@ -36,42 +36,6 @@ const experience = [
   }
 ]
 
-const projects = [
-  {
-    name: "Student Activity Calendar",
-    url: null,
-    description:
-      "A campus events platform serving 15,000+ students, with a Go backend, web and mobile apps, admin dashboards, and a development CLI.",
-    stack: "Go · React · React Native · Redis · AWS · Postgres"
-  },
-  {
-    name: "brain-kit",
-    url: "https://github.com/DOOduneye/brain-kit",
-    description:
-      "A CLI, vault skeleton, and set of skills for developing out of a personal knowledge base with Claude Code.",
-    stack: "TypeScript · Claude Code"
-  },
-  {
-    name: "monkey",
-    url: "https://github.com/DOOduneye/monkey",
-    description: "An interpreter and compiler for the Monkey language, from Thorsten Ball's books.",
-    stack: "Go"
-  },
-  {
-    name: "hydrate",
-    url: "https://github.com/DOOduneye/hydrate",
-    description: "A token-based authentication utility for Go.",
-    stack: "Go"
-  },
-  {
-    name: "davidoduneye.com",
-    url: "https://github.com/DOOduneye/portfolio",
-    description:
-      "This site. A React app with a built-in CMS, using tRPC on Cloudflare Workers, D1, and a TipTap editor.",
-    stack: "React · tRPC · Cloudflare · TipTap"
-  }
-]
-
 const links = [
   { label: "GitHub", url: "https://github.com/DOOduneye" },
   { label: "LinkedIn", url: "https://linkedin.com/in/dooduneye" },
@@ -99,6 +63,56 @@ function OnRepeat() {
       </a>{" "}
       · {track.artist}
     </p>
+  )
+}
+
+function Projects() {
+  const { data: projects = [] } = useQuery(trpc.public.projects.visible.queryOptions())
+
+  if (projects.length === 0) return null
+
+  return (
+    <Section title="Projects">
+      <ul>
+        {projects.map(project => {
+          const inner = (
+            <>
+              <div className="flex items-baseline justify-between gap-4">
+                <h3 className="font-medium text-foreground transition-colors group-hover:text-brand">
+                  {project.name}
+                </h3>
+                {project.url && (
+                  <span className="font-mono text-xs text-subtle-foreground transition-colors group-hover:text-brand">
+                    ↗
+                  </span>
+                )}
+              </div>
+              <p className="mt-1.5 max-w-xl text-sm leading-relaxed">{project.description}</p>
+              {project.stack && (
+                <p className="mt-2.5 font-mono text-xs text-subtle-foreground">{project.stack}</p>
+              )}
+            </>
+          )
+
+          return (
+            <li key={project.id} className="border-b border-border last:border-b-0">
+              {project.url ? (
+                <a
+                  href={project.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group block py-6"
+                >
+                  {inner}
+                </a>
+              ) : (
+                <div className="py-6">{inner}</div>
+              )}
+            </li>
+          )
+        })}
+      </ul>
+    </Section>
   )
 }
 
@@ -225,45 +239,7 @@ export function Home() {
         </ol>
       </Section>
 
-      <Section title="Projects">
-        <ul>
-          {projects.map(project => {
-            const inner = (
-              <>
-                <div className="flex items-baseline justify-between gap-4">
-                  <h3 className="font-medium text-foreground transition-colors group-hover:text-brand">
-                    {project.name}
-                  </h3>
-                  {project.url && (
-                    <span className="font-mono text-xs text-subtle-foreground transition-colors group-hover:text-brand">
-                      ↗
-                    </span>
-                  )}
-                </div>
-                <p className="mt-1.5 max-w-xl text-sm leading-relaxed">{project.description}</p>
-                <p className="mt-2.5 font-mono text-xs text-subtle-foreground">{project.stack}</p>
-              </>
-            )
-
-            return (
-              <li key={project.name} className="border-b border-border last:border-b-0">
-                {project.url ? (
-                  <a
-                    href={project.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group block py-6"
-                  >
-                    {inner}
-                  </a>
-                ) : (
-                  <div className="py-6">{inner}</div>
-                )}
-              </li>
-            )
-          })}
-        </ul>
-      </Section>
+      <Projects />
 
       <RecentWriting />
 
