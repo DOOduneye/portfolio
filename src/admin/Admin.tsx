@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react"
-import { Navigate, Route, Routes } from "react-router-dom"
+import { Navigate, Route, Routes, useLocation } from "react-router-dom"
 import { AdminSidebar } from "./components/AdminSidebar"
 import { CommandMenu, useAdminShortcuts } from "./components/CommandMenu"
 import { PostsList } from "./pages/PostsList"
@@ -14,18 +14,24 @@ export function Admin() {
   const openCommands = useCallback(() => setCommandsOpen(true), [])
 
   useAdminShortcuts(openCommands)
+  const { pathname } = useLocation()
 
   return (
     <SidebarProvider>
       <AdminSidebar onOpenCommands={openCommands} />
       <SidebarInset className="min-w-0">
-        <Routes>
-          <Route index element={<Navigate to="posts" replace />} />
-          <Route path="posts" element={<PostsList />} />
-          <Route path="posts/:slug" element={<PostEdit />} />
-          <Route path="projects" element={<Projects />} />
-          <Route path="experiences" element={<Experiences />} />
-        </Routes>
+        <div
+          key={pathname}
+          className="motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-1 motion-safe:duration-200 motion-safe:ease-out"
+        >
+          <Routes>
+            <Route index element={<Navigate to="posts" replace />} />
+            <Route path="posts" element={<PostsList />} />
+            <Route path="posts/:slug" element={<PostEdit />} />
+            <Route path="projects" element={<Projects />} />
+            <Route path="experiences" element={<Experiences />} />
+          </Routes>
+        </div>
       </SidebarInset>
       <CommandMenu open={commandsOpen} onOpenChange={setCommandsOpen} />
       <Toaster position="bottom-right" />
