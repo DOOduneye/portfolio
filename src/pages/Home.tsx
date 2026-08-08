@@ -2,40 +2,6 @@ import { useQuery } from "@tanstack/react-query"
 import { Link } from "react-router-dom"
 import { trpc } from "../api"
 
-const experience = [
-  {
-    role: "Member of Technical Staff",
-    org: "Agency",
-    orgUrl: "https://www.agency.inc",
-    dates: "Jan 2025 - Present",
-    description: "Early engineer building the core product."
-  },
-  {
-    role: "Software Engineering Intern",
-    org: "Google",
-    orgUrl: "https://about.google",
-    dates: "Aug - Nov 2024",
-    description:
-      "Worked on Google's CI tooling for the onArm initiative, adding multi-architecture (ARM and x86) test visibility for internal developers."
-  },
-  {
-    role: "Software Engineering Intern",
-    org: "Microsoft",
-    orgUrl: "https://www.microsoft.com",
-    dates: "May - Aug 2024",
-    description:
-      "Improved a synthetic data generator with multithreading and a move to cloud VMs, added tests in production for pipeline validation, and built a dashboard for monitoring test runs across production regions."
-  },
-  {
-    role: "Technical Lead",
-    org: "Generate",
-    orgUrl: "https://generatenu.com",
-    dates: "Jul 2023 - Jun 2024",
-    description:
-      "Led a team of 5 to 10 engineers building four full-stack applications for student clubs and events."
-  }
-]
-
 const links = [
   { label: "GitHub", url: "https://github.com/DOOduneye" },
   { label: "LinkedIn", url: "https://linkedin.com/in/dooduneye" },
@@ -112,6 +78,45 @@ function Projects() {
           )
         })}
       </ul>
+    </Section>
+  )
+}
+
+function Experience() {
+  const { data: roles = [] } = useQuery(trpc.public.experiences.visible.queryOptions())
+
+  if (roles.length === 0) return null
+
+  return (
+    <Section title="Experience">
+      <ol className="space-y-12">
+        {roles.map(job => (
+          <li key={job.id} className="grid gap-1.5 sm:grid-cols-[10rem_1fr] sm:gap-6">
+            <span className="whitespace-nowrap pt-0.5 font-mono text-xs leading-6 text-subtle-foreground">
+              {job.dates}
+            </span>
+            <div>
+              <h3 className="font-medium text-foreground">
+                {job.role}
+                <span className="text-subtle-foreground"> · </span>
+                {job.orgUrl ? (
+                  <a
+                    href={job.orgUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="transition-colors hover:text-brand"
+                  >
+                    {job.org}
+                  </a>
+                ) : (
+                  <span>{job.org}</span>
+                )}
+              </h3>
+              <p className="mt-1.5 text-sm leading-relaxed">{job.description}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
     </Section>
   )
 }
@@ -208,36 +213,7 @@ export function Home() {
         </nav>
       </header>
 
-      <Section title="Experience">
-        <ol className="space-y-12">
-          {experience.map(job => (
-            <li key={job.org + job.role} className="grid gap-1.5 sm:grid-cols-[10rem_1fr] sm:gap-6">
-              <span className="whitespace-nowrap pt-0.5 font-mono text-xs leading-6 text-subtle-foreground">
-                {job.dates}
-              </span>
-              <div>
-                <h3 className="font-medium text-foreground">
-                  {job.role}
-                  <span className="text-subtle-foreground"> · </span>
-                  {job.orgUrl ? (
-                    <a
-                      href={job.orgUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="transition-colors hover:text-brand"
-                    >
-                      {job.org}
-                    </a>
-                  ) : (
-                    <span>{job.org}</span>
-                  )}
-                </h3>
-                <p className="mt-1.5 text-sm leading-relaxed">{job.description}</p>
-              </div>
-            </li>
-          ))}
-        </ol>
-      </Section>
+      <Experience />
 
       <Projects />
 
