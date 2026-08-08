@@ -6,12 +6,14 @@ export function AdminPage({
   action,
   header,
   toolbar,
+  wide = false,
   children
 }: {
   title: string
   action?: ReactNode
   header?: ReactNode
   toolbar?: ReactNode
+  wide?: boolean
   children: ReactNode
 }) {
   return (
@@ -33,7 +35,7 @@ export function AdminPage({
       )}
 
       <div className={`min-h-0 flex-1 overflow-y-auto px-4 pb-6 md:px-6 ${toolbar ? "" : "pt-4"}`}>
-        {children}
+        <div className={wide ? "" : "mx-auto w-full max-w-4xl"}>{children}</div>
       </div>
     </div>
   )
