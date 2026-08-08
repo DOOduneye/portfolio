@@ -10,16 +10,46 @@ import {
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import type { Editor } from "@tiptap/react"
 import { Link, useNavigate, useParams } from "react-router-dom"
-import { ArrowLeft, ArrowUpRight, Image as ImageIcon, Trash2 } from "lucide-react"
+import {
+  ArrowLeft,
+  ArrowUpRight,
+  Image as ImageIcon,
+  MoreHorizontal,
+  PenLine,
+  Trash2
+} from "lucide-react"
 import { api, errorMessage, uploadImage, type RouterOutputs } from "../api"
 import { PostEditor } from "../../editor/PostEditor"
-import { parseDocument, readingMinutes, slugify, wordCount } from "../../editor/document"
-import { ConfirmButton } from "../components/ConfirmButton"
+import {
+  isUntitled,
+  parseDocument,
+  readingMinutes,
+  slugify,
+  wordCount
+} from "../../editor/document"
 import { Alert, AlertTitle } from "@/components/ui/alert"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Separator } from "@/components/ui/separator"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle
+} from "@/components/ui/dialog"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu"
+import { SidebarTrigger } from "@/components/ui/sidebar"
+import { Skeleton } from "@/components/ui/skeleton"
 import { Spinner } from "@/components/ui/spinner"
+import { toast } from "sonner"
 
 type Post = RouterOutputs["admin"]["posts"]["bySlug"]
 
@@ -34,13 +64,20 @@ type SaveState = "clean" | "dirty" | "saving" | "failed"
 
 const AUTOSAVE_DELAY_MS = 1200
 
+const SAVE_LABEL: Record<SaveState, string | null> = {
+  clean: null,
+  dirty: "Unsaved",
+  saving: "Saving",
+  failed: "Could not save"
+}
+
 export function PostEdit() {
   const { slug = "" } = useParams()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
 
   const [draft, setDraft] = useState<Draft | null>(null)
-  const [editorError, setEditorError] = useState<string | null>(null)
+  const [confirmingDelete, setConfirmingDelete] = useState(false)
 
   const saved = useRef("")
   const inFlight = useRef("")
@@ -55,6 +92,7 @@ export function PostEdit() {
     refetchOnWindowFocus: false
   })
   const post = postQuery.data
+  const postsList = useQuery(api.admin.posts.list.queryOptions())
 
   const seeded = useRef<string | null>(null)
   useEffect(() => {
@@ -70,6 +108,8 @@ export function PostEdit() {
     setDraft(next)
   }, [post])
 
+  const reportFailure = (cause: unknown) => toast.error(errorMessage(cause))
+
   const afterWrite = (updated: Post) => {
     queryClient.setQueryData(api.admin.posts.bySlug.queryKey({ slug: updated.slug }), updated)
     void queryClient.invalidateQueries(api.admin.posts.list.queryFilter())
@@ -77,6 +117,7 @@ export function PostEdit() {
 
   const update = useMutation(
     api.admin.posts.update.mutationOptions({
+      onError: reportFailure,
       onSuccess: updated => {
         saved.current = inFlight.current
         afterWrite(updated)
@@ -84,10 +125,11 @@ export function PostEdit() {
     })
   )
   const setStatus = useMutation(
-    api.admin.posts.setStatus.mutationOptions({ onSuccess: afterWrite })
+    api.admin.posts.setStatus.mutationOptions({ onError: reportFailure, onSuccess: afterWrite })
   )
   const rename = useMutation(
     api.admin.posts.rename.mutationOptions({
+      onError: reportFailure,
       onSuccess: renamed => {
         void queryClient.invalidateQueries(api.admin.posts.list.queryFilter())
         if (renamed) navigate(`/admin/posts/${renamed.slug}`, { replace: true })
@@ -96,6 +138,7 @@ export function PostEdit() {
   )
   const remove = useMutation(
     api.admin.posts.remove.mutationOptions({
+      onError: reportFailure,
       onSuccess: () => {
         void queryClient.invalidateQueries(api.admin.posts.list.queryFilter())
         navigate("/admin/posts")
@@ -104,6 +147,7 @@ export function PostEdit() {
   )
   const uploadCover = useMutation({
     mutationFn: uploadImage,
+    onError: reportFailure,
     onSuccess: url => change({ coverImage: url })
   })
 
@@ -119,14 +163,7 @@ export function PostEdit() {
         ? "dirty"
         : "clean"
 
-  const error =
-    editorError ??
-    postQuery.error ??
-    update.error ??
-    setStatus.error ??
-    rename.error ??
-    remove.error ??
-    uploadCover.error
+  const error = postQuery.error
 
   const persist = useCallback(
     (next: Draft) => {
@@ -180,19 +217,47 @@ export function PostEdit() {
     setStatus.mutate({ slug, status: post?.status === "published" ? "draft" : "published" })
   }
 
+  const titled = !isUntitled(draft?.title ?? "")
+  const targetSlug = slugify(draft?.title ?? "")
+  const slugTaken = (postsList.data ?? []).some(
+    other => other.slug === targetSlug && other.slug !== slug
+  )
+  const canRename = titled && Boolean(targetSlug) && targetSlug !== slug && !slugTaken
+
   const renameToTitle = () => {
-    const nextSlug = slugify(draft?.title ?? "")
-    if (!nextSlug || nextSlug === slug) return
-    rename.mutate({ slug, nextSlug })
+    if (!canRename) return
+    rename.mutate({ slug, nextSlug: targetSlug })
   }
 
   if (!post || !draft) {
-    return error ? (
-      <Alert variant="destructive">
-        <AlertTitle>{errorMessage(error)}</AlertTitle>
-      </Alert>
-    ) : (
-      <p className="text-sm text-subtle-foreground">Loading…</p>
+    return (
+      <div className="flex h-svh flex-col">
+        <header className="flex h-12 shrink-0 items-center gap-3 border-b border-border px-4 md:px-6">
+          <SidebarTrigger className="-ml-1 text-subtle-foreground md:hidden" />
+          <Link
+            to="/admin/posts"
+            className="inline-flex h-7 items-center gap-1.5 rounded-md px-2 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+          >
+            <ArrowLeft size={14} strokeWidth={2} />
+            Posts
+          </Link>
+        </header>
+
+        <div className="mx-auto w-full max-w-[36rem] px-6 pt-16">
+          {error ? (
+            <Alert variant="destructive">
+              <AlertTitle>{errorMessage(error)}</AlertTitle>
+            </Alert>
+          ) : (
+            <div className="flex flex-col gap-4" aria-label="Loading the post">
+              <Skeleton className="h-9 w-2/3" />
+              <Skeleton className="h-4 w-1/2" />
+              <Skeleton className="mt-6 h-4 w-full" />
+              <Skeleton className="h-4 w-11/12" />
+            </div>
+          )}
+        </div>
+      </div>
     )
   }
 
@@ -200,26 +265,28 @@ export function PostEdit() {
 
   return (
     <div>
-      <header className="sticky top-0 z-20 flex items-center justify-between gap-4 border-b border-border bg-background/85 px-8 py-3 backdrop-blur">
+      <header className="sticky top-0 z-20 flex h-12 items-center gap-2 border-b border-border bg-background/85 px-4 backdrop-blur md:px-6">
+        <SidebarTrigger className="-ml-1 text-subtle-foreground md:hidden" />
         <Link
           to="/admin/posts"
-          className="-ml-2.5 inline-flex h-9 items-center gap-1.5 rounded-md px-2.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+          className="inline-flex h-7 items-center gap-1.5 rounded-md px-2 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
         >
-          <ArrowLeft size={15} strokeWidth={2} />
+          <ArrowLeft size={14} strokeWidth={2} />
           Posts
         </Link>
 
-        <div className="flex items-center gap-3">
-          {stats && stats.words > 0 && (
-            <span className="font-mono text-xs text-subtle-foreground">
-              {stats.words} words · {stats.minutes} min
-            </span>
-          )}
-          <SaveIndicator state={saveState} />
-          {!published && <Badge variant="outline">Draft</Badge>}
+        <p className="ml-auto text-xs text-subtle-foreground" aria-live="polite">
+          {SAVE_LABEL[saveState]}
+        </p>
+
+        <div className="flex items-center gap-2">
+          <span className="text-xs text-subtle-foreground">
+            {published ? "Published" : "Draft"}
+          </span>
           {published && (
             <Button
-              variant="outline"
+              size="sm"
+              variant="ghost"
               render={<a href={`/writing/${slug}`} target="_blank" rel="noopener noreferrer" />}
             >
               <ArrowUpRight data-icon="inline-start" />
@@ -227,86 +294,126 @@ export function PostEdit() {
             </Button>
           )}
           <Button
+            size="sm"
             onClick={togglePublished}
             disabled={busy || (!published && titleMissing)}
             title={!published && titleMissing ? "Give the post a title first" : undefined}
           >
             {published ? "Unpublish" : "Publish"}
           </Button>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger
+              render={
+                <Button
+                  variant="ghost"
+                  size="icon-sm"
+                  aria-label="Post settings"
+                  className="ml-1 text-subtle-foreground hover:text-foreground"
+                />
+              }
+            >
+              <MoreHorizontal />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-64">
+              <DropdownMenuGroup>
+                <DropdownMenuLabel className="font-normal text-subtle-foreground">
+                  <span className="block font-mono text-xs">/writing/{slug}</span>
+                  {stats && stats.words > 0 && (
+                    <span className="mt-1 block text-xs">
+                      {stats.words} words, about {stats.minutes} minutes to read
+                    </span>
+                  )}
+                </DropdownMenuLabel>
+                {!post.publishedAt && canRename && (
+                  <DropdownMenuItem onClick={renameToTitle} disabled={busy}>
+                    <PenLine />
+                    Match the address to the title
+                  </DropdownMenuItem>
+                )}
+                {!post.publishedAt && slugTaken && (
+                  <DropdownMenuItem disabled>
+                    Another post already uses /{targetSlug}
+                  </DropdownMenuItem>
+                )}
+                {post.publishedAt && (
+                  <DropdownMenuItem disabled>The address is fixed once published</DropdownMenuItem>
+                )}
+              </DropdownMenuGroup>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                variant="destructive"
+                disabled={busy}
+                onClick={() => setConfirmingDelete(true)}
+              >
+                <Trash2 />
+                Delete post
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </header>
 
-      <div className="mx-auto max-w-2xl px-6 pb-32 pt-12">
-        {error && (
-          <div className="mb-8">
-            <Alert variant="destructive">
-              <AlertTitle>{errorMessage(error)}</AlertTitle>
-            </Alert>
-          </div>
-        )}
+      <Dialog open={confirmingDelete} onOpenChange={setConfirmingDelete}>
+        <DialogContent className="sm:max-w-sm">
+          <DialogHeader>
+            <DialogTitle>Delete this post?</DialogTitle>
+            <DialogDescription>
+              {draft.title.trim() || "This post"} and everything written in it goes away. This
+              cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setConfirmingDelete(false)}>
+              Keep it
+            </Button>
+            <Button variant="destructive" disabled={busy} onClick={() => remove.mutate({ slug })}>
+              Delete post
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
+      <div className="mx-auto w-full max-w-[36rem] px-6 pt-16 pb-32">
         <article>
-          <CoverImage
-            src={draft.coverImage}
-            uploading={uploadCover.isPending}
-            onPick={file => uploadCover.mutate(file)}
-            onRemove={() => change({ coverImage: null })}
-          />
+          <div className="group/cover">
+            <CoverImage
+              src={draft.coverImage}
+              uploading={uploadCover.isPending}
+              onPick={file => uploadCover.mutate(file)}
+              onRemove={() => change({ coverImage: null })}
+            />
 
-          <AutoTextarea
-            ref={titleField}
-            value={draft.title}
-            onChange={title => change({ title })}
-            onEnter={() => summaryField.current?.focus()}
-            placeholder="Title"
-            className="editorial w-full resize-none bg-transparent text-4xl font-semibold leading-tight tracking-tight text-foreground outline-none placeholder:text-subtle-foreground"
-          />
+            <AutoTextarea
+              ref={titleField}
+              value={draft.title}
+              onChange={title => change({ title })}
+              onEnter={() => summaryField.current?.focus()}
+              placeholder="Title"
+              className="editorial w-full resize-none bg-transparent text-[2rem] leading-[1.15] font-semibold tracking-[-0.03em] text-foreground outline-none placeholder:text-subtle-foreground"
+            />
 
-          <AutoTextarea
-            ref={summaryField}
-            value={draft.excerpt}
-            onChange={excerpt => change({ excerpt })}
-            onEnter={focusBody}
-            onBackspaceAtStart={() => focusEnd(titleField.current)}
-            placeholder="Add a summary"
-            className="editorial mt-4 w-full resize-none bg-transparent text-lg leading-relaxed text-muted-foreground outline-none placeholder:text-subtle-foreground"
-          />
+            <AutoTextarea
+              ref={summaryField}
+              value={draft.excerpt}
+              onChange={excerpt => change({ excerpt })}
+              onEnter={focusBody}
+              onBackspaceAtStart={() => focusEnd(titleField.current)}
+              placeholder="Add a summary"
+              className="editorial mt-3 w-full resize-none bg-transparent text-[0.9375rem] leading-relaxed text-muted-foreground outline-none placeholder:text-subtle-foreground"
+            />
+          </div>
 
           <div className="mt-10">
             <PostEditor
               onReady={editor => (body.current = editor)}
               initialContent={post.content}
               onChange={content => change({ content })}
-              onError={setEditorError}
+              onError={message => toast.error(message)}
               onLeaveStart={() => focusEnd(summaryField.current)}
             />
           </div>
         </article>
-
-        <Separator className="mt-16" />
-
-        <footer className="mt-5 flex flex-wrap items-center justify-between gap-3">
-          <div className="min-w-0 font-mono text-xs text-subtle-foreground">
-            /writing/{slug}
-            {!post.publishedAt && slugify(draft.title) !== slug && (
-              <button
-                onClick={renameToTitle}
-                disabled={busy}
-                className="ml-3 text-foreground underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground"
-              >
-                Use the title
-              </button>
-            )}
-            {post.publishedAt && <span className="ml-3">Fixed once published</span>}
-          </div>
-          <ConfirmButton
-            label="Delete"
-            confirmLabel="Delete permanently"
-            icon={Trash2}
-            onConfirm={() => remove.mutate({ slug })}
-            disabled={busy}
-          />
-        </footer>
       </div>
     </div>
   )
@@ -322,19 +429,6 @@ function focusEnd(field: HTMLTextAreaElement | null): void {
   if (!field) return
   field.focus()
   field.setSelectionRange(field.value.length, field.value.length)
-}
-
-function SaveIndicator({ state }: { state: SaveState }) {
-  if (state === "clean") return null
-
-  const label = { dirty: "Unsaved", saving: "Saving…", failed: "Could not save" }[state]
-  const tone = state === "failed" ? "text-destructive" : "text-muted-foreground"
-
-  return (
-    <span aria-live="polite" className={`font-mono text-xs ${tone}`}>
-      {label}
-    </span>
-  )
 }
 
 function CoverImage({
@@ -376,14 +470,20 @@ function CoverImage({
           </button>
         </div>
       ) : (
-        <button
+        <Button
+          variant="ghost"
+          size="sm"
           onClick={() => input.current?.click()}
           disabled={uploading}
-          className="flex items-center gap-2 font-mono text-xs text-subtle-foreground transition-colors hover:text-foreground"
+          className="-ml-2.5 text-subtle-foreground opacity-0 transition-opacity group-hover/cover:opacity-100 hover:text-foreground focus-visible:opacity-100"
         >
-          {uploading ? <Spinner /> : <ImageIcon size={14} />}
-          {uploading ? "Uploading…" : "Add a cover image"}
-        </button>
+          {uploading ? (
+            <Spinner data-icon="inline-start" />
+          ) : (
+            <ImageIcon data-icon="inline-start" />
+          )}
+          {uploading ? "Uploading cover" : "Add cover"}
+        </Button>
       )}
     </div>
   )
