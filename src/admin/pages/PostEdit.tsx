@@ -163,9 +163,6 @@ export function PostEdit() {
         ? "dirty"
         : "clean"
 
-  // Only a post that will not load is a state of the page. Everything else is
-  // something that failed while you were working, which is a toast, not a
-  // banner wedged above the document.
   const error = postQuery.error
 
   const persist = useCallback(
@@ -220,10 +217,6 @@ export function PostEdit() {
     setStatus.mutate({ slug, status: post?.status === "published" ? "draft" : "published" })
   }
 
-  // Every post starts as "Untitled", which slugifies to an address another
-  // Untitled post already holds. Offering the rename there is a dead end, so
-  // the action waits until the title is one the writer actually chose. The
-  // list is already cached for the nav, so a genuine collision is known too.
   const titled = !isUntitled(draft?.title ?? "")
   const targetSlug = slugify(draft?.title ?? "")
   const slugTaken = (postsList.data ?? []).some(
@@ -236,8 +229,6 @@ export function PostEdit() {
     rename.mutate({ slug, nextSlug: targetSlug })
   }
 
-  // Loading and failure keep the frame. Dropping to a bare line of text loses
-  // the way back, which on a phone is the whole screen.
   if (!post || !draft) {
     return (
       <div className="flex h-svh flex-col">
@@ -284,9 +275,6 @@ export function PostEdit() {
           Posts
         </Link>
 
-        {/* Only the transient bit lives here. How long the post is belongs
-            with the post, not in the toolbar, and whether it is published is
-            already what the button beside it says. */}
         <p className="ml-auto text-xs text-subtle-foreground" aria-live="polite">
           {SAVE_LABEL[saveState]}
         </p>
@@ -314,8 +302,6 @@ export function PostEdit() {
             {published ? "Unpublish" : "Publish"}
           </Button>
 
-          {/* The address and the destructive action are settings, not part of
-              the document, so they live off the header rather than under it. */}
           <DropdownMenu>
             <DropdownMenuTrigger
               render={
@@ -330,7 +316,6 @@ export function PostEdit() {
               <MoreHorizontal />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-64">
-              {/* Base UI requires a GroupLabel to sit inside a Group. */}
               <DropdownMenuGroup>
                 <DropdownMenuLabel className="font-normal text-subtle-foreground">
                   <span className="block font-mono text-xs">/writing/{slug}</span>
@@ -389,12 +374,8 @@ export function PostEdit() {
         </DialogContent>
       </Dialog>
 
-      {/* A measure, not a container width: 36rem holds roughly seventy
-          characters a line, which is where prose stops being tiring to read. */}
       <div className="mx-auto w-full max-w-[36rem] px-6 pt-16 pb-32">
         <article>
-          {/* The cover control belongs to the title, and it is an action you
-              take once, so it stays out of the way until you go looking. */}
           <div className="group/cover">
             <CoverImage
               src={draft.coverImage}
@@ -489,8 +470,6 @@ function CoverImage({
           </button>
         </div>
       ) : (
-        // Mono is for data, not for actions, and the target was a 12px line of
-        // text. This is a real button that reads as one.
         <Button
           variant="ghost"
           size="sm"

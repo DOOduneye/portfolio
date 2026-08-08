@@ -36,9 +36,6 @@ const CONTENT = [
   { to: "/admin/experiences", label: "Experience", icon: Briefcase }
 ]
 
-// Margin is four separate surfaces, one per subdomain, each with its own job:
-// the journal app, the phone-sized chat, personal storage, and the tool API.
-// They are listed by what they do rather than collapsed into one platform link.
 const MARGIN = [
   { href: "https://margin.davidoduneye.com", label: "Journal", icon: NotebookPen },
   { href: "https://chat.davidoduneye.com", label: "Chat", icon: MessageSquare },
@@ -56,8 +53,6 @@ export function AdminSidebar({ onOpenCommands }: { onOpenCommands: () => void })
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem className="flex items-center gap-2 px-1 py-0.5">
-            {/* Collapsed, the mark gives way to the toggle: the panel has to be
-                able to bring itself back without hunting for the rail. */}
             <span className="group-data-[collapsible=icon]:hidden">
               <SiteMark />
             </span>

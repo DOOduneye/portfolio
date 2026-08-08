@@ -73,8 +73,6 @@ const STATUS_FILTERS: { value: StatusFilter; label: string }[] = [
   { value: "published", label: "Published" }
 ]
 
-// Sizing and visibility are separate features in v9; without them a column
-// definition cannot carry a width and rows have no getVisibleCells.
 const features = tableFeatures({
   columnFilteringFeature,
   columnSizingFeature,
@@ -112,8 +110,6 @@ export function PostsList() {
     })
   )
 
-  // Publishing and deleting apply to the cached list first and roll back if the
-  // request fails, so a row never sits waiting on a round trip.
   const optimistic = <TVariables extends { slug: string }>(
     apply: (posts: Post[], variables: TVariables) => Post[]
   ) => ({
@@ -149,8 +145,6 @@ export function PostsList() {
 
   const error = posts.error ?? create.error ?? setStatus.error ?? remove.error
 
-  // Annotated because the helper narrows each accessor to its own value type,
-  // and a mixed array of those does not widen on its own.
   const columns = useMemo<ColumnDef<typeof features, Post, any>[]>(
     () => [
       column.display({
@@ -176,8 +170,6 @@ export function PostsList() {
       column.accessor("title", {
         header: "Title",
         cell: ({ row }) => (
-          // Stretched so the whole row opens the post without nesting the menu
-          // button inside the anchor.
           <Link
             to={`/admin/posts/${row.original.slug}`}
             className="truncate text-foreground after:absolute after:inset-0"
@@ -267,8 +259,6 @@ export function PostsList() {
     [remove, setStatus]
   )
 
-  // Narrowing happens before the table sees the rows. Registering the global
-  // filtering feature just to re-implement two string checks buys nothing.
   const data = useMemo(() => {
     const needle = query.trim().toLowerCase()
     return (posts.data ?? []).filter(post => {
@@ -282,8 +272,6 @@ export function PostsList() {
     features,
     data,
     columns,
-    // A phone has room for what a post is called and when it changed. Status
-    // is already the filter above, and the slug is on the post itself.
     state: {
       sorting,
       rowSelection,
@@ -316,8 +304,6 @@ export function PostsList() {
     </Button>
   )
 
-  // The header carries whichever mode the list is in: making something, or
-  // acting on a selection. Never both.
   const selectionHeader =
     picked.length > 0 ? (
       <>
@@ -360,8 +346,6 @@ export function PostsList() {
       </>
     ) : undefined
 
-  // Narrowing what is already on the page belongs with the list, not with the
-  // button that makes a new one.
   const toolbar = (
     <>
       <InputGroup className="h-7 w-40 lg:w-56">
@@ -376,8 +360,6 @@ export function PostsList() {
         />
       </InputGroup>
 
-      {/* The group is array-valued even when only one item can be pressed,
-            and deselecting the current filter falls back to showing everything. */}
       <ToggleGroup
         variant="outline"
         size="sm"
@@ -490,7 +472,6 @@ export function PostsList() {
   )
 }
 
-/** Shaped like the rows it replaces, so the list does not jump when it loads. */
 function PostRowsSkeleton() {
   return (
     <div className="divide-y divide-border border-t border-border">

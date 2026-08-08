@@ -9,8 +9,6 @@ import {
   Loader2Icon
 } from "lucide-react"
 
-// The site sets color-scheme: dark and offers no switch, so there is no theme
-// to read and no reason to carry next-themes for one.
 const Toaster = ({ ...props }: ToasterProps) => {
   return (
     <Sonner

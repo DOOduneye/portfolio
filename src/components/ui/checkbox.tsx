@@ -15,8 +15,6 @@ function Checkbox({ className, ...props }: CheckboxPrimitive.Root.Props) {
       )}
       {...props}
     >
-      {/* A partial selection is a dash, not a tick: a tick here would claim
-          every row is selected. */}
       <CheckboxPrimitive.Indicator
         data-slot="checkbox-indicator"
         className="grid place-content-center text-current transition-none [&>svg]:size-3.5"
