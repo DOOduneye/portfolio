@@ -1,6 +1,6 @@
 import type { JSONContent } from "@tiptap/core"
 
-export const EMPTY_DOCUMENT = '{"type":"doc","content":[]}'
+export const EMPTY_DOCUMENT = '{"type":"doc","content":[{"type":"paragraph"}]}'
 
 const blankDocument = (): JSONContent => ({
   type: "doc",
