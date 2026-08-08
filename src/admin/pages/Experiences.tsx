@@ -1,20 +1,11 @@
 import { useEffect, useState } from "react"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import {
-  ArrowDown,
-  ArrowUp,
-  ArrowUpRight,
-  Briefcase,
-  Eye,
-  EyeOff,
-  MoreHorizontal,
-  Pencil,
-  Plus,
-  Trash2
-} from "lucide-react"
+import { ArrowUpRight, Briefcase, Plus } from "lucide-react"
 import { toast } from "sonner"
 import { api, errorMessage, type RouterOutputs } from "../api"
 import { AdminPage } from "../components/AdminPage"
+import { RecordsList, type Column } from "../components/RecordsList"
+import { RowActions } from "../components/RowActions"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -24,34 +15,19 @@ import {
   DialogHeader,
   DialogTitle
 } from "@/components/ui/dialog"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger
-} from "@/components/ui/dropdown-menu"
-import {
-  Empty,
-  EmptyContent,
-  EmptyDescription,
-  EmptyHeader,
-  EmptyMedia,
-  EmptyTitle
-} from "@/components/ui/empty"
 import { Field, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import { Skeleton } from "@/components/ui/skeleton"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow
-} from "@/components/ui/table"
+import { TableCell, TableRow } from "@/components/ui/table"
 import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
+
+const COLUMNS: Column[] = [
+  { key: "role", label: "Role" },
+  { key: "org", label: "Organisation", className: "w-44" },
+  { key: "dates", label: "Dates", className: "w-44" },
+  { key: "visible", className: "w-20" },
+  { key: "actions", className: "w-12" }
+]
 
 type Experience = RouterOutputs["admin"]["experiences"]["list"][number]
 
@@ -140,77 +116,59 @@ export function Experiences() {
 
   return (
     <AdminPage title="Experience" action={newExperience}>
-      {list.isPending ? (
-        <RowsSkeleton />
-      ) : items.length === 0 ? (
-        <Empty>
-          <EmptyHeader>
-            <EmptyMedia variant="icon">
-              <Briefcase />
-            </EmptyMedia>
-            <EmptyTitle>No roles yet</EmptyTitle>
-            <EmptyDescription>They appear on the site in the order listed here.</EmptyDescription>
-          </EmptyHeader>
-          <EmptyContent>{newExperience}</EmptyContent>
-        </Empty>
-      ) : (
-        <Table>
-          <TableHeader>
-            <TableRow className="hover:bg-transparent">
-              <TableHead>Role</TableHead>
-              <TableHead className="w-44">Organisation</TableHead>
-              <TableHead className="w-44">Dates</TableHead>
-              <TableHead className="w-24">On site</TableHead>
-              <TableHead className="w-12" />
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {items.map((item, index) => (
-              <TableRow key={item.id} className="group/row">
-                <TableCell className="max-w-0 truncate font-medium text-foreground">
-                  {item.role}
-                </TableCell>
-                <TableCell className="text-muted-foreground">
-                  <span className="inline-flex items-center gap-1.5">
-                    {item.org}
-                    {item.orgUrl && (
-                      <a
-                        href={item.orgUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-subtle-foreground transition-colors hover:text-foreground"
-                        aria-label={`Open ${item.org}`}
-                      >
-                        <ArrowUpRight className="size-3.5" />
-                      </a>
-                    )}
-                  </span>
-                </TableCell>
-                <TableCell className="font-mono text-[0.8125rem] whitespace-nowrap text-subtle-foreground">
-                  {item.dates}
-                </TableCell>
-                <TableCell className="text-muted-foreground">
-                  {item.visible === 1 ? "Shown" : "Hidden"}
-                </TableCell>
-                <TableCell className="text-right">
-                  <RowActions
-                    index={index}
-                    total={items.length}
-                    onEdit={() => setDraft(toDraft(item))}
-                    onToggle={() =>
-                      update.mutate({ id: item.id, visible: item.visible === 1 ? 0 : 1 })
-                    }
-                    onMove={by => move(item, by)}
-                    onDelete={() => setConfirming(item)}
-                    visible={item.visible === 1}
-                    label={`${item.role} at ${item.org}`}
-                  />
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      )}
+      <RecordsList
+        loading={list.isPending}
+        rows={items}
+        columns={COLUMNS}
+        empty={{
+          icon: Briefcase,
+          title: "No roles yet",
+          description: "They appear on the site in the order listed here.",
+          action: newExperience
+        }}
+      >
+        {(item, index) => (
+          <TableRow key={item.id} className="group/row">
+            <TableCell className="max-w-0 truncate font-medium text-foreground">
+              {item.role}
+            </TableCell>
+            <TableCell className="text-muted-foreground">
+              <span className="inline-flex items-center gap-1.5">
+                {item.org}
+                {item.orgUrl && (
+                  <a
+                    href={item.orgUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-subtle-foreground transition-colors hover:text-foreground"
+                    aria-label={`Open ${item.org}`}
+                  >
+                    <ArrowUpRight className="size-3.5" />
+                  </a>
+                )}
+              </span>
+            </TableCell>
+            <TableCell className="font-mono text-[0.8125rem] whitespace-nowrap text-subtle-foreground">
+              {item.dates}
+            </TableCell>
+            <TableCell className="text-xs text-subtle-foreground">
+              {item.visible === 1 ? null : "Hidden"}
+            </TableCell>
+            <TableCell className="text-right">
+              <RowActions
+                index={index}
+                total={items.length}
+                onEdit={() => setDraft(toDraft(item))}
+                onToggle={() => update.mutate({ id: item.id, visible: item.visible === 1 ? 0 : 1 })}
+                onMove={by => move(item, by)}
+                onDelete={() => setConfirming(item)}
+                visible={item.visible === 1}
+                label={`${item.role} at ${item.org}`}
+              />
+            </TableCell>
+          </TableRow>
+        )}
+      </RecordsList>
 
       <Dialog open={draft !== null} onOpenChange={open => !open && setDraft(null)}>
         <DialogContent className="sm:max-w-lg">
@@ -306,79 +264,5 @@ export function Experiences() {
         </DialogContent>
       </Dialog>
     </AdminPage>
-  )
-}
-
-function RowActions({
-  index,
-  total,
-  label,
-  onEdit,
-  onToggle,
-  onMove,
-  onDelete,
-  visible
-}: {
-  index: number
-  total: number
-  label: string
-  visible: boolean
-  onEdit: () => void
-  onToggle: () => void
-  onMove: (by: -1 | 1) => void
-  onDelete: () => void
-}) {
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger
-        render={
-          <Button
-            variant="ghost"
-            size="icon-xs"
-            aria-label={`Actions for ${label}`}
-            className="text-subtle-foreground opacity-0 focus-visible:opacity-100 group-hover/row:opacity-100 aria-expanded:opacity-100"
-          />
-        }
-      >
-        <MoreHorizontal />
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={onEdit}>
-          <Pencil />
-          Edit
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={onToggle}>
-          {visible ? <EyeOff /> : <Eye />}
-          {visible ? "Hide from the site" : "Show on the site"}
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem disabled={index === 0} onClick={() => onMove(-1)}>
-          <ArrowUp />
-          Move up
-        </DropdownMenuItem>
-        <DropdownMenuItem disabled={index === total - 1} onClick={() => onMove(1)}>
-          <ArrowDown />
-          Move down
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem variant="destructive" onClick={onDelete}>
-          <Trash2 />
-          Delete
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  )
-}
-
-function RowsSkeleton() {
-  return (
-    <div className="divide-y divide-border border-t border-border">
-      {[0, 1, 2].map(row => (
-        <div key={row} className="flex h-11 items-center gap-4">
-          <Skeleton className="h-3.5 w-48" />
-          <Skeleton className="ml-auto h-3 w-32" />
-        </div>
-      ))}
-    </div>
   )
 }
