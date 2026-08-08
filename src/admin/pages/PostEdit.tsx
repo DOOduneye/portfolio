@@ -49,8 +49,6 @@ export function PostEdit() {
   const summaryField = useRef<HTMLTextAreaElement>(null)
   const body = useRef<Editor | null>(null)
 
-  // The editor is the only writer, so a background refetch would only risk
-  // overwriting what is being typed.
   const postQuery = useQuery({
     ...api.admin.posts.bySlug.queryOptions({ slug }),
     staleTime: Infinity,

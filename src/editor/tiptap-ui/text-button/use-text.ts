@@ -1,16 +1,13 @@
 "use client"
 
 import { useCallback, useEffect, useState } from "react"
-// --- Icons ---
 import { TextIcon } from "@/components/icons/text"
 import { NodeSelection, TextSelection } from "@tiptap/pm/state"
 import { type Editor } from "@tiptap/react"
 import { useHotkeys } from "react-hotkeys-hook"
 
-// --- Hooks ---
 import { useIsBreakpoint } from "../../hooks/use-is-breakpoint"
 import { useTiptapEditor } from "../../hooks/use-tiptap-editor"
-// --- Lib ---
 import {
   findNodePosition,
   isNodeInSchema,
@@ -20,30 +17,12 @@ import {
 
 export const TEXT_SHORTCUT_KEY = "mod+alt+0"
 
-/**
- * Configuration for the text/paragraph functionality
- */
 export interface UseTextConfig {
-  /**
-   * The Tiptap editor instance.
-   */
   editor?: Editor | null
-  /**
-   * Whether the button should hide when text conversion is not available.
-   * @default false
-   */
   hideWhenUnavailable?: boolean
-  /**
-   * Callback function called after a successful conversion.
-   */
   onToggled?: () => void
 }
 
-/**
- * Returns whether we can toggle/turn the current selection into a paragraph.
- * - When `turnInto === false`, it just checks the direct ability to set paragraph on the selection.
- * - When `turnInto === true`, it additionally requires the selection to be within convertible types.
- */
 export function canToggleText(editor: Editor | null, turnInto: boolean = true): boolean {
   if (!editor) return false
   if (!editor.schema.nodes["paragraph"]) return false
@@ -52,7 +31,6 @@ export function canToggleText(editor: Editor | null, turnInto: boolean = true): 
     return editor.can().setNode("paragraph")
   }
 
-  // Ensure selection is in nodes we're allowed to convert
   if (
     !selectionWithinConvertibleTypes(editor, [
       "paragraph",
@@ -66,22 +44,14 @@ export function canToggleText(editor: Editor | null, turnInto: boolean = true): 
   )
     return false
 
-  // Either we can set paragraph directly on the selection,
-  // or we can clear formatting/nodes to arrive at a paragraph.
   return editor.can().setNode("paragraph") || editor.can().clearNodes()
 }
 
-/**
- * Checks if paragraph is currently active
- */
 export function isParagraphActive(editor: Editor | null): boolean {
   if (!editor) return false
   return editor.isActive("paragraph")
 }
 
-/**
- * Converts the current selection or node to paragraph
- */
 export function toggleParagraph(editor: Editor | null): boolean {
   if (!editor || !editor.isEditable) return false
   if (!canToggleText(editor)) return false
@@ -91,7 +61,6 @@ export function toggleParagraph(editor: Editor | null): boolean {
     let state = view.state
     let tr = state.tr
 
-    // No selection, find the the cursor position
     if (state.selection.empty || state.selection instanceof TextSelection) {
       const pos = findNodePosition({
         editor,
@@ -107,7 +76,6 @@ export function toggleParagraph(editor: Editor | null): boolean {
     const selection = state.selection
     let chain = editor.chain().focus()
 
-    // Handle NodeSelection
     if (selection instanceof NodeSelection) {
       const firstChild = selection.node.firstChild?.firstChild
       const lastChild = selection.node.lastChild?.lastChild
@@ -134,9 +102,6 @@ export function toggleParagraph(editor: Editor | null): boolean {
   }
 }
 
-/**
- * Determines if the text button should be shown
- */
 export function shouldShowButton(props: {
   editor: Editor | null
   hideWhenUnavailable: boolean
@@ -153,42 +118,6 @@ export function shouldShowButton(props: {
   return true
 }
 
-/**
- * Custom hook that provides text/paragraph functionality for Tiptap editor
- *
- * @example
- * ```tsx
- * // Simple usage - no params needed
- * function MySimpleTextButton() {
- *   const { isVisible, handleToggle, isActive } = useText()
- *
- *   if (!isVisible) return null
- *
- *   return <button onClick={handleToggle}>Text</button>
- * }
- *
- * // Advanced usage with configuration
- * function MyAdvancedTextButton() {
- *   const { isVisible, handleToggle, label, isActive } = useText({
- *     editor: myEditor,
- *     hideWhenUnavailable: true,
- *     onToggled: () => console.log('Text converted!')
- *   })
- *
- *   if (!isVisible) return null
- *
- *   return (
- *     <MyButton
- *       onClick={handleToggle}
- *       aria-label={label}
- *       aria-pressed={isActive}
- *     >
- *       Convert to Text
- *     </MyButton>
- *   )
- * }
- * ```
- */
 export function useText(config?: UseTextConfig) {
   const { editor: providedEditor, hideWhenUnavailable = false, onToggled } = config || {}
 

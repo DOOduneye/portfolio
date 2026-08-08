@@ -1,29 +1,15 @@
 import { useEffect, useState } from "react"
 import { useEditorState } from "@tiptap/react"
 
-// --- Hooks ---
 import { useFloatingToolbarVisibility } from "../hooks/use-floating-toolbar-visibility"
 import { useTiptapEditor } from "../hooks/use-tiptap-editor"
-// --- Utils ---
 import { isSelectionValid } from "../lib/tiptap-utils"
-// --- Primitive UI Components ---
 import { Toolbar, ToolbarSeparator, ToolbarTooltip } from "../tiptap-ui-primitive/toolbar"
-// --- UI Utils ---
 import { FloatingElement } from "../tiptap-ui-utils/floating-element"
-// --- UI ---
 import { LinkButton, LinkContent } from "../tiptap-ui/link-popover"
 import { MarkButton } from "../tiptap-ui/mark-button"
 import { TurnIntoDropdown } from "../tiptap-ui/turn-into-dropdown"
 
-/**
- * Floating toolbar that appears when text is selected or when editing links.
- *
- * Two modes:
- * 1. Format toolbar: Shows when text is selected. Has formatting buttons + link button.
- * 2. Link editor: Shows when clicking on a link OR clicking the link button.
- *
- * The toolbar hides when clicking elsewhere (no selection and not on a link).
- */
 export function ToolbarFloating() {
   const { editor } = useTiptapEditor()
 

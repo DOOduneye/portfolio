@@ -10,8 +10,6 @@ import type { SlashMenuConfig } from "./tiptap-ui/slash-dropdown-menu/use-slash-
 
 const IMAGE_TYPES = ["image/png", "image/jpeg", "image/gif", "image/webp", "image/avif"]
 
-// Heading one is the post title, and images go through R2 rather than the
-// editor's own upload node, so both defaults are replaced below.
 const SLASH_ITEMS = [
   "heading_2",
   "heading_3",

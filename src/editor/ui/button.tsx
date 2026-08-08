@@ -3,8 +3,6 @@ import { cn } from "@/lib/utils"
 
 type BaseButtonProps = React.ComponentProps<typeof BaseButton>
 
-// The editor's buttons name their sizes the way Tiptap's own UI kit does, and
-// they mark the current formatting with data-active rather than aria-pressed.
 const SIZES = {
   icon: "icon",
   iconSm: "icon-sm",

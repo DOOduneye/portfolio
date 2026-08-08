@@ -42,10 +42,6 @@ export type TableInfo = {
   map: TableMap
 } & FindNodeResult
 
-// ============================================================================
-// HELPER CONSTANTS & UTILITIES
-// ============================================================================
-
 const EMPTY_CELLS_RESULT = { cells: [], mergedCells: [] }
 
 export function isHTMLElement(n: unknown): n is HTMLElement {
@@ -68,10 +64,6 @@ export function safeClosest<T extends Element>(start: Element | null, selector: 
   return (start?.closest?.(selector) as T | null) ?? null
 }
 
-/**
- * Walk up from an element until we find a TD/TH or the table wrapper.
- * Returns the found element plus its tbody (if present).
- */
 export function domCellAround(target: Element): DomCellAroundResult | undefined {
   let current: Element | null = target
 
@@ -102,23 +94,14 @@ export function domCellAround(target: Element): DomCellAroundResult | undefined 
   }
 }
 
-/**
- * Clamps a value between min and max bounds
- */
 export function clamp(value: number, min: number, max: number): number {
   return Math.max(min, Math.min(value, max))
 }
 
-/**
- * Validates if row/col indices are within table bounds
- */
 function isWithinBounds(row: number, col: number, map: TableMap): boolean {
   return row >= 0 && row < map.height && col >= 0 && col < map.width
 }
 
-/**
- * Resolves the index for a row or column based on current selection or provided value
- */
 function resolveOrientationIndex(
   state: EditorState,
   table: TableInfo,
@@ -142,9 +125,6 @@ function resolveOrientationIndex(
   return orientation === "row" ? rect.top : rect.left
 }
 
-/**
- * Creates a CellInfo object from position data
- */
 function createCellInfo(row: number, column: number, cellPos: number, cellNode: Node): CellInfo {
   return {
     row,
@@ -156,9 +136,6 @@ function createCellInfo(row: number, column: number, cellPos: number, cellNode: 
   }
 }
 
-/**
- * Checks if a cell is merged (has colspan or rowspan > 1)
- */
 export function isCellMerged(node: Node | null): boolean {
   if (!node) return false
   const colspan = node.attrs["colspan"] ?? 1
@@ -166,9 +143,6 @@ export function isCellMerged(node: Node | null): boolean {
   return colspan > 1 || rowspan > 1
 }
 
-/**
- * Generic function to collect cells along a row or column
- */
 function collectCells(
   editor: Editor | null,
   orientation: Orientation,
@@ -188,7 +162,6 @@ function collectCells(
   const resolvedIndex = resolveOrientationIndex(state, table, orientation, index)
   if (resolvedIndex === null) return EMPTY_CELLS_RESULT
 
-  // Bounds check
   const maxIndex = orientation === "row" ? map.height : map.width
   if (resolvedIndex < 0 || resolvedIndex >= maxIndex) {
     return EMPTY_CELLS_RESULT
@@ -227,9 +200,6 @@ function collectCells(
   return { cells, mergedCells }
 }
 
-/**
- * Generic function to count empty cells from the end of a row or column
- */
 function countEmptyCellsFromEnd(
   editor: Editor,
   tablePos: number,
@@ -273,20 +243,6 @@ function countEmptyCellsFromEnd(
   return emptyCount
 }
 
-/**
- * Get information about the table at the current selection or a specific position.
- *
- * If `tablePos` is provided, it looks for a table at that exact position.
- * Otherwise, it finds the nearest table containing the current selection.
- *
- * Returns an object with:
- * - `node`: the table node
- * - `pos`: the position of the table in the document
- * - `start`: the position just after the table node (where its content starts)
- * - `map`: the `TableMap` for layout info (rows, columns, spans)
- *
- * If no table is found, returns null.
- */
 export function getTable(editor: Editor | null, tablePos?: number) {
   if (!editor) return null
 
@@ -318,11 +274,6 @@ export function getTable(editor: Editor | null, tablePos?: number) {
   return { ...table, map: tableMap }
 }
 
-/**
- * Checks if the current text selection is inside a table cell.
- * @param state - The editor state to check
- * @returns true if the selection is inside a table cell; false otherwise
- */
 export function isSelectionInCell(state: EditorState): boolean {
   const { selection } = state
   const $from = selection.$from
@@ -337,10 +288,6 @@ export function isSelectionInCell(state: EditorState): boolean {
   return false
 }
 
-/**
- * Cells overlap a rectangle if any of the cells in the rectangle are merged
- * with cells outside the rectangle.
- */
 export function cellsOverlapRectangle({ width, height, map }: TableMap, rect: Rect) {
   let indexTop = rect.top * width + rect.left,
     indexLeft = indexTop
@@ -367,12 +314,6 @@ export function cellsOverlapRectangle({ width, height, map }: TableMap, rect: Re
   return false
 }
 
-/**
- * Runs a function while preserving the editor's selection.
- * @param editor The Tiptap editor instance
- * @param fn The function to run
- * @returns True if the selection was successfully restored, false otherwise
- */
 export function runPreservingCursor(editor: Editor, fn: () => void): boolean {
   const view = editor.view
   const startSel = view.state.selection
@@ -397,8 +338,6 @@ export function runPreservingCursor(editor: Editor, fn: () => void): boolean {
     view.dispatch(view.state.tr.setSelection(sel))
     return true
   } catch {
-    // Fallback: if the exact spot vanished (e.g., cell deleted),
-    // go to the nearest valid position.
     const mappedPos = mapping.map(startSel.from, -1)
     const clamped = clamp(mappedPos, 0, view.state.doc.content.size)
     const near = Selection.near(view.state.doc.resolve(clamped), -1)
@@ -407,19 +346,6 @@ export function runPreservingCursor(editor: Editor, fn: () => void): boolean {
   }
 }
 
-/**
- * Determines whether a table cell is effectively empty.
- *
- * A cell is considered empty when:
- *  - it has no children, or
- *  - it contains only whitespace text, or
- *  - it contains no text and no non-text leaf nodes (images, embeds, etc.)
- *
- * Early-outs as soon as any meaningful content is found.
- *
- * @param cellNode - The table cell node to check
- * @returns true if the cell is empty; false otherwise
- */
 export function isCellEmpty(cellNode: Node): boolean {
   if (cellNode.childCount === 0) return true
 
@@ -439,16 +365,6 @@ export function isCellEmpty(cellNode: Node): boolean {
   return isEmpty
 }
 
-/**
- * Determine if the current selection is a full row or column selection.
- *
- * If the selection is a `CellSelection` that spans an entire row or column,
- * returns an object indicating the type and index:
- * - `{ type: "row", index: number }` for full row selections
- * - `{ type: "column", index: number }` for full column selections
- *
- * If the selection is not a full row/column, or if no table is found, returns null.
- */
 export function getTableSelectionType(
   editor: Editor | null,
   index?: number,
@@ -485,18 +401,6 @@ export function getTableSelectionType(
   return null
 }
 
-/**
- * Get all cells (and unique merged cells) in the selected row or column.
- *
- * - If `index` is provided, uses that row/column index.
- * - If omitted, uses the first selected row/column based on current selection.
- *
- * Returns an object with:
- * - `cells`: all cells in the row/column
- * - `mergedCells`: only the unique cells that have rowspan/colspan > 1
- *
- * If no valid selection or index is found, returns empty arrays.
- */
 export function getRowOrColumnCells(
   editor: Editor | null,
   index?: number,
@@ -544,11 +448,6 @@ export function getRowOrColumnCells(
   return { ...result, index: finalIndex, orientation: finalOrientation }
 }
 
-/**
- * Collect cells (and unique merged cells) from a specific row.
- * - If `rowIndex` is provided, scans that row.
- * - If omitted, uses the first (topmost) selected row based on the current selection.
- */
 export function getRowCells(
   editor: Editor | null,
   rowIndex?: number,
@@ -557,11 +456,6 @@ export function getRowCells(
   return collectCells(editor, "row", rowIndex, tablePos)
 }
 
-/**
- * Collect cells (and unique merged cells) from the current table.
- * - If `columnIndex` is provided, scans that column.
- * - If omitted, uses the first (leftmost) selected column based on the current selection.
- */
 export function getColumnCells(
   editor: Editor | null,
   columnIndex?: number,
@@ -570,17 +464,6 @@ export function getColumnCells(
   return collectCells(editor, "column", columnIndex, tablePos)
 }
 
-/**
- * After moving a row or column, update the selection to the moved item.
- *
- * This ensures that after a move operation, the selection remains on the
- * moved row or column, providing better user feedback.
- *
- * @param editor - The editor instance
- * @param orientation - "row" or "column" indicating what was moved
- * @param newIndex - The new index of the moved row/column
- * @param tablePos - Optional position of the table in the document
- */
 export function updateSelectionAfterAction(
   editor: Editor,
   orientation: Orientation,
@@ -630,13 +513,6 @@ export function updateSelectionAfterAction(
   }
 }
 
-/**
- * Returns a command that sets the given attributes to the given values,
- * and is only available when the currently selected cell doesn't
- * already have those attributes set to those values.
- *
- * @public
- */
 export function setCellAttr(attrs: Record<string, unknown>): Command
 export function setCellAttr(name: string, value: unknown): Command
 export function setCellAttr(
@@ -680,52 +556,14 @@ export function setCellAttr(
   }
 }
 
-/**
- * Counts how many consecutive empty rows exist at the bottom of a given table.
- *
- * This function:
- *  - Locates the exact table in the document via reference matching
- *  - Iterates from the last visual row upward
- *  - Deduplicates cells per row using `TableMap` (merged cells can repeat positions)
- *  - Treats a row as empty only if all its unique cells are empty by `isCellEmpty`
- *
- * @param editor - The editor whose document contains the table
- * @param target - The table node instance to analyze (must be the same reference as in the doc)
- * @returns The number of trailing empty rows (0 if table not found)
- */
 export function countEmptyRowsFromEnd(editor: Editor, tablePos: number): number {
   return countEmptyCellsFromEnd(editor, tablePos, "row")
 }
 
-/**
- * Counts how many consecutive empty columns exist at the right edge of a given table.
- *
- * Similar to `countEmptyRowsFromEnd`, but scans by columns:
- *  - Iterates from the last visual column leftward
- *  - Deduplicates per-column cells using `TableMap`
- *  - A column is empty only if all unique cells in that column are empty
- *
- * @param editor - The editor whose document contains the table
- * @param target - The table node instance to analyze (must be the same reference as in the doc)
- * @returns The number of trailing empty columns (0 if table not found)
- */
 export function countEmptyColumnsFromEnd(editor: Editor, tablePos: number): number {
   return countEmptyCellsFromEnd(editor, tablePos, "column")
 }
 
-/**
- * Rounds a number with a symmetric "dead-zone" around integer boundaries,
- * which makes drag/resize UX feel less jittery near thresholds.
- *
- * For example, with `margin = 0.3`:
- *  - values < n + 0.3 snap down to `n`
- *  - values > n + 0.7 snap up to `n + 1`
- *  - values in [n + 0.3, n + 0.7] fall back to `Math.round`
- *
- * @param num - The floating value to round
- * @param margin - Half-width of the dead-zone around integer boundaries (default 0.3)
- * @returns The rounded value using the dead-zone heuristic
- */
 export function marginRound(num: number, margin = 0.3): number {
   const floor = Math.floor(num)
   const ceil = Math.ceil(num)
@@ -737,25 +575,12 @@ export function marginRound(num: number, margin = 0.3): number {
   return Math.round(num)
 }
 
-/**
- * Compares two DOMRect objects for equality.
- *
- * Treats `undefined` as a valid state, where two `undefined` rects are equal,
- * and `undefined` is not equal to any defined rect.
- *
- * @param a - The first DOMRect or undefined
- * @param b - The second DOMRect or undefined
- * @returns true if both rects are equal or both are undefined; false otherwise
- */
 export function rectEq(a?: DOMRect | null, b?: DOMRect | null): boolean {
   if (!a && !b) return true
   if (!a || !b) return false
   return a.left === b.left && a.top === b.top && a.width === b.width && a.height === b.height
 }
 
-/**
- * Applies the transaction based on the specified mode
- */
 function applySelectionWithMode(
   state: EditorState,
   transaction: Transaction,
@@ -780,30 +605,6 @@ function applySelectionWithMode(
   }
 }
 
-/**
- * Create or apply a `CellSelection` inside a table.
- *
- * Depending on the `mode` option, this helper behaves differently:
- *
- * - `"state"` (default) → Returns a new `EditorState` with the selection applied.
- * - `"transaction"` → Returns a `Transaction` with the selection set, without applying it.
- * - `"dispatch"` → Immediately calls `dispatch(tr)` with the new selection.
- *
- * This allows you to reuse the same helper in commands, tests, or utilities
- * without duplicating logic.
- *
- * Example:
- * ```ts
- * // Get new state
- * const nextState = createTableCellSelection(state, tablePosition, { row: 1, col: 1 }, { row: 2, col: 3 })
- *
- * // Get transaction only
- * const tr = createTableCellSelection(state, tablePosition, { row: 0, col: 0 }, { row: 0, col: 2 }, { mode: "transaction" })
- *
- * // Dispatch directly
- * createTableCellSelection(state, tablePosition, { row: 1, col: 1 }, { row: 3, col: 2 }, { mode: "dispatch", dispatch })
- * ```
- */
 export function createTableCellSelection(
   state: EditorState,
   tablePosition: number,
@@ -845,10 +646,6 @@ export function createTableCellSelection(
   return applySelectionWithMode(state, transaction, options)
 }
 
-/**
- * Get the position of a cell inside a table by relative row/col indices.
- * Returns the position *before* the cell, which is what `CellSelection` expects.
- */
 export function getCellPosition(
   state: EditorState,
   tablePosition: number,
@@ -866,19 +663,6 @@ export function getCellPosition(
   return resolvedColPosition
 }
 
-/**
- * Selects table cells by their (row, col) coordinates.
- *
- * This function can be used in three modes:
- * - `"state"` (default) → Returns a new `EditorState` with the selection applied, or null if failed.
- * - `"transaction"` → Returns a `Transaction` with the selection set, or null if failed.
- * - `"dispatch"` → Immediately dispatches the selection and returns boolean success status.
- *
- * @param editor - The editor instance
- * @param tablePos - Position of the table in the document
- * @param coords - Array of {row, col} coordinates to select
- * @param options - Mode and dispatch options
- */
 export function selectCellsByCoords(
   editor: Editor | null,
   tablePos: number,
@@ -922,7 +706,6 @@ export function selectCellsByCoords(
     return
   }
 
-  // --- Find the smallest rectangle that contains all our coordinates ---
   const allRows = cleanedCoords.map(coord => coord.row)
   const topRow = Math.min(...allRows)
   const bottomRow = Math.max(...allRows)
@@ -931,34 +714,22 @@ export function selectCellsByCoords(
   const leftCol = Math.min(...allCols)
   const rightCol = Math.max(...allCols)
 
-  // --- Convert visual coordinates to document positions ---
-  // Use TableMap.map array directly to handle merged cells correctly
   const getCellPositionFromMap = (row: number, col: number): number | null => {
-    // TableMap.map is a flat array where each entry represents a cell
-    // For merged cells, the same offset appears multiple times
     const cellOffset = tableMap.map[row * tableMap.width + col]
     if (cellOffset === undefined) return null
 
-    // Convert the relative offset to an absolute position in the document
-    // tablePos + 1 skips the table opening tag
     return tablePos + 1 + cellOffset
   }
 
-  // Anchor = where the selection starts (top-left of bounding box)
   const anchorPosition = getCellPositionFromMap(topRow, leftCol)
   if (anchorPosition === null) return
 
-  // Head = where the selection ends (usually bottom-right of bounding box)
   let headPosition = getCellPositionFromMap(bottomRow, rightCol)
   if (headPosition === null) return
 
-  // --- Handle edge case with merged cells ---
-  // If anchor and head point to the same cell, we need to find a different head
-  // This happens when selecting a single merged cell or when all coords point to one cell
   if (headPosition === anchorPosition) {
     let foundDifferentCell = false
 
-    // Search backwards from bottom-right to find a cell with a different position
     for (let row = bottomRow; row >= topRow && !foundDifferentCell; row--) {
       for (let col = rightCol; col >= leftCol && !foundDifferentCell; col--) {
         const candidatePosition = getCellPositionFromMap(row, col)
@@ -985,15 +756,6 @@ export function selectCellsByCoords(
   }
 }
 
-/**
- * Select the cell at (row, col) using `cellAround` to respect merged cells.
- *
- * @param editor    Tiptap editor
- * @param row       Row index (0-based)
- * @param col       Column index (0-based)
- * @param tablePos  Optional absolute position of the table node
- * @param dispatch  Optional dispatch; defaults to editor.view.dispatch
- */
 export function selectCellAt({
   editor,
   row,
@@ -1013,7 +775,6 @@ export function selectCellAt({
   const found = getTable(editor, tablePos)
   if (!found) return false
 
-  // Bounds check
   if (!isWithinBounds(row, col, found.map)) {
     return false
   }
@@ -1034,20 +795,6 @@ export function selectCellAt({
   return true
 }
 
-/**
- * Selects a boundary cell of the table based on orientation.
- *
- * For row orientation, selects the bottom-left cell of the table.
- * For column orientation, selects the top-right cell of the table.
- *
- * This function accounts for merged cells to ensure the correct cell is selected.
- *
- * @param editor      The Tiptap editor instance
- * @param tableNode   The table node
- * @param tablePos    The position of the table node in the document
- * @param orientation "row" to select bottom-left, "column" to select top-right
- * @returns true if the selection was successful; false otherwise
- */
 export function selectLastCell(
   editor: Editor,
   tableNode: Node,
@@ -1057,14 +804,11 @@ export function selectLastCell(
   const map = TableMap.get(tableNode)
   const isRow = orientation === "row"
 
-  // For rows, select bottom-left cell; for columns, select top-right cell
   const row = isRow ? map.height - 1 : 0
   const col = isRow ? 0 : map.width - 1
 
-  // Calculate the index in the table map
   const index = row * map.width + col
 
-  // Get the actual cell position from the map (handles merged cells)
   const cellPos = map.map[index]
   if (!cellPos && cellPos !== 0) {
     console.warn("selectLastCell: cell position not found in map", {
@@ -1076,7 +820,6 @@ export function selectLastCell(
     return false
   }
 
-  // Find the row and column of the actual cell
   const cellIndex = map.map.indexOf(cellPos)
   const actualRow = cellIndex >= 0 ? Math.floor(cellIndex / map.width) : 0
   const actualCol = cellIndex >= 0 ? cellIndex % map.width : 0
@@ -1090,22 +833,6 @@ export function selectLastCell(
   })
 }
 
-/**
- * Get all (row, col) coordinates for a given row or column index.
- *
- * - If `orientation` is "row", returns all columns in that row.
- * - If `orientation` is "column", returns all rows in that column.
- *
- * Returns null if:
- * - the editor or table is not found
- * - the index is out of bounds
- *
- * @param editor      The Tiptap editor instance
- * @param index       The row or column index (0-based)
- * @param orientation "row" to get row coordinates, "column" for column coordinates
- * @param tablePos    Optional position of the table node in the document
- * @returns Array of {row, col} objects or null if invalid
- */
 export function getIndexCoordinates({
   editor,
   index,
@@ -1134,24 +861,6 @@ export function getIndexCoordinates({
     : Array.from({ length: map.height }, (_, row) => ({ row, col: index }))
 }
 
-/**
- * Given a DOM cell element, find its (row, col) indices within the table.
- *
- * This function:
- * - Locates the nearest ancestor table element
- * - Uses the editor's document model to resolve the cell's position
- * - Traverses up the node hierarchy to find the corresponding table cell node
- * - Uses `TableMap` to translate the cell's position into (row, col) indices
- *
- * Returns null if:
- * - the table or cell cannot be found in the editor's document
- * - any error occurs during position resolution
- *
- * @param cell      The HTMLTableCellElement (td or th)
- * @param tableNode The table node in the ProseMirror document
- * @param editor    The Tiptap editor instance
- * @returns An object with { rowIndex, colIndex } or null if not found
- */
 export function getCellIndicesFromDOM(
   cell: HTMLTableCellElement,
   tableNode: Node | null,
@@ -1184,22 +893,6 @@ export function getCellIndicesFromDOM(
   return null
 }
 
-/**
- * Given a DOM element inside a table, find the corresponding table node and its position.
- *
- * This function:
- * - Locates the nearest ancestor table element
- * - Uses the editor's document model to resolve the table's position
- * - Traverses up the node hierarchy to find the corresponding table node
- *
- * Returns null if:
- * - the table cannot be found in the editor's document
- * - any error occurs during position resolution
- *
- * @param tableElement The HTMLTableElement or an element inside it
- * @param editor       The Tiptap editor instance
- * @returns An object with { node: tableNode, pos: tablePos } or null if not found
- */
 export function getTableFromDOM(
   tableElement: HTMLElement,
   editor: Editor
@@ -1220,9 +913,6 @@ export function getTableFromDOM(
   return null
 }
 
-/**
- * Checks if a node is a table node
- */
 export function isTableNode(node: Node | null | undefined): node is Node {
   return !!node && (node.type.name === "table" || node.type.spec["tableRole"] === "table")
 }

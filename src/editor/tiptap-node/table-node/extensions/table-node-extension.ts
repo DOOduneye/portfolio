@@ -103,10 +103,8 @@ export const TableNode = Table.extend<TableOptions>({
           const originalTable = this.dom
           const tableElement = originalTable.firstChild!
 
-          // Move table into inner container
           this.innerTableContainer.appendChild(tableElement)
 
-          // Build the hierarchy: blockContainer > originalTable > innerContainer + widgetsContainer
           originalTable.appendChild(this.innerTableContainer)
           originalTable.appendChild(this.widgetsContainer)
           originalTable.appendChild(this.overlayContainer)
@@ -177,33 +175,12 @@ const TableCellNode = TableCell.extend<TableCellOptions>({
 })
 
 export interface TableNodeOptions {
-  /**
-   * If set to false, the table extension will not be registered
-   * @example table: false
-   */
   table: Partial<TableOptions> | false
-  /**
-   * If set to false, the table extension will not be registered
-   * @example tableCell: false
-   */
   tableCell: Partial<TableCellOptions> | false
-  /**
-   * If set to false, the table extension will not be registered
-   * @example tableHeader: false
-   */
   tableHeader: Partial<TableHeaderOptions> | false
-  /**
-   * If set to false, the table extension will not be registered
-   * @example tableRow: false
-   */
   tableRow: Partial<TableRowOptions> | false
 }
 
-/**
- * The table kit is a collection of table editor extensions.
- *
- * It’s a good starting point for building your own table in Tiptap.
- */
 export const TableKit = Extension.create<TableNodeOptions>({
   name: "tableKit",
 

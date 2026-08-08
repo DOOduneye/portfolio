@@ -1,14 +1,11 @@
 "use client"
 
 import { useCallback, useMemo } from "react"
-// --- Icons ---
 import { CopyIcon } from "@/components/icons/copy"
 import { addColumnAfter, addRowAfter, CellSelection } from "@tiptap/pm/tables"
 import type { Editor } from "@tiptap/react"
 
-// --- Hooks ---
 import { useTiptapEditor } from "../../../../hooks/use-tiptap-editor"
-// --- Lib ---
 import { isExtensionAvailable } from "../../../../lib/tiptap-utils"
 import type { Orientation } from "../../lib/tiptap-table-utils"
 import {
@@ -21,31 +18,11 @@ import {
 } from "../../lib/tiptap-table-utils"
 
 export interface UseTableDuplicateRowColumnConfig {
-  /**
-   * The Tiptap editor instance. If omitted, the hook will use
-   * the context/editor from `useTiptapEditor`.
-   */
   editor?: Editor | null
-  /**
-   * The index of the row or column to duplicate.
-   */
   index?: number
-  /**
-   * Whether you're duplicating a row or a column.
-   */
   orientation?: Orientation
-  /**
-   * The position of the table in the document.
-   */
   tablePos?: number
-  /**
-   * Hide the button when duplication isn't currently possible.
-   * @default false
-   */
   hideWhenUnavailable?: boolean
-  /**
-   * Callback function called after a successful duplication.
-   */
   onDuplicated?: () => void
 }
 
@@ -56,10 +33,6 @@ export const tableDuplicateRowColumnLabels: Record<Orientation, string> = {
   column: "Duplicate column"
 }
 
-/**
- * Checks if a table row/column duplication can be performed
- * in the current editor state.
- */
 function canDuplicateRowColumn({
   editor,
   index,
@@ -91,9 +64,6 @@ function canDuplicateRowColumn({
   }
 }
 
-/**
- * Duplicates a row by using addRowAfter and then replacing the content.
- */
 function duplicateRow({
   editor,
   index,
@@ -140,8 +110,6 @@ function duplicateRow({
     const { state, view } = editor
     const tr = state.tr
 
-    // Replace each cell in the new row with duplicated content
-    // Process in reverse order to maintain correct positions
     const cellsToReplace = [...newRowCells.cells].reverse()
     const originalCells = [...originalRowCells.cells].reverse()
 
@@ -174,9 +142,6 @@ function duplicateRow({
   }
 }
 
-/**
- * Duplicates a column by using addColumnAfter and then replacing the content.
- */
 function duplicateColumn({
   editor,
   index,
@@ -220,8 +185,6 @@ function duplicateColumn({
     const { state, view } = editor
     const tr = state.tr
 
-    // Replace each cell in the new column with duplicated content
-    // Process in reverse order to maintain correct positions
     const cellsToReplace = [...newColumnCells.cells].reverse()
     const originalCells = [...originalColumnCells.cells].reverse()
 
@@ -254,9 +217,6 @@ function duplicateColumn({
   }
 }
 
-/**
- * Executes the row/column duplication in the editor.
- */
 function tableDuplicateRowColumn({
   editor,
   index,
@@ -300,10 +260,6 @@ function tableDuplicateRowColumn({
   }
 }
 
-/**
- * Determines if the duplicate button should be shown
- * based on editor state and config.
- */
 function shouldShowButton({
   editor,
   index,
@@ -320,10 +276,6 @@ function shouldShowButton({
   return hideWhenUnavailable ? canDuplicateRowColumn({ editor, index, orientation }) : true
 }
 
-/**
- * Custom hook that provides **table row/column duplication**
- * functionality for the Tiptap editor.
- */
 export function useTableDuplicateRowColumn(config: UseTableDuplicateRowColumnConfig) {
   const {
     editor: providedEditor,

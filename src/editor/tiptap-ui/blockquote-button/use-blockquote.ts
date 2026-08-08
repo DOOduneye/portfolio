@@ -1,14 +1,11 @@
 "use client"
 
 import { useCallback, useEffect, useState } from "react"
-// --- Icons ---
 import { QuoteIcon } from "@/components/icons/quote"
 import { NodeSelection, TextSelection } from "@tiptap/pm/state"
 import type { Editor } from "@tiptap/react"
 
-// --- Hooks ---
 import { useTiptapEditor } from "../../hooks/use-tiptap-editor"
-// --- UI Utils ---
 import {
   findNodePosition,
   isNodeInSchema,
@@ -19,28 +16,12 @@ import {
 
 export const BLOCKQUOTE_SHORTCUT_KEY = "mod+shift+b"
 
-/**
- * Configuration for the blockquote functionality
- */
 export interface UseBlockquoteConfig {
-  /**
-   * The Tiptap editor instance.
-   */
   editor?: Editor | null
-  /**
-   * Whether the button should hide when blockquote is not available.
-   * @default false
-   */
   hideWhenUnavailable?: boolean
-  /**
-   * Callback function called after a successful toggle.
-   */
   onToggled?: () => void
 }
 
-/**
- * Checks if blockquote can be toggled in the current editor state
- */
 export function canToggleBlockquote(editor: Editor | null, turnInto: boolean = true): boolean {
   if (!editor || !editor.isEditable) return false
   if (!isNodeInSchema("blockquote", editor) || isNodeTypeSelected(editor, ["image"])) return false
@@ -49,7 +30,6 @@ export function canToggleBlockquote(editor: Editor | null, turnInto: boolean = t
     return editor.can().toggleWrap("blockquote")
   }
 
-  // Ensure selection is in nodes we're allowed to convert
   if (
     !selectionWithinConvertibleTypes(editor, [
       "paragraph",
@@ -63,14 +43,9 @@ export function canToggleBlockquote(editor: Editor | null, turnInto: boolean = t
   )
     return false
 
-  // Either we can wrap in blockquote directly on the selection,
-  // or we can clear formatting/nodes to arrive at a blockquote.
   return editor.can().toggleWrap("blockquote") || editor.can().clearNodes()
 }
 
-/**
- * Toggles blockquote formatting for a specific node or the current selection
- */
 export function toggleBlockquote(editor: Editor | null): boolean {
   if (!editor || !editor.isEditable) return false
   if (!canToggleBlockquote(editor)) return false
@@ -80,7 +55,6 @@ export function toggleBlockquote(editor: Editor | null): boolean {
     let state = view.state
     let tr = state.tr
 
-    // No selection, find the the cursor position
     if (state.selection.empty || state.selection instanceof TextSelection) {
       const pos = findNodePosition({
         editor,
@@ -97,7 +71,6 @@ export function toggleBlockquote(editor: Editor | null): boolean {
 
     let chain = editor.chain().focus()
 
-    // Handle NodeSelection
     if (selection instanceof NodeSelection) {
       const firstChild = selection.node.firstChild?.firstChild
       const lastChild = selection.node.lastChild?.lastChild
@@ -126,9 +99,6 @@ export function toggleBlockquote(editor: Editor | null): boolean {
   }
 }
 
-/**
- * Determines if the blockquote button should be shown
- */
 export function shouldShowButton(props: {
   editor: Editor | null
   hideWhenUnavailable: boolean
@@ -145,42 +115,6 @@ export function shouldShowButton(props: {
   return true
 }
 
-/**
- * Custom hook that provides blockquote functionality for Tiptap editor
- *
- * @example
- * ```tsx
- * // Simple usage - no params needed
- * function MySimpleBlockquoteButton() {
- *   const { isVisible, handleToggle, isActive } = useBlockquote()
- *
- *   if (!isVisible) return null
- *
- *   return <button onClick={handleToggle}>Blockquote</button>
- * }
- *
- * // Advanced usage with configuration
- * function MyAdvancedBlockquoteButton() {
- *   const { isVisible, handleToggle, label, isActive } = useBlockquote({
- *     editor: myEditor,
- *     hideWhenUnavailable: true,
- *     onToggled: () => console.log('Blockquote toggled!')
- *   })
- *
- *   if (!isVisible) return null
- *
- *   return (
- *     <MyButton
- *       onClick={handleToggle}
- *       aria-label={label}
- *       aria-pressed={isActive}
- *     >
- *       Toggle Blockquote
- *     </MyButton>
- *   )
- * }
- * ```
- */
 export function useBlockquote(config?: UseBlockquoteConfig) {
   const { editor: providedEditor, hideWhenUnavailable = false, onToggled } = config || {}
 

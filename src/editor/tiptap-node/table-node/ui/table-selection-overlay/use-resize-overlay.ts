@@ -25,7 +25,6 @@ export function useResizeOverlay(editor: Editor | null, updateSelectionRect: () 
         rafId.current = requestAnimationFrame(tick)
       } else {
         stopLoop()
-        // one final sync after mouseup
         updateSelectionRect()
       }
     }
@@ -36,25 +35,20 @@ export function useResizeOverlay(editor: Editor | null, updateSelectionRect: () 
     if (!editor) return
 
     const onTx = ({ transaction }: { transaction: Transaction }) => {
-      // this is for non-resize txs that may affect selection
       updateSelectionRect()
 
       const meta = transaction.getMeta(columnResizingPluginKey)
       if (!meta) return
 
-      // drag start
       if (Object.prototype.hasOwnProperty.call(meta, "setDragging") && meta.setDragging) {
         startLoop()
       }
 
-      // drag end is also a tx with setDragging: null — rAF loop will notice and stop itself
       if (Object.prototype.hasOwnProperty.call(meta, "setDragging") && meta.setDragging == null) {
-        // if loop missed it for any reason, force a stop + final sync
         stopLoop()
         updateSelectionRect()
       }
 
-      // handle-only hover (optional): update once for cursor changes, etc.
       if (Object.prototype.hasOwnProperty.call(meta, "setHandle")) {
         updateSelectionRect()
       }

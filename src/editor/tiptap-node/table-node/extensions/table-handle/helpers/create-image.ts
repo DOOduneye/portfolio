@@ -1,7 +1,6 @@
 import type { Editor } from "@tiptap/core"
 
 const STYLE_PROPS: (keyof CSSStyleDeclaration | string)[] = [
-  // Box & border
   "boxSizing",
   "backgroundColor",
   "borderTopColor",
@@ -17,12 +16,10 @@ const STYLE_PROPS: (keyof CSSStyleDeclaration | string)[] = [
   "borderBottomWidth",
   "borderLeftWidth",
   "borderRadius",
-  // Spacing
   "paddingTop",
   "paddingRight",
   "paddingBottom",
   "paddingLeft",
-  // Typography
   "color",
   "font",
   "fontFamily",
@@ -36,23 +33,17 @@ const STYLE_PROPS: (keyof CSSStyleDeclaration | string)[] = [
   "textAlign",
   "verticalAlign",
   "whiteSpace",
-  // Sizing
   "width",
   "minWidth",
   "maxWidth",
   "height",
   "minHeight",
   "maxHeight",
-  // Table specifics
   "backgroundClip"
 ]
 
 const toDash = (p: string) => p.replace(/[A-Z]/g, m => "-" + m.toLowerCase())
 
-/**
- * Copy a curated list of computed styles from source -> target
- * (Works for TD/TH and most inline content you'd expect inside.)
- */
 function copyComputedStyles(source: HTMLElement, target: HTMLElement) {
   const cs = getComputedStyle(source)
 
@@ -63,23 +54,16 @@ function copyComputedStyles(source: HTMLElement, target: HTMLElement) {
     if (val) (target.style as any)[prop] = val
   }
 
-  // Ensure long content doesn't overflow the drag image
   target.style.overflow = "hidden"
   target.style.textOverflow = "ellipsis"
-  // Respect existing wrapping if set on the source; otherwise prefer single line
   if (cs.whiteSpace === "" || cs.whiteSpace === "normal") {
     target.style.whiteSpace = "nowrap"
   }
 }
 
-/**
- * Deep clone a node and copy computed styles element-by-element.
- * Avoids the browser's default cloning which loses computed styles.
- */
 function cloneWithStyles(root: HTMLElement): HTMLElement {
   const clone = root.cloneNode(true) as HTMLElement
 
-  // Iterative walk to avoid recursion limits
   const q: Array<{ src: Element; dst: Element }> = [{ src: root, dst: clone }]
   while (q.length) {
     const { src, dst } = q.shift()!
@@ -101,9 +85,6 @@ function cloneWithStyles(root: HTMLElement): HTMLElement {
   return clone
 }
 
-/**
- * Apply crisp, rounded, off-screen wrapper styling for drag image.
- */
 function styleDragWrapper(el: HTMLElement, maxWidth: number) {
   Object.assign(el.style, {
     position: "fixed",
@@ -119,12 +100,7 @@ function styleDragWrapper(el: HTMLElement, maxWidth: number) {
   } as CSSStyleDeclaration)
 }
 
-/**
- * Scale an element down if it exceeds the max width, keeping crisp layout.
- * Assumes the element is already positioned off-screen (so attaching to body is safe).
- */
 function scaleToFit(el: HTMLElement, maxWidth: number): void {
-  // Attach once (if not already) so measurements are correct.
   if (!el.isConnected) document.body.appendChild(el)
   const rect = el.getBoundingClientRect()
   if (rect.width > maxWidth && rect.width > 0) {
@@ -134,9 +110,6 @@ function scaleToFit(el: HTMLElement, maxWidth: number): void {
   }
 }
 
-/**
- * Copy table-level styles that affect layout.
- */
 function applyTableBoxStyles(srcTable: HTMLTableElement, dstTable: HTMLTableElement) {
   const tcs = getComputedStyle(srcTable)
   dstTable.style.borderCollapse = tcs.borderCollapse
@@ -145,9 +118,6 @@ function applyTableBoxStyles(srcTable: HTMLTableElement, dstTable: HTMLTableElem
   dstTable.className = srcTable.className
 }
 
-/**
- * Lock a cell's width to its rendered width.
- */
 function lockCellWidth(fromCell: HTMLElement, toCell: HTMLElement) {
   const rect = fromCell.getBoundingClientRect()
   if (rect.width > 0) {
@@ -156,9 +126,6 @@ function lockCellWidth(fromCell: HTMLElement, toCell: HTMLElement) {
   }
 }
 
-/**
- * Build a 1-row preview table.
- */
 function buildRowPreview(tableEl: HTMLTableElement, rowIndex: number): HTMLTableElement | null {
   const body = tableEl.tBodies?.[0] ?? tableEl.querySelector("tbody")
   if (!body) return null
@@ -172,7 +139,6 @@ function buildRowPreview(tableEl: HTMLTableElement, rowIndex: number): HTMLTable
 
   applyTableBoxStyles(tableEl, tableClone)
 
-  // Lock each cell width
   for (let i = 0; i < row.cells.length; i++) {
     const src = row.cells[i] as HTMLElement
     const dst = rowClone.cells[i] as HTMLElement | undefined
@@ -184,9 +150,6 @@ function buildRowPreview(tableEl: HTMLTableElement, rowIndex: number): HTMLTable
   return tableClone
 }
 
-/**
- * Build a 1-column preview table (one cell per row).
- */
 function buildColumnPreview(tableEl: HTMLTableElement, colIndex: number): HTMLTableElement | null {
   const body = tableEl.tBodies?.[0] ?? tableEl.querySelector("tbody")
   if (!body) return null
@@ -223,13 +186,6 @@ function buildColumnPreview(tableEl: HTMLTableElement, colIndex: number): HTMLTa
   return tableClone
 }
 
-/**
- * Public API
- * Creates a polished drag image for a row/column from a TipTap/ProseMirror table.
- * - Subtle rounded corners & shadow
- * - Scales down if it exceeds editor width
- * - Preserves computed styles to look 1:1 with the table
- */
 export function createTableDragImage(
   editor: Editor,
   orientation: "row" | "col",
@@ -266,9 +222,7 @@ export function createTableDragImage(
     wrapper.appendChild(card)
   }
 
-  // Measure & scale after attaching
   scaleToFit(wrapper, maxWidth)
 
   return wrapper
 }
-// === END UTILS ===

@@ -40,8 +40,6 @@ export const blockTypeOptions = [
       !editor.isActive("blockquote") &&
       !editor.isActive("codeBlock")
   },
-  // Level one is the post title, so the schema does not carry it and the menu
-  // must not offer a row that silently does nothing.
   {
     type: "heading",
     label: HEADING_LABELS[2],
