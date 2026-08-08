@@ -145,7 +145,7 @@ export function PostsList() {
 
   const error = posts.error ?? create.error ?? setStatus.error ?? remove.error
 
-  const columns = useMemo<ColumnDef<typeof features, Post, any>[]>(
+  const columns = useMemo(
     () => [
       column.display({
         id: "select",
@@ -257,7 +257,7 @@ export function PostsList() {
       })
     ],
     [remove, setStatus]
-  )
+  ) as unknown as ColumnDef<typeof features, Post>[]
 
   const data = useMemo(() => {
     const needle = query.trim().toLowerCase()
