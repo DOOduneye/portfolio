@@ -59,6 +59,7 @@ export const projects = sqliteTable("projects", {
   name: text("name").notNull(),
   url: text("url"),
   description: text("description").notNull().default(""),
+  stack: text("stack").notNull().default(""),
   sortOrder: integer("sort_order").notNull().default(0),
   visible: integer("visible").notNull().default(1),
   createdAt: timestamp("created_at"),

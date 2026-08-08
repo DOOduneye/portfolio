@@ -8,6 +8,7 @@ const projectInput = z.object({
   name: z.string().min(1).max(128),
   url: z.string().url().nullish(),
   description: z.string().max(1024).default(""),
+  stack: z.string().max(256).default(""),
   sortOrder: z.number().int().default(0),
   visible: z.number().int().min(0).max(1).default(1)
 })
