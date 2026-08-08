@@ -1,8 +1,8 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { api, errorMessage, type RouterOutputs } from "../api"
 import { AdminPage } from "../components/AdminPage"
-import { Alert, AlertTitle } from "@/components/ui/alert"
+import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Field, FieldLabel } from "@/components/ui/field"
@@ -39,16 +39,22 @@ export function Experiences() {
 
   const list = useQuery(api.admin.experiences.list.queryOptions())
 
+  const reportFailure = (cause: unknown) => toast.error(errorMessage(cause))
+
   const settled = {
+    onError: reportFailure,
     onSuccess: () => queryClient.invalidateQueries(api.admin.experiences.list.queryFilter())
   }
   const create = useMutation(api.admin.experiences.create.mutationOptions(settled))
   const update = useMutation(api.admin.experiences.update.mutationOptions(settled))
   const destroy = useMutation(api.admin.experiences.remove.mutationOptions(settled))
 
+  useEffect(() => {
+    if (list.error) toast.error(errorMessage(list.error))
+  }, [list.error])
+
   const items = list.data
   const saving = create.isPending || update.isPending
-  const error = list.error ?? create.error ?? update.error ?? destroy.error
 
   const save = async () => {
     if (!draft) return
@@ -77,12 +83,6 @@ export function Experiences() {
       action={<Button onClick={() => setDraft(empty)}>New experience</Button>}
     >
       <div className="flex flex-col gap-6">
-        {error && (
-          <Alert variant="destructive">
-            <AlertTitle>{errorMessage(error)}</AlertTitle>
-          </Alert>
-        )}
-
         {draft && (
           <Card className="gap-4 p-5">
             <div className="grid gap-4 sm:grid-cols-2">

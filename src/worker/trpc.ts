@@ -27,7 +27,14 @@ export function createContext({ req, env, executionCtx, identity }: ContextOptio
 
 export type Context = ReturnType<typeof createContext>
 
-const t = initTRPC.context<Context>().create()
+const t = initTRPC.context<Context>().create({
+  errorFormatter({ shape, error }) {
+    if (error.code !== "INTERNAL_SERVER_ERROR") return shape
+
+    console.error("trpc", error.cause ?? error)
+    return { ...shape, message: "Something went wrong. The details are in the logs." }
+  }
+})
 
 export const router = t.router
 export const publicProcedure = t.procedure
