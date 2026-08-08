@@ -33,7 +33,6 @@ import {
 import { api, errorMessage, type RouterOutputs } from "../api"
 import { AdminPage } from "../components/AdminPage"
 import { useIsMobile } from "@/hooks/use-mobile"
-import { Alert, AlertTitle } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import {
@@ -63,6 +62,7 @@ import {
   TableRow
 } from "@/components/ui/table"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
+import { toast } from "sonner"
 
 type Post = RouterOutputs["admin"]["posts"]["list"][number]
 type StatusFilter = "all" | "draft" | "published"
@@ -101,8 +101,11 @@ export function PostsList() {
   const posts = useQuery(api.admin.posts.list.queryOptions())
   const listKey = api.admin.posts.list.queryKey()
 
+  const reportFailure = (cause: unknown) => toast.error(errorMessage(cause))
+
   const create = useMutation(
     api.admin.posts.create.mutationOptions({
+      onError: reportFailure,
       onSuccess: post => {
         void queryClient.invalidateQueries(api.admin.posts.list.queryFilter())
         if (post) navigate(`/admin/posts/${post.slug}`)
@@ -119,8 +122,9 @@ export function PostsList() {
       if (previous) queryClient.setQueryData(listKey, apply(previous, variables))
       return { previous }
     },
-    onError: (_error: unknown, _variables: TVariables, context?: { previous?: Post[] }) => {
+    onError: (cause: unknown, _variables: TVariables, context?: { previous?: Post[] }) => {
       if (context?.previous) queryClient.setQueryData(listKey, context.previous)
+      reportFailure(cause)
     },
     onSettled: () => queryClient.invalidateQueries(api.admin.posts.list.queryFilter())
   })
@@ -142,8 +146,6 @@ export function PostsList() {
       )
     )
   )
-
-  const error = posts.error ?? create.error ?? setStatus.error ?? remove.error
 
   const columns = useMemo(
     () => [
@@ -380,12 +382,6 @@ export function PostsList() {
 
   return (
     <AdminPage title="Posts" action={newPost} header={selectionHeader} toolbar={toolbar}>
-      {error && (
-        <Alert variant="destructive" className="mb-4">
-          <AlertTitle>{errorMessage(error)}</AlertTitle>
-        </Alert>
-      )}
-
       {posts.isPending ? (
         <PostRowsSkeleton />
       ) : (posts.data?.length ?? 0) === 0 ? (
