@@ -381,7 +381,7 @@ export function PostsList() {
   )
 
   return (
-    <AdminPage title="Posts" action={newPost} header={selectionHeader} toolbar={toolbar}>
+    <AdminPage title="Posts" action={newPost} header={selectionHeader} toolbar={toolbar} wide>
       {posts.isPending ? (
         <PostRowsSkeleton />
       ) : (posts.data?.length ?? 0) === 0 ? (
