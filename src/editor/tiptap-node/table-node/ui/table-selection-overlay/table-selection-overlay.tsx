@@ -8,9 +8,7 @@ import { cellAround, CellSelection } from "@tiptap/pm/tables"
 import type { EditorView } from "@tiptap/pm/view"
 import type { Editor } from "@tiptap/react"
 
-// --- Hooks ---
 import { useTiptapEditor } from "../../../../hooks/use-tiptap-editor"
-// --- Lib ---
 import { domCellAround, getTable, rectEq } from "../../lib/tiptap-table-utils"
 import { useResizeOverlay } from "./use-resize-overlay"
 
@@ -25,14 +23,8 @@ export interface TableSelectionOverlayProps {
   onMenuOpenChange?: (isOpen: boolean) => void
 }
 
-// tl = top-left
-// tr = top-right
-// bl = bottom-left
-// br = bottom-right
 type ResizeHandle = "tl" | "tr" | "bl" | "br" | null
 
-// if an element's edge is within 5px of the selection edge,
-// it is treated as aligned.
 const CORNER_DETECTION_TOLERANCE = 5
 
 const getCellAtCoordinates = (state: EditorState, view: EditorView, x: number, y: number) => {
@@ -108,12 +100,6 @@ const findCornerCells = (
     bottomRight: null
   }
 
-  // It takes two numbers: value1 and value2.
-  // It calculates the absolute difference between them: Math.abs(value1 - value2).
-  // It checks whether that difference is less than 5 (CORNER_DETECTION_TOLERANCE).
-  // It returns a boolean:
-  // true → if value1 and value2 are within 5 (CORNER_DETECTION_TOLERANCE) of each other.
-  // false → if they are 5 or more units apart.
   const isNearEdge = (value1: number, value2: number) =>
     Math.abs(value1 - value2) < CORNER_DETECTION_TOLERANCE
 
@@ -123,7 +109,6 @@ const findCornerCells = (
 
     const cellRect = dom.getBoundingClientRect()
 
-    // Top-left corner
     if (
       isNearEdge(cellRect.left, selectionRect.left) &&
       isNearEdge(cellRect.top, selectionRect.top)
@@ -131,7 +116,6 @@ const findCornerCells = (
       corners.topLeft = pos
     }
 
-    // Top-right corner
     if (
       isNearEdge(cellRect.right, selectionRect.right) &&
       isNearEdge(cellRect.top, selectionRect.top)
@@ -139,7 +123,6 @@ const findCornerCells = (
       corners.topRight = pos
     }
 
-    // Bottom-left corner
     if (
       isNearEdge(cellRect.left, selectionRect.left) &&
       isNearEdge(cellRect.bottom, selectionRect.bottom)
@@ -147,7 +130,6 @@ const findCornerCells = (
       corners.bottomLeft = pos
     }
 
-    // Bottom-right corner
     if (
       isNearEdge(cellRect.right, selectionRect.right) &&
       isNearEdge(cellRect.bottom, selectionRect.bottom)
@@ -278,7 +260,6 @@ export const TableSelectionOverlay: React.FC<TableSelectionOverlayProps> = ({
       return
     }
 
-    // single cell handling
     const { $anchor } = selection
     const cell = cellAround($anchor)
 
@@ -486,10 +467,8 @@ export const TableSelectionOverlay: React.FC<TableSelectionOverlayProps> = ({
               left: 0
             }}
           >
-            {/* Menu Component */}
             {renderCellMenu()}
 
-            {/* Corner resize handles */}
             {showResizeHandles && (
               <>
                 <div

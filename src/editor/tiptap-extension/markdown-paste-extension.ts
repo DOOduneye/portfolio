@@ -1,9 +1,6 @@
 import { Extension } from "@tiptap/core"
 import { Plugin, PluginKey } from "@tiptap/pm/state"
 
-/**
- * Simple heuristic to check if text looks like markdown
- */
 function looksLikeMarkdown(text: string): boolean {
   const markdownPatterns = [
     /^#{1,6}\s/m, // Headers: # ## ### etc
@@ -25,10 +22,6 @@ function looksLikeMarkdown(text: string): boolean {
   return markdownPatterns.some(pattern => pattern.test(text))
 }
 
-/**
- * Extension that handles pasting markdown content and converts it to rich text.
- * Requires the @tiptap/markdown extension to be loaded.
- */
 export const MarkdownPaste = Extension.create({
   name: "markdownPaste",
 
@@ -40,7 +33,6 @@ export const MarkdownPaste = Extension.create({
         key: new PluginKey("markdownPaste"),
         props: {
           handlePaste(_view, event) {
-            // Only handle if markdown extension is available
             if (!editor.markdown) {
               return false
             }
@@ -48,8 +40,6 @@ export const MarkdownPaste = Extension.create({
             const text = event.clipboardData?.getData("text/plain")
             const html = event.clipboardData?.getData("text/html")
 
-            // If there's HTML content, let default handler process it
-            // (user might be pasting from a rich text source)
             if (html && html.trim().length > 0) {
               return false
             }
@@ -58,12 +48,10 @@ export const MarkdownPaste = Extension.create({
               return false
             }
 
-            // Check if the pasted text looks like markdown
             if (!looksLikeMarkdown(text)) {
               return false
             }
 
-            // Parse and insert the markdown content
             editor.commands.insertContent(text, { contentType: "markdown" })
             return true
           }

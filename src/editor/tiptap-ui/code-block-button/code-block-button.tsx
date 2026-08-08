@@ -2,26 +2,15 @@
 
 import { forwardRef, useCallback } from "react"
 
-// --- Tiptap UI ---
 import type { UseCodeBlockConfig } from "."
 import { CODE_BLOCK_SHORTCUT_KEY, useCodeBlock } from "."
-// --- UI Primitives ---
 import { Button, type ButtonProps } from "@/editor/ui/button"
 import { Kbd, KbdGroup } from "@/editor/ui/kbd"
-// --- Hooks ---
 import { useTiptapEditor } from "../../hooks/use-tiptap-editor"
-// --- Lib ---
 import { parseShortcutKeys } from "../../lib/tiptap-utils"
 
 export interface CodeBlockButtonProps extends Omit<ButtonProps, "type">, UseCodeBlockConfig {
-  /**
-   * Optional text to display alongside the icon.
-   */
   text?: string
-  /**
-   * Optional show shortcut keys in the button.
-   * @default false
-   */
   showShortcut?: boolean
 }
 
@@ -40,11 +29,6 @@ export function CodeBlockShortcutKeys({
   )
 }
 
-/**
- * Button component for toggling code block in a Tiptap editor.
- *
- * For custom button implementations, use the `useCodeBlock` hook instead.
- */
 export const CodeBlockButton = forwardRef<HTMLButtonElement, CodeBlockButtonProps>(
   (
     {

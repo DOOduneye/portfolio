@@ -1,7 +1,6 @@
 "use client"
 
 import { useCallback, useMemo } from "react"
-// --- Icons ---
 import { ArrowDownIcon } from "@/components/icons/arrow-down"
 import { ArrowLeftIcon } from "@/components/icons/arrow-left"
 import { ArrowRightIcon } from "@/components/icons/arrow-right"
@@ -19,9 +18,7 @@ import {
 } from "@tiptap/pm/tables"
 import type { Editor } from "@tiptap/react"
 
-// --- Hooks ---
 import { useTiptapEditor } from "../../../../hooks/use-tiptap-editor"
-// --- Lib ---
 import { isExtensionAvailable } from "../../../../lib/tiptap-utils"
 import type { Orientation } from "../../lib/tiptap-table-utils"
 import {
@@ -35,37 +32,12 @@ import {
 export type MoveDirection = "up" | "down" | "left" | "right"
 
 export interface UseTableMoveRowColumnConfig {
-  /**
-   * The Tiptap editor instance. If omitted, the hook will use
-   * the context/editor from `useTiptapEditor`.
-   */
   editor?: Editor | null
-  /**
-   * The index of the row or column to move.
-   * If omitted, will use the current selection.
-   */
   index?: number
-  /**
-   * Whether you're moving a row or a column.
-   * If omitted, will use the current selection.
-   */
   orientation?: Orientation
-  /**
-   * The position of the table in the document.
-   */
   tablePos?: number
-  /**
-   * The direction to move (up/down for rows, left/right for columns).
-   */
   direction: MoveDirection
-  /**
-   * Hide the button when moving isn't currently possible.
-   * @default false
-   */
   hideWhenUnavailable?: boolean
-  /**
-   * Callback function called after a successful move.
-   */
   onMoved?: () => void
 }
 
@@ -109,9 +81,6 @@ function safeRowIsHeader(map: TableMap, node: Node, index: number): boolean {
   }
 }
 
-/**
- * Validates that the direction is compatible with the orientation.
- */
 function isValidDirectionForOrientation(
   orientation: Orientation,
   direction: MoveDirection
@@ -124,9 +93,6 @@ function isValidDirectionForOrientation(
   return false
 }
 
-/**
- * Checks if a table row/column can be moved in the specified direction.
- */
 function canMoveRowColumn({
   editor,
   index,
@@ -157,9 +123,6 @@ function canMoveRowColumn({
       return false
     }
 
-    // START
-    // This is just internal preference, you can comment it out if you want
-    // to allow moving header rows/columns
     if (finalOrientation === "row" && safeRowIsHeader(table.map, table.node, finalIndex)) {
       return false
     }
@@ -167,7 +130,6 @@ function canMoveRowColumn({
     if (finalOrientation === "column" && safeColumnIsHeader(table.map, table.node, finalIndex)) {
       return false
     }
-    // END
 
     const { width, height } = table.map
 
@@ -226,9 +188,6 @@ function canMoveRowColumn({
   }
 }
 
-/**
- * Executes the row/column move in the editor.
- */
 function tableMoveRowColumn({
   editor,
   index,
@@ -295,10 +254,6 @@ function tableMoveRowColumn({
   }
 }
 
-/**
- * Determines if the move button should be shown
- * based on editor state and config.
- */
 function shouldShowButton({
   editor,
   index,
@@ -329,10 +284,6 @@ function shouldShowButton({
     : true
 }
 
-/**
- * Custom hook that provides **table row/column moving**
- * functionality for the Tiptap editor.
- */
 export function useTableMoveRowColumn(config: UseTableMoveRowColumnConfig) {
   const {
     editor: providedEditor,

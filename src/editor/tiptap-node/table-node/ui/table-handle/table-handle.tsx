@@ -6,12 +6,10 @@ import { FloatingPortal } from "@floating-ui/react"
 import type { Node } from "@tiptap/pm/model"
 import type { Editor } from "@tiptap/react"
 
-// --- Hooks ---
 import { useTiptapEditor } from "../../../../hooks/use-tiptap-editor"
 import { colDragStart, rowDragStart } from "../../extensions/table-handle"
 import { useTableHandleState } from "../../hooks/use-table-handle-state"
 import { type Orientation } from "../../lib/tiptap-table-utils"
-// --- Components ---
 import { TableHandleMenu } from "../table-handle-menu"
 import { useTableHandlePositioning } from "./use-table-handle-positioning"
 
@@ -35,31 +33,13 @@ export interface TableHandleRenderProps {
 }
 
 export interface TableHandleProps {
-  /**
-   * The Tiptap editor instance.
-   */
   editor?: Editor | null
 
-  /**
-   * Custom component to render for row handles.
-   * If not provided, uses the default TableHandleMenu.
-   */
   rowButton?: ComponentType<TableHandleButtonProps>
 
-  /**
-   * Custom component to render for column handles.
-   * If not provided, uses the default TableHandleMenu.
-   */
   columnButton?: ComponentType<TableHandleButtonProps>
 }
 
-/**
- * Main table handle component that manages the positioning and rendering
- * of table row/column handles, extend buttons, and context menus.
- *
- * This component can be extended with custom row and column buttons,
- * or completely customized using the render prop pattern.
- */
 export function TableHandle({
   editor: providedEditor,
   rowButton: CustomRowButton,

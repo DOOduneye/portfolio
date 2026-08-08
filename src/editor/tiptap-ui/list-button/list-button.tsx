@@ -2,26 +2,15 @@
 
 import { forwardRef, useCallback } from "react"
 
-// --- Tiptap UI ---
 import type { ListType, UseListConfig } from "."
 import { LIST_SHORTCUT_KEYS, useList } from "."
-// --- UI Primitives ---
 import { Button, type ButtonProps } from "@/editor/ui/button"
 import { Kbd, KbdGroup } from "@/editor/ui/kbd"
-// --- Hooks ---
 import { useTiptapEditor } from "../../hooks/use-tiptap-editor"
-// --- Lib ---
 import { parseShortcutKeys } from "../../lib/tiptap-utils"
 
 export interface ListButtonProps extends Omit<ButtonProps, "type">, UseListConfig {
-  /**
-   * Optional text to display alongside the icon.
-   */
   text?: string
-  /**
-   * Optional show shortcut keys in the button.
-   * @default false
-   */
   showShortcut?: boolean
 }
 
@@ -42,11 +31,6 @@ export function ListShortcutKeys({
   )
 }
 
-/**
- * Button component for toggling lists in a Tiptap editor.
- *
- * For custom button implementations, use the `useList` hook instead.
- */
 export const ListButton = forwardRef<HTMLButtonElement, ListButtonProps>(
   (
     {

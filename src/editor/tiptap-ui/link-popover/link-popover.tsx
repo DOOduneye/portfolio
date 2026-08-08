@@ -1,75 +1,35 @@
 "use client"
 
 import { useCallback, useEffect, useState } from "react"
-// --- Icons ---
 import { ExternalLinkIcon } from "@/components/icons/external-link"
 import { LinkIcon } from "@/components/icons/link"
 import { TrashIcon } from "@/components/icons/trash"
 import type { Editor } from "@tiptap/react"
 
-// --- Tiptap UI ---
 import type { UseLinkPopoverConfig } from "."
 import { useLinkPopover } from "."
-// --- UI Primitives ---
 import { Button, type ButtonProps } from "@/editor/ui/button"
 import { Input } from "@/components/ui/input"
-// --- Hooks ---
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { useTiptapEditor } from "../../hooks/use-tiptap-editor"
 import { ToolbarSeparator, ToolbarTooltip } from "../../tiptap-ui-primitive/toolbar"
 
 export interface LinkMainProps {
-  /**
-   * The URL to set for the link.
-   */
   url: string
-  /**
-   * Function to update the URL state.
-   */
   setUrl: React.Dispatch<React.SetStateAction<string | null>>
-  /**
-   * Function to set the link in the editor.
-   */
   setLink: (url?: string) => void
-  /**
-   * Function to remove the link from the editor.
-   */
   removeLink: () => void
-  /**
-   * Function to open the link.
-   */
   openLink: () => void
-  /**
-   * Whether the link is currently active in the editor.
-   */
   isActive: boolean
-  /**
-   * Whether to autofocus the input when empty.
-   * @default true
-   */
   autoFocus?: boolean
-  /**
-   * Callback when the link is saved (e.g., on Enter key).
-   * Used to refocus editor and collapse selection.
-   */
   onSave?: () => void
 }
 
 export interface LinkPopoverProps extends Omit<ButtonProps, "type">, UseLinkPopoverConfig {
-  /**
-   * Callback for when the popover opens or closes.
-   */
   onOpenChange?: (isOpen: boolean) => void
-  /**
-   * Whether to automatically open the popover when a link is active.
-   * @default true
-   */
   autoOpenOnLinkActive?: boolean
 }
 
-/**
- * Link button component for triggering the link popover
- */
 export function LinkButton({
   className,
   children,
@@ -91,9 +51,6 @@ export function LinkButton({
   )
 }
 
-/**
- * Main content component for the link popover
- */
 const LinkMain: React.FC<LinkMainProps> = ({
   url,
   setUrl,
@@ -127,8 +84,6 @@ const LinkMain: React.FC<LinkMainProps> = ({
         }
       }}
     >
-      {/* The toolbar is already a panel, so the field sits inside it rather
-          than drawing a second border and background of its own. */}
       <Input
         type="url"
         aria-label="Link address"
@@ -194,11 +149,6 @@ export const LinkContent: React.FC<{
   return <LinkMain {...linkPopover} autoFocus={autoFocus} onSave={handleSave} />
 }
 
-/**
- * Link popover component for Tiptap editors.
- *
- * For custom popover implementations, use the `useLinkPopover` hook instead.
- */
 export function LinkPopover({
   editor: providedEditor,
   hideWhenUnavailable = false,

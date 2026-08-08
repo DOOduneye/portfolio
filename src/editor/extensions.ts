@@ -19,15 +19,8 @@ import { PreservingParagraph } from "./tiptap-extension/preserving-paragraph-ext
 import { HorizontalRule } from "./tiptap-node/horizontal-rule-node/horizontal-rule-node-extension"
 import { TableKit } from "./tiptap-node/table-node/extensions/table-node-extension"
 
-// Registered by hand rather than with `all`, which pulls every grammar
-// highlight.js ships into the reader's bundle.
 export const lowlight = createLowlight({ bash, css, go, json, python, sql, typescript, xml })
 
-// Both the editor and the static renderer take this exact list, or a post
-// renders differently from the way it was written. Editing behaviour belongs
-// in the editor. Headings start at h2 because the post title is the page's h1.
-// The emoji node is deliberately absent: its dataset is 640kB, which every
-// reader of every post would have to download for a picker only I use.
 export const contentExtensions = [
   StarterKit.configure({
     heading: { levels: [2, 3] },
