@@ -16,7 +16,8 @@
     "deploy": "pnpm run build && pnpm run db:migrate && wrangler deploy",
     "db:generate": "drizzle-kit generate",
     "db:migrate:local": "wrangler d1 migrations apply DB --local",
-    "db:migrate": "wrangler d1 migrations apply DB --remote"
+    "db:migrate": "wrangler d1 migrations apply DB --remote",
+    "check:comments": "node scripts/check-comments.mjs"
   },
   "dependencies": {
     "@ariakit/react": "^0.4.36",
