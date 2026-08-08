@@ -1,12 +1,48 @@
 import { useEffect, useState } from "react"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import {
+  ArrowDown,
+  ArrowUp,
+  ArrowUpRight,
+  Briefcase,
+  Eye,
+  EyeOff,
+  MoreHorizontal,
+  Pencil,
+  Plus,
+  Trash2
+} from "lucide-react"
+import { toast } from "sonner"
 import { api, errorMessage, type RouterOutputs } from "../api"
 import { AdminPage } from "../components/AdminPage"
-import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle
+} from "@/components/ui/dialog"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu"
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle
+} from "@/components/ui/empty"
 import { Field, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
+import { Skeleton } from "@/components/ui/skeleton"
+import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
 
 type Experience = RouterOutputs["admin"]["experiences"]["list"][number]
@@ -18,31 +54,38 @@ interface Draft {
   orgUrl: string
   dates: string
   description: string
-  sortOrder: number
   visible: boolean
 }
 
-const empty: Draft = {
+const blank: Draft = {
   id: null,
   role: "",
   org: "",
   orgUrl: "",
   dates: "",
   description: "",
-  sortOrder: 0,
   visible: true
 }
 
+const toDraft = (experience: Experience): Draft => ({
+  id: experience.id,
+  role: experience.role,
+  org: experience.org,
+  orgUrl: experience.orgUrl ?? "",
+  dates: experience.dates,
+  description: experience.description,
+  visible: experience.visible === 1
+})
+
 export function Experiences() {
   const [draft, setDraft] = useState<Draft | null>(null)
+  const [confirming, setConfirming] = useState<Experience | null>(null)
   const queryClient = useQueryClient()
 
   const list = useQuery(api.admin.experiences.list.queryOptions())
 
-  const reportFailure = (cause: unknown) => toast.error(errorMessage(cause))
-
   const settled = {
-    onError: reportFailure,
+    onError: (cause: unknown) => toast.error(errorMessage(cause)),
     onSuccess: () => queryClient.invalidateQueries(api.admin.experiences.list.queryFilter())
   }
   const create = useMutation(api.admin.experiences.create.mutationOptions(settled))
@@ -53,153 +96,242 @@ export function Experiences() {
     if (list.error) toast.error(errorMessage(list.error))
   }, [list.error])
 
-  const items = list.data
+  const items = list.data ?? []
   const saving = create.isPending || update.isPending
+  const complete = Boolean(draft?.role.trim() && draft?.org.trim() && draft?.dates.trim())
 
   const save = async () => {
-    if (!draft) return
+    if (!draft || !complete) return
     const payload = {
-      role: draft.role,
-      org: draft.org,
+      role: draft.role.trim(),
+      org: draft.org.trim(),
       orgUrl: draft.orgUrl.trim() || null,
-      dates: draft.dates,
-      description: draft.description,
-      sortOrder: draft.sortOrder,
+      dates: draft.dates.trim(),
+      description: draft.description.trim(),
       visible: draft.visible ? 1 : 0
     }
-    if (draft.id === null) await create.mutateAsync(payload)
+    if (draft.id === null) await create.mutateAsync({ ...payload, sortOrder: items.length })
     else await update.mutateAsync({ id: draft.id, ...payload })
     setDraft(null)
   }
 
-  const remove = (item: Experience) => {
-    if (!confirm(`Delete "${`${item.role} · ${item.org}`}"?`)) return
-    destroy.mutate({ id: item.id })
+  const move = (experience: Experience, by: -1 | 1) => {
+    const index = items.findIndex(item => item.id === experience.id)
+    const swap = items[index + by]
+    if (!swap) return
+    update.mutate({ id: experience.id, sortOrder: swap.sortOrder })
+    update.mutate({ id: swap.id, sortOrder: experience.sortOrder })
   }
 
+  const newExperience = (
+    <Button size="sm" onClick={() => setDraft(blank)}>
+      <Plus data-icon="inline-start" />
+      New role
+    </Button>
+  )
+
   return (
-    <AdminPage
-      title="Experience"
-      action={<Button onClick={() => setDraft(empty)}>New experience</Button>}
-    >
-      <div className="flex flex-col gap-6">
-        {draft && (
-          <Card className="gap-4 p-5">
-            <div className="grid gap-4 sm:grid-cols-2">
+    <AdminPage title="Experience" action={newExperience}>
+      {list.isPending ? (
+        <RowsSkeleton />
+      ) : items.length === 0 ? (
+        <Empty>
+          <EmptyHeader>
+            <EmptyMedia variant="icon">
+              <Briefcase />
+            </EmptyMedia>
+            <EmptyTitle>No roles yet</EmptyTitle>
+            <EmptyDescription>They appear on the site in the order listed here.</EmptyDescription>
+          </EmptyHeader>
+          <EmptyContent>{newExperience}</EmptyContent>
+        </Empty>
+      ) : (
+        <ul className="divide-y divide-border border-t border-border">
+          {items.map((item, index) => (
+            <li
+              key={item.id}
+              className="group/row flex items-start gap-4 py-3.5 transition-colors hover:bg-muted/40"
+            >
+              <div className="min-w-0 grow">
+                <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                  <span className="truncate text-sm font-medium text-foreground">{item.role}</span>
+                  <span className="text-sm text-muted-foreground">{item.org}</span>
+                  {item.orgUrl && (
+                    <a
+                      href={item.orgUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-subtle-foreground transition-colors hover:text-foreground"
+                      aria-label={`Open ${item.org}`}
+                    >
+                      <ArrowUpRight className="size-3.5" />
+                    </a>
+                  )}
+                  {item.visible === 0 && (
+                    <span className="text-xs text-subtle-foreground">Hidden</span>
+                  )}
+                </div>
+                <p className="mt-1 font-mono text-xs text-subtle-foreground">{item.dates}</p>
+                <p className="mt-1 truncate text-sm text-muted-foreground">{item.description}</p>
+              </div>
+
+              <DropdownMenu>
+                <DropdownMenuTrigger
+                  render={
+                    <Button
+                      variant="ghost"
+                      size="icon-sm"
+                      aria-label={`Actions for ${item.role} at ${item.org}`}
+                      className="shrink-0 text-subtle-foreground opacity-0 focus-visible:opacity-100 group-hover/row:opacity-100 aria-expanded:opacity-100"
+                    />
+                  }
+                >
+                  <MoreHorizontal />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={() => setDraft(toDraft(item))}>
+                    <Pencil />
+                    Edit
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() =>
+                      update.mutate({ id: item.id, visible: item.visible === 1 ? 0 : 1 })
+                    }
+                  >
+                    {item.visible === 1 ? <EyeOff /> : <Eye />}
+                    {item.visible === 1 ? "Hide from the site" : "Show on the site"}
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem disabled={index === 0} onClick={() => move(item, -1)}>
+                    <ArrowUp />
+                    Move up
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    disabled={index === items.length - 1}
+                    onClick={() => move(item, 1)}
+                  >
+                    <ArrowDown />
+                    Move down
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem variant="destructive" onClick={() => setConfirming(item)}>
+                    <Trash2 />
+                    Delete
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      <Dialog open={draft !== null} onOpenChange={open => !open && setDraft(null)}>
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle>{draft?.id === null ? "New role" : "Edit role"}</DialogTitle>
+          </DialogHeader>
+
+          {draft && (
+            <div className="flex flex-col gap-4">
               <Field>
                 <FieldLabel>Role</FieldLabel>
                 <Input
                   value={draft.role}
-                  onChange={e => setDraft({ ...draft, role: e.target.value })}
-                  placeholder="Software Engineer"
+                  onChange={event => setDraft({ ...draft, role: event.target.value })}
+                  placeholder="Software Engineering Intern"
                   autoFocus
                 />
               </Field>
               <Field>
-                <FieldLabel>Organization</FieldLabel>
+                <FieldLabel>Organisation</FieldLabel>
                 <Input
                   value={draft.org}
-                  onChange={e => setDraft({ ...draft, org: e.target.value })}
+                  onChange={event => setDraft({ ...draft, org: event.target.value })}
                 />
               </Field>
               <Field>
-                <FieldLabel>Organization URL (optional)</FieldLabel>
+                <FieldLabel>Link</FieldLabel>
                 <Input
                   value={draft.orgUrl}
-                  onChange={e => setDraft({ ...draft, orgUrl: e.target.value })}
-                  placeholder="https://…"
+                  onChange={event => setDraft({ ...draft, orgUrl: event.target.value })}
+                  placeholder="https://example.com"
                 />
               </Field>
               <Field>
                 <FieldLabel>Dates</FieldLabel>
                 <Input
                   value={draft.dates}
-                  onChange={e => setDraft({ ...draft, dates: e.target.value })}
-                  placeholder="Jan 2025 - Present"
+                  onChange={event => setDraft({ ...draft, dates: event.target.value })}
+                  placeholder="Aug - Nov 2024"
                 />
               </Field>
-            </div>
-            <Field>
-              <FieldLabel>Description</FieldLabel>
-              <Textarea
-                value={draft.description}
-                onChange={e => setDraft({ ...draft, description: e.target.value })}
-                rows={3}
-              />
-            </Field>
-            <div className="flex items-center gap-6">
               <Field>
-                <FieldLabel>Order</FieldLabel>
-                <Input
-                  type="number"
-                  value={draft.sortOrder}
-                  onChange={e => setDraft({ ...draft, sortOrder: Number(e.target.value) })}
-                  className="w-24"
+                <FieldLabel>What you did</FieldLabel>
+                <Textarea
+                  value={draft.description}
+                  onChange={event => setDraft({ ...draft, description: event.target.value })}
+                  rows={3}
                 />
               </Field>
-              <label className="flex items-center gap-2 pt-5 text-sm text-muted-foreground">
-                <input
-                  type="checkbox"
+              <label className="flex items-center justify-between gap-4 text-sm text-foreground">
+                Show on the site
+                <Switch
                   checked={draft.visible}
-                  onChange={e => setDraft({ ...draft, visible: e.target.checked })}
-                  className="accent-brand"
+                  onCheckedChange={visible => setDraft({ ...draft, visible })}
                 />
-                Visible on site
               </label>
             </div>
-            <div className="flex gap-2 border-t border-border pt-4">
-              <Button
-                onClick={() => void save()}
-                disabled={saving || !draft.role.trim() || !draft.org.trim()}
-              >
-                {saving ? "Saving…" : draft.id === null ? "Create" : "Save"}
-              </Button>
-              <Button onClick={() => setDraft(null)}>Cancel</Button>
-            </div>
-          </Card>
-        )}
+          )}
 
-        {items && items.length === 0 && !draft && (
-          <p className="text-sm text-muted-foreground">No experiences yet.</p>
-        )}
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setDraft(null)}>
+              Cancel
+            </Button>
+            <Button onClick={() => void save()} disabled={saving || !complete}>
+              {saving ? "Saving" : draft?.id === null ? "Create" : "Save"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
-        <ul className="divide-y divide-border">
-          {items?.map(item => (
-            <li key={item.id} className="flex items-center justify-between gap-4 py-3.5">
-              <div className="min-w-0">
-                <span className="font-medium text-foreground">
-                  {item.role} <span className="text-subtle-foreground">· {item.org}</span>
-                  {!item.visible && (
-                    <span className="ml-2 text-xs text-subtle-foreground">(hidden)</span>
-                  )}
-                </span>
-                <p className="text-sm text-subtle-foreground">{item.dates}</p>
-              </div>
-              <div className="flex shrink-0 gap-1.5">
-                <Button
-                  onClick={() =>
-                    setDraft({
-                      id: item.id,
-                      role: item.role,
-                      org: item.org,
-                      orgUrl: item.orgUrl ?? "",
-                      dates: item.dates,
-                      description: item.description,
-                      sortOrder: item.sortOrder,
-                      visible: item.visible === 1
-                    })
-                  }
-                >
-                  Edit
-                </Button>
-                <Button variant="destructive" onClick={() => remove(item)}>
-                  Delete
-                </Button>
-              </div>
-            </li>
-          ))}
-        </ul>
-      </div>
+      <Dialog open={confirming !== null} onOpenChange={open => !open && setConfirming(null)}>
+        <DialogContent className="sm:max-w-sm">
+          <DialogHeader>
+            <DialogTitle>Delete this role?</DialogTitle>
+            <DialogDescription>
+              {confirming?.role} at {confirming?.org} comes off the site. This cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setConfirming(null)}>
+              Keep it
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={() => {
+                if (confirming) destroy.mutate({ id: confirming.id })
+                setConfirming(null)
+              }}
+            >
+              Delete role
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </AdminPage>
+  )
+}
+
+function RowsSkeleton() {
+  return (
+    <div className="divide-y divide-border border-t border-border">
+      {[0, 1, 2].map(row => (
+        <div key={row} className="flex flex-col gap-2 py-3.5">
+          <Skeleton className="h-4 w-56" />
+          <Skeleton className="h-3 w-28" />
+          <Skeleton className="h-3.5 w-full max-w-md" />
+        </div>
+      ))}
+    </div>
   )
 }
