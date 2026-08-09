@@ -136,15 +136,16 @@ function Row<T extends Arrangeable>({
     >
       <button
         ref={setActivatorNodeRef}
+        type="button"
+        onClick={onOpen}
         {...attributes}
         {...listeners}
-        aria-label="Reorder"
-        className="absolute top-1/2 left-[-1.65rem] hidden -translate-y-1/2 cursor-grab text-subtle-foreground opacity-0 transition-opacity group-hover/row:opacity-100 focus-visible:opacity-100 active:cursor-grabbing sm:block"
+        className={cn(
+          "block w-full py-5 pr-10 pl-6 text-left",
+          isDragging ? "cursor-grabbing" : "cursor-grab"
+        )}
       >
-        <GripVertical className="size-4" />
-      </button>
-
-      <button type="button" onClick={onOpen} className="block w-full py-5 pr-10 text-left">
+        <GripVertical className="absolute top-6 left-0 size-4 text-subtle-foreground opacity-0 transition-opacity group-hover/row:opacity-100" />
         {children}
       </button>
 
