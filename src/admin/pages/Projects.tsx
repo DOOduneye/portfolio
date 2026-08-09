@@ -4,6 +4,7 @@ import { Layers, Plus } from "lucide-react"
 import { toast } from "sonner"
 import { api, errorMessage, type RouterOutputs } from "../api"
 import { AdminPage } from "../components/AdminPage"
+import { normaliseUrl } from "../components/OrgField"
 import { Arrangement } from "../components/Arrangement"
 import { ItemActions } from "../components/ItemActions"
 import { Button } from "@/components/ui/button"
@@ -141,7 +142,7 @@ export function Projects() {
           </DialogHeader>
 
           {draft && (
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-3.5">
               <Field>
                 <FieldLabel>Name</FieldLabel>
                 <Input
@@ -155,7 +156,8 @@ export function Projects() {
                 <Input
                   value={draft.url}
                   onChange={event => setDraft({ ...draft, url: event.target.value })}
-                  placeholder="https://github.com/DOOduneye/…"
+                  onBlur={event => setDraft({ ...draft, url: normaliseUrl(event.target.value) })}
+                  placeholder="github.com/DOOduneye/…"
                 />
               </Field>
               <Field>
@@ -174,7 +176,7 @@ export function Projects() {
                   placeholder="Go · React · Postgres"
                 />
               </Field>
-              <label className="flex items-center justify-between gap-4 text-sm text-foreground">
+              <label className="mt-1 flex items-center justify-between gap-4 border-t border-border pt-4 text-sm text-foreground">
                 Show on the site
                 <Switch
                   checked={draft.visible}

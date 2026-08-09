@@ -4,6 +4,7 @@ import { Briefcase, Plus } from "lucide-react"
 import { toast } from "sonner"
 import { api, errorMessage, type RouterOutputs } from "../api"
 import { AdminPage } from "../components/AdminPage"
+import { OrgField, normaliseUrl, orgFromUrl } from "../components/OrgField"
 import { Arrangement } from "../components/Arrangement"
 import { ItemActions } from "../components/ItemActions"
 import { Button } from "@/components/ui/button"
@@ -154,7 +155,7 @@ export function Experiences() {
           </DialogHeader>
 
           {draft && (
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-3.5">
               <Field>
                 <FieldLabel>Role</FieldLabel>
                 <Input
@@ -166,9 +167,11 @@ export function Experiences() {
               </Field>
               <Field>
                 <FieldLabel>Organisation</FieldLabel>
-                <Input
+                <OrgField
                   value={draft.org}
-                  onChange={event => setDraft({ ...draft, org: event.target.value })}
+                  url={draft.orgUrl}
+                  onChange={org => setDraft({ ...draft, org })}
+                  placeholder="Google"
                 />
               </Field>
               <Field>
@@ -176,7 +179,15 @@ export function Experiences() {
                 <Input
                   value={draft.orgUrl}
                   onChange={event => setDraft({ ...draft, orgUrl: event.target.value })}
-                  placeholder="https://example.com"
+                  onBlur={event => {
+                    const orgUrl = normaliseUrl(event.target.value)
+                    setDraft({
+                      ...draft,
+                      orgUrl,
+                      org: draft.org.trim() || orgFromUrl(orgUrl)
+                    })
+                  }}
+                  placeholder="google.com"
                 />
               </Field>
               <Field>
@@ -195,7 +206,7 @@ export function Experiences() {
                   rows={3}
                 />
               </Field>
-              <label className="flex items-center justify-between gap-4 text-sm text-foreground">
+              <label className="mt-1 flex items-center justify-between gap-4 border-t border-border pt-4 text-sm text-foreground">
                 Show on the site
                 <Switch
                   checked={draft.visible}
