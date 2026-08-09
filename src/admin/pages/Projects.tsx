@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { ArrowUpRight, Layers, Plus } from "lucide-react"
+import { Layers, Plus } from "lucide-react"
 import { toast } from "sonner"
 import { api, errorMessage, type RouterOutputs } from "../api"
 import { AdminPage } from "../components/AdminPage"
-import { RecordsList, type Column } from "../components/RecordsList"
-import { RowActions } from "../components/RowActions"
+import { Arrangement } from "../components/Arrangement"
+import { ItemActions } from "../components/ItemActions"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -17,16 +17,8 @@ import {
 } from "@/components/ui/dialog"
 import { Field, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import { TableCell, TableRow } from "@/components/ui/table"
 import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
-
-const COLUMNS: Column[] = [
-  { key: "name", label: "Name" },
-  { key: "stack", label: "Stack", className: "w-72" },
-  { key: "visible", className: "w-20" },
-  { key: "actions", className: "w-12" }
-]
 
 type Project = RouterOutputs["admin"]["projects"]["list"][number]
 
@@ -86,12 +78,10 @@ export function Projects() {
     setDraft(null)
   }
 
-  const move = (project: Project, by: -1 | 1) => {
-    const index = items.findIndex(item => item.id === project.id)
-    const swap = items[index + by]
-    if (!swap) return
-    update.mutate({ id: project.id, sortOrder: swap.sortOrder })
-    update.mutate({ id: swap.id, sortOrder: project.sortOrder })
+  const reorder = (ordered: typeof items) => {
+    ordered.forEach((item, index) => {
+      if (item.sortOrder !== index) update.mutate({ id: item.id, sortOrder: index })
+    })
   }
 
   const newProject = (
@@ -103,56 +93,46 @@ export function Projects() {
 
   return (
     <AdminPage title="Projects" action={newProject}>
-      <RecordsList
+      <Arrangement
         loading={list.isPending}
-        rows={items}
-        columns={COLUMNS}
+        items={items}
         empty={{
           icon: Layers,
           title: "No projects yet",
-          description: "They appear on the site in the order listed here.",
+          description: "They appear on the site in the order you arrange them here.",
           action: newProject
         }}
-      >
-        {(item, index) => (
-          <TableRow key={item.id} className="group/row">
-            <TableCell className="max-w-0 truncate font-medium text-foreground">
-              <span className="inline-flex items-center gap-1.5">
-                {item.name}
-                {item.url && (
-                  <a
-                    href={item.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-subtle-foreground transition-colors hover:text-foreground"
-                    aria-label={`Open ${item.name}`}
-                  >
-                    <ArrowUpRight className="size-3.5" />
-                  </a>
-                )}
-              </span>
-            </TableCell>
-            <TableCell className="max-w-0 truncate font-mono text-[0.8125rem] text-subtle-foreground">
-              {item.stack}
-            </TableCell>
-            <TableCell className="text-xs text-subtle-foreground">
-              {item.visible === 1 ? null : "Hidden"}
-            </TableCell>
-            <TableCell className="text-right">
-              <RowActions
-                index={index}
-                total={items.length}
-                onEdit={() => setDraft(toDraft(item))}
-                onToggle={() => update.mutate({ id: item.id, visible: item.visible === 1 ? 0 : 1 })}
-                onMove={by => move(item, by)}
-                onDelete={() => setConfirming(item)}
-                visible={item.visible === 1}
-                label={item.name}
-              />
-            </TableCell>
-          </TableRow>
+        onReorder={reorder}
+        onOpen={item => setDraft(toDraft(item))}
+        actions={item => (
+          <ItemActions
+            label={item.name}
+            visible={item.visible === 1}
+            onToggle={() => update.mutate({ id: item.id, visible: item.visible === 1 ? 0 : 1 })}
+            onDelete={() => setConfirming(item)}
+          />
         )}
-      </RecordsList>
+      >
+        {item => (
+          <>
+            <h3 className="font-medium text-foreground">
+              {item.name}
+              {item.url && (
+                <span className="ml-1.5 font-mono text-xs text-subtle-foreground">↗</span>
+              )}
+              {item.visible === 0 && (
+                <span className="ml-2 text-xs font-normal text-subtle-foreground">Hidden</span>
+              )}
+            </h3>
+            <p className="mt-1.5 max-w-xl text-sm leading-relaxed text-muted-foreground">
+              {item.description}
+            </p>
+            {item.stack && (
+              <p className="mt-2.5 font-mono text-xs text-subtle-foreground">{item.stack}</p>
+            )}
+          </>
+        )}
+      </Arrangement>
 
       <Dialog open={draft !== null} onOpenChange={open => !open && setDraft(null)}>
         <DialogContent className="sm:max-w-lg">
