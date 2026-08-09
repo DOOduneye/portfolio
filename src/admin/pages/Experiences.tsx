@@ -5,6 +5,14 @@ import { toast } from "sonner"
 import { api, errorMessage, type RouterOutputs } from "../api"
 import { AdminPage } from "../components/AdminPage"
 import { OrgField, normaliseUrl, orgFromUrl } from "../components/OrgField"
+import { DateRangeField } from "../components/DateRangeField"
+import {
+  emptyRange,
+  formatRange,
+  isRangeComplete,
+  parseRange,
+  type DateRange
+} from "../lib/dateRange"
 import { Arrangement } from "../components/Arrangement"
 import { ItemActions } from "../components/ItemActions"
 import { Button } from "@/components/ui/button"
@@ -28,7 +36,7 @@ interface Draft {
   role: string
   org: string
   orgUrl: string
-  dates: string
+  dates: DateRange
   description: string
   visible: boolean
 }
@@ -38,7 +46,7 @@ const blank: Draft = {
   role: "",
   org: "",
   orgUrl: "",
-  dates: "",
+  dates: emptyRange,
   description: "",
   visible: true
 }
@@ -48,7 +56,7 @@ const toDraft = (experience: Experience): Draft => ({
   role: experience.role,
   org: experience.org,
   orgUrl: experience.orgUrl ?? "",
-  dates: experience.dates,
+  dates: parseRange(experience.dates),
   description: experience.description,
   visible: experience.visible === 1
 })
@@ -74,7 +82,9 @@ export function Experiences() {
 
   const items = list.data ?? []
   const saving = create.isPending || update.isPending
-  const complete = Boolean(draft?.role.trim() && draft?.org.trim() && draft?.dates.trim())
+  const complete = Boolean(
+    draft?.role.trim() && draft?.org.trim() && draft && isRangeComplete(draft.dates)
+  )
 
   const save = async () => {
     if (!draft || !complete) return
@@ -82,7 +92,7 @@ export function Experiences() {
       role: draft.role.trim(),
       org: draft.org.trim(),
       orgUrl: draft.orgUrl.trim() || null,
-      dates: draft.dates.trim(),
+      dates: formatRange(draft.dates),
       description: draft.description.trim(),
       visible: draft.visible ? 1 : 0
     }
@@ -192,10 +202,9 @@ export function Experiences() {
               </Field>
               <Field>
                 <FieldLabel>Dates</FieldLabel>
-                <Input
+                <DateRangeField
                   value={draft.dates}
-                  onChange={event => setDraft({ ...draft, dates: event.target.value })}
-                  placeholder="Aug - Nov 2024"
+                  onChange={dates => setDraft({ ...draft, dates })}
                 />
               </Field>
               <Field>
