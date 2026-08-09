@@ -1,5 +1,4 @@
-import { useState } from "react"
-import { Building2 } from "lucide-react"
+import { useEffect, useState } from "react"
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group"
 
 export function hostFrom(value: string): string | null {
@@ -25,6 +24,43 @@ export function orgFromUrl(value: string): string {
   return label ? label.charAt(0).toUpperCase() + label.slice(1) : ""
 }
 
+function iconCandidates(url: string): string[] {
+  const host = hostFrom(url)
+  if (!host) return []
+
+  const labels = host.split(".")
+  const apex = labels.length > 2 ? labels.slice(-2).join(".") : host
+  const hosts = apex === host ? [host] : [host, apex]
+
+  return hosts.map(name => `https://${name}/favicon.ico`)
+}
+
+export function OrgIcon({ url, name }: { url: string; name: string }) {
+  const candidates = iconCandidates(url)
+  const [attempt, setAttempt] = useState(0)
+
+  useEffect(() => setAttempt(0), [url])
+
+  const source = candidates[attempt]
+
+  if (!source) {
+    return (
+      <span className="flex size-4 items-center justify-center rounded-[3px] bg-muted text-[0.5625rem] font-medium text-muted-foreground">
+        {name.trim().charAt(0).toUpperCase() || "·"}
+      </span>
+    )
+  }
+
+  return (
+    <img
+      src={source}
+      alt=""
+      onError={() => setAttempt(current => current + 1)}
+      className="size-4 rounded-[3px] object-contain"
+    />
+  )
+}
+
 export function OrgField({
   value,
   url,
@@ -36,22 +72,10 @@ export function OrgField({
   onChange: (value: string) => void
   placeholder?: string
 }) {
-  const host = hostFrom(url)
-  const [broken, setBroken] = useState(false)
-
   return (
     <InputGroup>
       <InputGroupAddon>
-        {host && !broken ? (
-          <img
-            src={`https://${host}/favicon.ico`}
-            alt=""
-            onError={() => setBroken(true)}
-            className="size-4 rounded-[3px] object-contain"
-          />
-        ) : (
-          <Building2 />
-        )}
+        <OrgIcon url={url} name={value} />
       </InputGroupAddon>
       <InputGroupInput
         value={value}

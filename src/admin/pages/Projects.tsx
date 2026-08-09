@@ -5,6 +5,7 @@ import { toast } from "sonner"
 import { api, errorMessage, type RouterOutputs } from "../api"
 import { AdminPage } from "../components/AdminPage"
 import { normaliseUrl } from "../components/OrgField"
+import { StackField, formatStack, parseStack } from "../components/StackField"
 import { Arrangement } from "../components/Arrangement"
 import { ItemActions } from "../components/ItemActions"
 import { Button } from "@/components/ui/button"
@@ -28,18 +29,18 @@ interface Draft {
   name: string
   url: string
   description: string
-  stack: string
+  stack: string[]
   visible: boolean
 }
 
-const blank: Draft = { id: null, name: "", url: "", description: "", stack: "", visible: true }
+const blank: Draft = { id: null, name: "", url: "", description: "", stack: [], visible: true }
 
 const toDraft = (project: Project): Draft => ({
   id: project.id,
   name: project.name,
   url: project.url ?? "",
   description: project.description,
-  stack: project.stack,
+  stack: parseStack(project.stack),
   visible: project.visible === 1
 })
 
@@ -63,6 +64,7 @@ export function Projects() {
   }, [list.error])
 
   const items = list.data ?? []
+  const knownStack = [...new Set(items.flatMap(item => parseStack(item.stack)))].sort()
   const saving = create.isPending || update.isPending
 
   const save = async () => {
@@ -71,7 +73,7 @@ export function Projects() {
       name: draft.name.trim(),
       url: draft.url.trim() || null,
       description: draft.description.trim(),
-      stack: draft.stack.trim(),
+      stack: formatStack(draft.stack),
       visible: draft.visible ? 1 : 0
     }
     if (draft.id === null) await create.mutateAsync({ ...payload, sortOrder: items.length })
@@ -170,10 +172,10 @@ export function Projects() {
               </Field>
               <Field>
                 <FieldLabel>Stack</FieldLabel>
-                <Input
+                <StackField
                   value={draft.stack}
-                  onChange={event => setDraft({ ...draft, stack: event.target.value })}
-                  placeholder="Go · React · Postgres"
+                  suggestions={knownStack}
+                  onChange={stack => setDraft({ ...draft, stack })}
                 />
               </Field>
               <label className="mt-1 flex items-center justify-between gap-4 border-t border-border pt-4 text-sm text-foreground">
