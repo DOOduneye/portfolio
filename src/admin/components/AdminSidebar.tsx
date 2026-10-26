@@ -5,6 +5,7 @@ import {
   Briefcase,
   FileText,
   HardDrive,
+  House,
   Layers,
   LogOut,
   MessageSquare,
@@ -31,6 +32,7 @@ import {
 } from "@/components/ui/sidebar"
 
 const CONTENT = [
+  { to: "/admin/overview", label: "Overview", icon: House },
   { to: "/admin/posts", label: "Posts", icon: FileText },
   { to: "/admin/projects", label: "Projects", icon: Layers },
   { to: "/admin/experiences", label: "Experience", icon: Briefcase }

@@ -1,7 +1,15 @@
 import { useEffect, useMemo, useState } from "react"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useNavigate } from "react-router-dom"
-import { ArrowUpRight, Briefcase, FileText, Layers, Plus, type LucideIcon } from "lucide-react"
+import {
+  ArrowUpRight,
+  Briefcase,
+  FileText,
+  House,
+  Layers,
+  Plus,
+  type LucideIcon
+} from "lucide-react"
 import { api } from "../api"
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog"
 
@@ -59,6 +67,14 @@ export function CommandMenu({
         label: "View site",
         icon: ArrowUpRight,
         run: close(() => window.open("/", "_blank"))
+      },
+      {
+        id: "go-overview",
+        group: "Go to",
+        label: "Overview",
+        hint: "G O",
+        icon: House,
+        run: close(() => navigate("/admin/overview"))
       },
       {
         id: "go-posts",
@@ -219,7 +235,9 @@ export function useAdminShortcuts(openCommands: () => void) {
 
       if (awaitingGoTo) {
         awaitingGoTo = false
-        const destination = { p: "posts", r: "projects", e: "experiences" }[event.key.toLowerCase()]
+        const destination = { p: "posts", r: "projects", e: "experiences", o: "overview" }[
+          event.key.toLowerCase()
+        ]
         if (destination) {
           event.preventDefault()
           navigate(`/admin/${destination}`)
