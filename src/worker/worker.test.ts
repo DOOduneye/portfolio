@@ -20,6 +20,7 @@ function createProject(name: string): Request {
 beforeEach(async () => {
   await env.DB.exec("DELETE FROM audit_log")
   await env.DB.exec("DELETE FROM projects")
+  await env.DB.exec("DELETE FROM settings")
 })
 
 describe("admin mutations", () => {
@@ -93,5 +94,66 @@ describe("public routes", () => {
     expect(response.headers.get("location")).toBe(
       "https://davidoduneye.com/trpc/admin.projects.create"
     )
+  })
+})
+
+function setOverview(location: string, intro: string): Request {
+  return new Request("https://davidoduneye.com/trpc/admin.settings.setOverview?batch=1", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ 0: { location, intro } })
+  })
+}
+
+type OverviewBody = { result: { data: { location: string; intro: string } | null } }
+
+describe("site overview", () => {
+  it("serves no overview when nothing has been saved", async () => {
+    const response = await call(
+      new Request("https://davidoduneye.com/trpc/public.settings.overview"),
+      { ENVIRONMENT: "production" }
+    )
+    expect(response.status).toBe(200)
+
+    const body = (await response.json()) as OverviewBody
+    expect(body.result.data).toBeNull()
+  })
+
+  it("serves the saved overview after an admin update and audits the write", async () => {
+    const save = await call(setOverview("Boston, MA", "A new intro."))
+    expect(save.status).toBe(200)
+
+    const response = await call(
+      new Request("https://davidoduneye.com/trpc/public.settings.overview")
+    )
+    const body = (await response.json()) as OverviewBody
+    expect(body.result.data).toEqual({ location: "Boston, MA", intro: "A new intro." })
+
+    const audit = await env.DB.prepare("SELECT action FROM audit_log").all<{ action: string }>()
+    expect(audit.results.map(row => row.action)).toEqual(["admin.settings.setOverview"])
+  })
+
+  it("serves no overview when the saved value is not valid", async () => {
+    await env.DB.prepare("INSERT INTO settings (key, value) VALUES (?, ?)")
+      .bind("overview", "not json")
+      .run()
+
+    const response = await call(
+      new Request("https://davidoduneye.com/trpc/public.settings.overview")
+    )
+    const body = (await response.json()) as OverviewBody
+    expect(body.result.data).toBeNull()
+  })
+
+  it("refuses an overview update when Access has not authenticated", async () => {
+    const response = await call(setOverview("Boston, MA", "A new intro."), {
+      ENVIRONMENT: "production"
+    })
+
+    const body = (await response.json()) as [{ error: { data: { code: string } } }]
+    expect(body[0]!.error.data.code).toBe("UNAUTHORIZED")
+
+    const saved = await env.DB.prepare("SELECT count(*) AS n FROM settings").first<{ n: number }>()
+    expect(saved!.n).toBe(0)
   })
 })

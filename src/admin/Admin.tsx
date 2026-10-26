@@ -6,6 +6,7 @@ import { PostsList } from "./pages/PostsList"
 import { PostEdit } from "./pages/PostEdit"
 import { Projects } from "./pages/Projects"
 import { Experiences } from "./pages/Experiences"
+import { Overview } from "./pages/Overview"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { Toaster } from "@/components/ui/sonner"
 
@@ -26,6 +27,7 @@ export function Admin() {
         >
           <Routes>
             <Route index element={<Navigate to="posts" replace />} />
+            <Route path="overview" element={<Overview />} />
             <Route path="posts" element={<PostsList />} />
             <Route path="posts/:slug" element={<PostEdit />} />
             <Route path="projects" element={<Projects />} />

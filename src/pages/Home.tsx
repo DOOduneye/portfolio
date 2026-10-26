@@ -11,6 +11,22 @@ const links = [
   }
 ]
 
+function Overview() {
+  const { data: overview } = useQuery(trpc.public.settings.overview.queryOptions())
+
+  return (
+    <>
+      {overview && (
+        <p className="font-mono text-xs tracking-wide text-subtle-foreground">
+          {overview.location}
+        </p>
+      )}
+      <h1 className="mt-3 text-4xl font-semibold tracking-tight text-foreground">David Oduneye</h1>
+      {overview && <p className="mt-5 max-w-lg leading-relaxed">{overview.intro}</p>}
+    </>
+  )
+}
+
 function OnRepeat() {
   const { data: track } = useQuery(trpc.public.music.topTrack.queryOptions())
 
@@ -181,23 +197,7 @@ export function Home() {
   return (
     <div className="mx-auto max-w-2xl px-6 py-28">
       <header>
-        <p className="font-mono text-xs tracking-wide text-subtle-foreground">New York, NY</p>
-        <h1 className="mt-3 text-4xl font-semibold tracking-tight text-foreground">
-          David Oduneye
-        </h1>
-        <p className="mt-5 max-w-lg leading-relaxed">
-          Software engineer, member of technical staff at{" "}
-          <a
-            href="https://www.agency.inc"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-foreground transition-colors hover:text-brand"
-          >
-            Agency
-          </a>
-          . Computer science at <span className="text-foreground">Northeastern University</span>,
-          class of 2025.
-        </p>
+        <Overview />
         <nav className="mt-8 flex gap-6 font-mono text-xs">
           {links.map(link => (
             <a
