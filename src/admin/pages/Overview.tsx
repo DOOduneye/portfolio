@@ -11,23 +11,23 @@ import { Textarea } from "@/components/ui/textarea"
 type OverviewData = RouterOutputs["admin"]["settings"]["overview"]
 
 export function Overview() {
-  const current = useQuery(api.admin.settings.overview.queryOptions())
+  const overview = useQuery(api.admin.settings.overview.queryOptions())
 
   useEffect(() => {
-    if (current.error) toast.error(errorMessage(current.error))
-  }, [current.error])
+    if (overview.error) toast.error(errorMessage(overview.error))
+  }, [overview.error])
 
   return (
     <AdminPage title="Overview">
-      {current.data && <OverviewForm current={current.data} />}
+      {overview.data !== undefined && <OverviewForm current={overview.data} />}
     </AdminPage>
   )
 }
 
 function OverviewForm({ current }: { current: OverviewData }) {
   const queryClient = useQueryClient()
-  const [location, setLocation] = useState(current.location)
-  const [intro, setIntro] = useState(current.intro)
+  const [location, setLocation] = useState(current?.location ?? "")
+  const [intro, setIntro] = useState(current?.intro ?? "")
 
   const save = useMutation(
     api.admin.settings.setOverview.mutationOptions({
@@ -42,7 +42,7 @@ function OverviewForm({ current }: { current: OverviewData }) {
   )
 
   const complete = location.trim().length > 0 && intro.trim().length > 0
-  const changed = location !== current.location || intro !== current.intro
+  const changed = location !== (current?.location ?? "") || intro !== (current?.intro ?? "")
 
   return (
     <div className="flex max-w-xl flex-col gap-3.5">

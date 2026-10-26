@@ -105,10 +105,10 @@ function setOverview(location: string, intro: string): Request {
   })
 }
 
-type OverviewBody = { result: { data: { location: string; intro: string } } }
+type OverviewBody = { result: { data: { location: string; intro: string } | null } }
 
 describe("site overview", () => {
-  it("serves the default overview when nothing has been saved", async () => {
+  it("serves no overview when nothing has been saved", async () => {
     const response = await call(
       new Request("https://davidoduneye.com/trpc/public.settings.overview"),
       { ENVIRONMENT: "production" }
@@ -116,8 +116,7 @@ describe("site overview", () => {
     expect(response.status).toBe(200)
 
     const body = (await response.json()) as OverviewBody
-    expect(body.result.data.location).toBe("Boston, MA")
-    expect(body.result.data.intro).toContain("Klaviyo")
+    expect(body.result.data).toBeNull()
   })
 
   it("serves the saved overview after an admin update and audits the write", async () => {
@@ -134,7 +133,7 @@ describe("site overview", () => {
     expect(audit.results.map(row => row.action)).toEqual(["admin.settings.setOverview"])
   })
 
-  it("falls back to the default when the saved value is not valid", async () => {
+  it("serves no overview when the saved value is not valid", async () => {
     await env.DB.prepare("INSERT INTO settings (key, value) VALUES (?, ?)")
       .bind("overview", "not json")
       .run()
@@ -143,8 +142,7 @@ describe("site overview", () => {
       new Request("https://davidoduneye.com/trpc/public.settings.overview")
     )
     const body = (await response.json()) as OverviewBody
-    expect(body.result.data.location).toBe("Boston, MA")
-    expect(body.result.data.intro).toContain("Klaviyo")
+    expect(body.result.data).toBeNull()
   })
 
   it("refuses an overview update when Access has not authenticated", async () => {

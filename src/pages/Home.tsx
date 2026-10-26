@@ -11,24 +11,18 @@ const links = [
   }
 ]
 
-// Mirrors DEFAULT_OVERVIEW in src/worker/routers/settings.ts, which is what the
-// overview query returns until the overview is saved in the CMS. This copy only
-// covers the first paint, before the query resolves.
-const fallbackOverview = {
-  location: "Boston, MA",
-  intro:
-    "Software engineer at Klaviyo, where I build AI for marketing teams. I joined through the acquisition of Agency, where I was a member of technical staff. Computer science at Northeastern University, class of 2025."
-}
-
 function Overview() {
-  const { data } = useQuery(trpc.public.settings.overview.queryOptions())
-  const overview = data ?? fallbackOverview
+  const { data: overview } = useQuery(trpc.public.settings.overview.queryOptions())
 
   return (
     <>
-      <p className="font-mono text-xs tracking-wide text-subtle-foreground">{overview.location}</p>
+      {overview && (
+        <p className="font-mono text-xs tracking-wide text-subtle-foreground">
+          {overview.location}
+        </p>
+      )}
       <h1 className="mt-3 text-4xl font-semibold tracking-tight text-foreground">David Oduneye</h1>
-      <p className="mt-5 max-w-lg leading-relaxed">{overview.intro}</p>
+      {overview && <p className="mt-5 max-w-lg leading-relaxed">{overview.intro}</p>}
     </>
   )
 }

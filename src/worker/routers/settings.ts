@@ -15,12 +15,6 @@ const overviewSchema = z.object({
 
 export type Overview = z.infer<typeof overviewSchema>
 
-export const DEFAULT_OVERVIEW: Overview = {
-  location: "Boston, MA",
-  intro:
-    "Software engineer at Klaviyo, where I build AI for marketing teams. I joined through the acquisition of Agency, where I was a member of technical staff. Computer science at Northeastern University, class of 2025."
-}
-
 const mediaPath = z.string().regex(/^\/media\/[0-9a-f]{64}\.[a-z0-9]+$/, "not an uploaded image")
 
 export async function readSetting(
@@ -31,15 +25,15 @@ export async function readSetting(
   return row?.value ?? null
 }
 
-export async function readOverview(db: DrizzleD1Database<typeof schema>): Promise<Overview> {
+export async function readOverview(db: DrizzleD1Database<typeof schema>): Promise<Overview | null> {
   const raw = await readSetting(db, OVERVIEW_KEY)
-  if (raw === null) return DEFAULT_OVERVIEW
+  if (raw === null) return null
 
   try {
     const parsed = overviewSchema.safeParse(JSON.parse(raw))
-    return parsed.success ? parsed.data : DEFAULT_OVERVIEW
+    return parsed.success ? parsed.data : null
   } catch {
-    return DEFAULT_OVERVIEW
+    return null
   }
 }
 
