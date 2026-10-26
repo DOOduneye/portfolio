@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query"
 import { Link } from "react-router-dom"
 import { trpc } from "../api"
-import { parseIntro } from "../lib/intro"
+import { parseLinks } from "../lib/links"
 
 const links = [
   { label: "GitHub", url: "https://github.com/DOOduneye" },
@@ -11,6 +11,28 @@ const links = [
     url: "https://open.spotify.com/user/317gsn3rqunkxocwuvf7njcj5luy"
   }
 ]
+
+function LinkedText({ text }: { text: string }) {
+  return (
+    <>
+      {parseLinks(text).map((segment, index) =>
+        segment.href ? (
+          <a
+            key={index}
+            href={segment.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-foreground transition-colors hover:text-brand"
+          >
+            {segment.text}
+          </a>
+        ) : (
+          segment.text
+        )
+      )}
+    </>
+  )
+}
 
 function Overview() {
   const { data: overview } = useQuery(trpc.public.settings.overview.queryOptions())
@@ -25,21 +47,7 @@ function Overview() {
       <h1 className="mt-3 text-4xl font-semibold tracking-tight text-foreground">David Oduneye</h1>
       {overview && (
         <p className="mt-5 max-w-lg leading-relaxed">
-          {parseIntro(overview.intro).map((segment, index) =>
-            segment.href ? (
-              <a
-                key={index}
-                href={segment.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-foreground transition-colors hover:text-brand"
-              >
-                {segment.text}
-              </a>
-            ) : (
-              segment.text
-            )
-          )}
+          <LinkedText text={overview.intro} />
         </p>
       )}
     </>
@@ -75,12 +83,23 @@ function Projects() {
   return (
     <Section title="Projects">
       <ul>
-        {projects.map(project => {
-          const inner = (
-            <>
+        {projects.map(project => (
+          <li key={project.id} className="group relative border-b border-border last:border-b-0">
+            <div className="py-6">
               <div className="flex items-baseline justify-between gap-4">
                 <h3 className="font-medium text-foreground transition-colors group-hover:text-brand">
-                  {project.name}
+                  {project.url ? (
+                    <a
+                      href={project.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="after:absolute after:inset-0"
+                    >
+                      {project.name}
+                    </a>
+                  ) : (
+                    project.name
+                  )}
                 </h3>
                 {project.url && (
                   <span className="font-mono text-xs text-subtle-foreground transition-colors group-hover:text-brand">
@@ -88,30 +107,15 @@ function Projects() {
                   </span>
                 )}
               </div>
-              <p className="mt-1.5 max-w-xl text-sm leading-relaxed">{project.description}</p>
+              <p className="relative z-10 mt-1.5 max-w-xl text-sm leading-relaxed">
+                <LinkedText text={project.description} />
+              </p>
               {project.stack && (
                 <p className="mt-2.5 font-mono text-xs text-subtle-foreground">{project.stack}</p>
               )}
-            </>
-          )
-
-          return (
-            <li key={project.id} className="border-b border-border last:border-b-0">
-              {project.url ? (
-                <a
-                  href={project.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group block py-6"
-                >
-                  {inner}
-                </a>
-              ) : (
-                <div className="py-6">{inner}</div>
-              )}
-            </li>
-          )
-        })}
+            </div>
+          </li>
+        ))}
       </ul>
     </Section>
   )
@@ -147,7 +151,9 @@ function Experience() {
                   <span>{job.org}</span>
                 )}
               </h3>
-              <p className="mt-1.5 text-sm leading-relaxed">{job.description}</p>
+              <p className="mt-1.5 text-sm leading-relaxed">
+                <LinkedText text={job.description} />
+              </p>
             </div>
           </li>
         ))}
