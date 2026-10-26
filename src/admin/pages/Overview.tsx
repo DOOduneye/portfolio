@@ -64,6 +64,9 @@ function OverviewForm({ current }: { current: OverviewData }) {
           rows={4}
           maxLength={600}
         />
+        <p className="text-xs text-subtle-foreground">
+          Link a word like this: [Agency](https://www.agency.inc)
+        </p>
       </Field>
       <div>
         <Button

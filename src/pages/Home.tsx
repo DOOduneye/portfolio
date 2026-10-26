@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query"
 import { Link } from "react-router-dom"
 import { trpc } from "../api"
+import { parseIntro } from "../lib/intro"
 
 const links = [
   { label: "GitHub", url: "https://github.com/DOOduneye" },
@@ -22,7 +23,25 @@ function Overview() {
         </p>
       )}
       <h1 className="mt-3 text-4xl font-semibold tracking-tight text-foreground">David Oduneye</h1>
-      {overview && <p className="mt-5 max-w-lg leading-relaxed">{overview.intro}</p>}
+      {overview && (
+        <p className="mt-5 max-w-lg leading-relaxed">
+          {parseIntro(overview.intro).map((segment, index) =>
+            segment.href ? (
+              <a
+                key={index}
+                href={segment.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-foreground transition-colors hover:text-brand"
+              >
+                {segment.text}
+              </a>
+            ) : (
+              segment.text
+            )
+          )}
+        </p>
+      )}
     </>
   )
 }
